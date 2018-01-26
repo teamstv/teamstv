@@ -36,10 +36,10 @@ class Telebot(object):
         self.bot.sendMessage(msg['chat']['id'], response)
 
     def _next(self, msg):
-        pass
+        self.notify(msg)
 
     def _resume(self, msg):
-        pass
+        self.notify(msg)
 
     def __init__(self):
         self.CMDs = {
@@ -53,7 +53,6 @@ class Telebot(object):
     def start(self):
         self.bot = telepot.Bot(TOKEN)
         MessageLoop(self.bot, self.handle).run_as_thread()
-        print('Listening ...')
 
     def get(self):
         req = Client()
