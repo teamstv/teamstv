@@ -54,6 +54,8 @@
           $.each(elements, function (i, element) {
             gridster.add_widget('<li>'+element.html+'</li>', element.size_x, element.size_y, element.col, element.row);
           });
+
+          document.getElementById("resolution").innerHTML = window.screen.width + " x " + window.screen.height;
         }
 
         $.getJSON( "data.json", function( data ) {

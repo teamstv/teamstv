@@ -3,13 +3,13 @@
 			"type": "text1",
 			"position": [2, 3],
 			"size": [2, 3],
-			"html": "<h1>text1</h1>"
+			"html": "<h1>I am a news block!</h1>"
 		},
 		{
 			"type": "text2",
 			"position": [5, 5],
 			"size": [1, 2],
-			"html": "<h2>text2</h2>"
+			"html": "<h2><span id='resolution'>.</span></h2>"
 		}
 	]
 }
