@@ -7,18 +7,19 @@
   <script src="./node_modules/angular/angular.min.js"></script>
   <script src="./jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
   <script src="./dsmorse-gridster.js-2808cd7/dist/jquery.gridster.js" type="text/javascript"></script>
+  <script src="./node_modules/js-md5/src/md5.js" type="text/javascript"></script>
   <script src="app.js"></script>
 
   <link rel="stylesheet" type="text/css" href="./dsmorse-gridster.js-2808cd7/dist/jquery.gridster.min.css">
 
   <link rel="stylesheet" type="text/css" href="./gridster_custom.css">
 
-  <meta http-equiv="refresh" content="30">
+  <!-- <meta http-equiv="refresh" content="30"> -->
 
 </head>
 <body ng-app="COETVApp">
   	<div ng-controller="COETVAppController">
-  		<div class="gridster ready">
+  		<div class="gridster ready" id="grid-container">
 		    <ul>
 		    </ul>
 		</div>
@@ -46,26 +47,63 @@
             widget_margins: [0, 0]
         }).data('gridster');
 
-        function buildGrid(elements) {
+        function parseMap(map_data) {
+          var map_file;
+          $.get( "map.html", function( data ) {
+            console.log('data', data);
+             return data;
+          });
+        }
+
+        function parseBlock(id, type, data) {
+          if (type === "map") {
+            $("#"+id).html('<iframe src="map.html"></iframe>');
+
+            //return parseMap(data);
+          }
+          if (type === "text" || type === "html") {
+            $("#"+id).html(data);
+          }
+        }
+
+        function clearGrid() {
+          serialization = [];
           gridster.remove_all_widgets();
+          //$("#grid-container").find("ul").html("");
+          //console.log('cleared');
+        }
+
+        function buildGrid(elements) {
+          clearGrid();
 
           elements = Gridster.sort_by_row_and_col_asc(elements);
 
           $.each(elements, function (i, element) {
-            gridster.add_widget('<li>'+element.html+'</li>', element.size_x, element.size_y, element.col, element.row);
+            gridster.add_widget('<li id="' +element.md5+'" type="' + element.type + '"></li>', element.size_x, element.size_y, element.col, element.row);
+            parseBlock(element.md5, element.type, element.data);
           });
-
-          document.getElementById("resolution").innerHTML = window.screen.width + " x " + window.screen.height;
+          console.log('build grid');
         }
 
-        $.getJSON( "data.json", function( data ) {
-          $.each(data.blocks, function (i, block) {
-            serialization.push({
-              col: block.position[0], row: block.position[1], size_x: block.size[0], size_y: block.size[1], html: block.html
+        function getData() {
+          $.getJSON( "data.json", function( data ) {
+            $.each(data.blocks, function (i, block) {
+              serialization.push({
+                col: block.position[0], row: block.position[1], size_x: block.size[0], size_y: block.size[1], type: block.type, data: block.data, md5: md5(block.type+block.data)
+              });
             });
+            console.log("build data", serialization);
+            buildGrid(serialization);
           });
-          buildGrid(serialization);        
-        });
+        }
+
+        //getData();
+        // var interval = setInterval(function () {
+        //   getData(); 
+        // }, 10000);
+
+        getData();
+        
     });
 
 	</script>

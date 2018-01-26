@@ -1,15 +1,17 @@
 {"blocks":[
 		{
-			"type": "text1",
+			"type": "map",
+			"data": "",
 			"position": [1, 1],
 			"size": [1, 1],
 			"html": "<h1>I am a news block!</h1>"
 		},
 		{
-			"type": "text2",
+			"type": "text",
+			"data": "text information",
 			"position": [3, 2],
 			"size": [1, 1],
-			"html": "<h2><span id='resolution'>.</span></h2>"
+			"html": "<h2>.</h2>"
 		}
 	]
 }
