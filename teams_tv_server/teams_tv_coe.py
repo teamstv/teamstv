@@ -1,12 +1,14 @@
 import json
 
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, jsonify
 import os
 
 from lib import calendar, misc
 import settings
+from lib.telebot import Telebot
 
 app = Flask(__name__)
+tb = Telebot()
 
 @app.route('/traffic')
 def show_traffic():
@@ -20,6 +22,10 @@ def show_rss():
 def show_image():
     full_filename = os.path.join(settings.IMG_FOLDER, 'Untitled.png')
     return render_template("image.html", user_image=full_filename)
+
+@app.route("/telebot", methods=['GET'])
+def get_telebot():
+    return jsonify(tb.get())
 
 @app.route("/front_index")
 def test_index():
@@ -75,4 +81,5 @@ def get_image(folder, file):
     return send_file(filename, mimetype='image/gif')
 
 if __name__ == '__main__':
+    tb.start()
     app.run()

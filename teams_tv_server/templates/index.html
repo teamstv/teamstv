@@ -134,6 +134,10 @@
           if (type === "text" || type === "html") {
             $("#"+id).html(data);
           }
+          if (type === "carousel") {
+            var params = $.param(data);
+            $("#"+id).html('<iframe src="carousel.html' + ((data) ? '?'+params : '') + '"></iframe>');
+          }
         }
 
         function clearGrid() {
