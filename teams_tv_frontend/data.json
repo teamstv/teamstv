@@ -1,17 +1,2 @@
-{"blocks":[
-		{
-			"type": "map",
-			"data": "",
-			"position": [1, 1],
-			"size": [1, 1],
-			"html": "<h1>I am a news block!</h1>"
-		},
-		{
-			"type": "text",
-			"data": "text information",
-			"position": [3, 2],
-			"size": [1, 1],
-			"html": "<h2>.</h2>"
-		}
-	]
-}
+[{"blocks": [1, 2], "sdate": "2018-01-26T14:00:00+00:00", "edate": "2018-01-26T17:30:00+00:00", "widget": "map", "data": {"center": [59.913, 30.316564], "zoom": 12}},
+{"blocks": [3, 4], "sdate": "2018-01-26T14:00:00+00:00", "edate": "2018-01-26T17:30:00+00:00", "widget": "text", "data": "text"}]
