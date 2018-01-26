@@ -1,14 +1,14 @@
 {"blocks":[
 		{
 			"type": "text1",
-			"position": [2, 3],
-			"size": [2, 3],
+			"position": [1, 1],
+			"size": [1, 1],
 			"html": "<h1>I am a news block!</h1>"
 		},
 		{
 			"type": "text2",
-			"position": [5, 5],
-			"size": [1, 2],
+			"position": [3, 2],
+			"size": [1, 1],
 			"html": "<h2><span id='resolution'>.</span></h2>"
 		}
 	]

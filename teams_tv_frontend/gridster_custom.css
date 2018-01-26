@@ -6,7 +6,7 @@ html, body {
 	overflow: hidden;
 }
 
- [data-col="1"] { left: 5px; }
+/* [data-col="1"] { left: 5px; }
  [data-col="2"] { left: 110px; }
  [data-col="3"] { left: 215px; }
 
@@ -30,7 +30,7 @@ html, body {
  [data-sizex="4"] { width:415px; }
  [data-sizex="5"] { width:520px; }
  [data-sizex="6"] { width:625px; }
-
+*/
 .content {
   color: white;
 }
@@ -47,7 +47,7 @@ html, body {
   font-size: 1em;
   text-align: center;
   line-height: 100%;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
 }
 
 ul {
