@@ -55,11 +55,80 @@
           });
         }
 
+        function getBlockLayout(block) {
+          switch (block) {
+            case "1": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 2,
+                        size_y: 1
+                      };
+                      break;
+            case "2": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 2,
+                        size_y: 2
+                      };
+                      break;
+            case "3": return {
+                        col: 3,
+                        row: 1,
+                        size_x: 1,
+                        size_y: 1
+                      };
+                      break;
+            case "4": return {
+                        col: 3,
+                        row: 2,
+                        size_x: 1,
+                        size_y: 1
+                      };
+                      break;
+
+            case "12": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 2,
+                        size_y: 2
+                      };
+                      break;
+            case "13": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 3,
+                        size_y: 1
+                      };
+                      break;
+            case "24": return {
+                        col: 1,
+                        row: 2,
+                        size_x: 3,
+                        size_y: 1
+                      };
+                      break;
+            case "34": return {
+                        col: 3,
+                        row: 1,
+                        size_x: 1,
+                        size_y: 2
+                      };
+                      break;
+
+            case "1234": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 3,
+                        size_y: 3
+                      };
+                      break;
+          }
+        }
+
         function parseBlock(id, type, data) {
           if (type === "map") {
-            $("#"+id).html('<iframe src="map.html"></iframe>');
-
-            //return parseMap(data);
+            var params = $.param(data);
+            $("#"+id).html('<iframe src="map.html' + ((data) ? '?'+params : '') + '"></iframe>');
           }
           if (type === "text" || type === "html") {
             $("#"+id).html(data);
@@ -87,9 +156,10 @@
 
         function getData() {
           $.getJSON( "data.json", function( data ) {
-            $.each(data.blocks, function (i, block) {
+            $.each(data, function (i, block) {
+              var blockLayout = getBlockLayout(block.blocks.join(""));
               serialization.push({
-                col: block.position[0], row: block.position[1], size_x: block.size[0], size_y: block.size[1], type: block.type, data: block.data, md5: md5(block.type+block.data)
+                col: blockLayout.col, row: blockLayout.row, size_x: blockLayout.size_x, size_y: blockLayout.size_y, type: block.widget, data: block.data, md5: md5(block.widget+block.data)
               });
             });
             console.log("build data", serialization);
