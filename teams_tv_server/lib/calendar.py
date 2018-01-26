@@ -44,7 +44,7 @@ def get_events(calendars, time_from, time_to):
                 "blocks": blocks,
                 "widget": summary,
                 "data": data,
-                "uid": uid,
+                "uid": uid[:-3], # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
                 "last_modified": last_modified
             })
     return res

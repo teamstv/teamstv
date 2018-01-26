@@ -21,6 +21,29 @@ def show_image():
     full_filename = os.path.join(settings.IMG_FOLDER, 'Untitled.png')
     return render_template("image.html", user_image=full_filename)
 
+@app.route("/front_index")
+def test_index():
+    return render_template("index.html")
+
+@app.route("/map.html")
+def get_map():
+    return render_template("map.html")
+
+@app.route("/js/<script>")
+def get_some_js(script):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "js", script), mimetype="application/json")
+
+
+@app.route("/css/<style>")
+def get_some_css(style):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "css", style), mimetype="text/css")
+
+@app.route("/js/<dir>/<file>")
+def get_nested_js(dir, file):
+    img_path = os.path.join(settings.STATIC_FOLDER, "js")
+    folder_path = os.path.join(img_path, dir)
+    filename = os.path.join(folder_path, file)
+    return send_file(filename, mimetype='application/json')
 
 @app.route("/test_json")
 def test_json():
