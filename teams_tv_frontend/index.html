@@ -49,8 +49,8 @@
 
         function parseMap(map_data) {
           var map_file;
+          console.log('map');
           $.get( "map.html", function( data ) {
-            console.log('data', data);
              return data;
           });
         }
@@ -119,13 +119,14 @@
                         col: 1,
                         row: 1,
                         size_x: 3,
-                        size_y: 3
+                        size_y: 2
                       };
                       break;
           }
         }
 
         function parseBlock(id, type, data) {
+          console.log('parseBlock', id, type, data);
           if (type === "map") {
             var params = $.param(data);
             $("#"+id).html('<iframe src="map.html' + ((data) ? '?'+params : '') + '"></iframe>');
@@ -136,7 +137,7 @@
         }
 
         function clearGrid() {
-          serialization = [];
+          //serialization = [];
           gridster.remove_all_widgets();
           //$("#grid-container").find("ul").html("");
           //console.log('cleared');
@@ -148,31 +149,72 @@
           elements = Gridster.sort_by_row_and_col_asc(elements);
 
           $.each(elements, function (i, element) {
-            gridster.add_widget('<li id="' +element.md5+'" type="' + element.type + '"></li>', element.size_x, element.size_y, element.col, element.row);
-            parseBlock(element.md5, element.type, element.data);
+            gridster.add_widget('<li id="' +element.uid+'" type="' + element.type + '"></li>', element.size_x, element.size_y, element.col, element.row);
+            parseBlock(element.uid, element.type, element.data);
           });
           console.log('build grid');
         }
 
         function getData() {
-          $.getJSON( "data.json", function( data ) {
-            $.each(data, function (i, block) {
-              var blockLayout = getBlockLayout(block.blocks.join(""));
-              serialization.push({
-                col: blockLayout.col, row: blockLayout.row, size_x: blockLayout.size_x, size_y: blockLayout.size_y, type: block.widget, data: block.data, md5: md5(block.widget+block.data)
+          var eq = true;
+          var temp = [];
+
+          $.ajax({
+            dataType: "json",
+            url: "data.json",
+            cache: false,
+            success: function (data) {
+              console.log('Get data', data);
+
+              $.each(data, function (i, block) {
+                var blockLayout = getBlockLayout(block.blocks.join(""));
+
+                temp.push({
+                  col: blockLayout.col, 
+                  row: blockLayout.row, 
+                  size_x: blockLayout.size_x, 
+                  size_y: blockLayout.size_y, 
+                  type: block.widget, 
+                  data: block.data, 
+                  uid: block.uid,
+                  modified: block.last_modified
+                });
               });
-            });
-            console.log("build data", serialization);
-            buildGrid(serialization);
+
+              console.log('temp', temp);
+
+              if (serialization.length == 0) {
+                eq = false;
+              } else if (serialization.length != temp.length) {
+                eq = false;
+              } else {
+                // for (var t = 0; t < temp.length; t++) {
+                //   if ((temp[t].uid != serialization[t].uid) || (temp[t].last_modified != serialization[t].last_modified)) {
+                //     eq = false;
+                //   }
+                  // console.log(temp[t].md5, serialization[t].md5);
+                  // if (temp[t].md5 != serialization[t].md5) {
+                  //   console.log(temp[t].md5, serialization[t].md5);
+                  //   eq = false;
+                  // }
+                //}
+              }
+              
+              if (!eq) {              
+                serialization = temp;
+                buildGrid(serialization);
+                console.log("build data", serialization);
+              } 
+            }
           });
         }
 
-        //getData();
-        // var interval = setInterval(function () {
-        //   getData(); 
-        // }, 10000);
-
         getData();
+        var interval = setInterval(function () {
+          getData(); 
+        }, 5000);
+
+        //getData();
         
     });
 

@@ -1,2 +1,2 @@
-[{"blocks": [1, 2], "sdate": "2018-01-26T14:00:00+00:00", "edate": "2018-01-26T17:30:00+00:00", "widget": "map", "data": {"center": [59.913, 30.316564], "zoom": 12}},
-{"blocks": [3, 4], "sdate": "2018-01-26T14:00:00+00:00", "edate": "2018-01-26T17:30:00+00:00", "widget": "text", "data": "text"}]
+[{"sdate": "2018-01-26T14:00:00+00:00", "blocks": [1, 2], "uid": "ek1COvB2yandexru", "data": {"center": [59.913, 30.316564], "zoom": 12}, "widget": "map", "last_modified": "2018-01-26T16:26:42+00:00", "edate": "2018-01-26T20:45:00+00:00"},
+{"sdate": "2018-01-26T18:30:00+00:00", "blocks": [3, 4], "uid": "tykq0zf8yandexru", "data": "text", "widget": "text2", "last_modified": "2018-01-26T16:26:32+00:00", "edate": "2018-01-26T22:00:00+00:00"}]
