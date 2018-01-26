@@ -12,6 +12,9 @@ app = Flask(__name__)
 def show_traffic():
     return render_template("traffic.html")
 
+@app.route('/rss')
+def show_traffic():
+    return render_template("rss.html")
 
 @app.route('/image')
 def show_image():
