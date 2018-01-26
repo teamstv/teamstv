@@ -36,12 +36,16 @@ def get_events(calendars, time_from, time_to):
             contents = json.loads(e.description.value)
             blocks = contents["blocks"]
             data = contents["data"]
+            uid = e.uid.value
+            last_modified = e.last_modified.value
             res.append({
                 "sdate": start,
                 "edate": end,
                 "blocks": blocks,
                 "widget": summary,
-                "data": data
+                "data": data,
+                "uid": uid,
+                "last_modified": last_modified
             })
     return res
 
