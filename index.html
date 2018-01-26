@@ -13,7 +13,7 @@
 
   <link rel="stylesheet" type="text/css" href="./gridster_custom.css">
 
-  <meta http-equiv="refresh" content="5">
+  <meta http-equiv="refresh" content="30">
 
 </head>
 <body ng-app="COETVApp">
@@ -28,19 +28,16 @@
 
     var gridster;
 
-    // same object than generated with gridster.serialize() method
     var serialization = [];
 
-    for (var h = 1; h < 7; h++) {
-    	for (var v = 1; v < 7; v++) {
-    		serialization.push({
-    			col: h, row: v, size_x: 1, size_y: 1
-    		})
-    	}
-    }
-
-    // sort serialization
-    serialization = Gridster.sort_by_row_and_col_asc(serialization);
+    // for grid testing
+    // for (var h = 1; h < 7; h++) {
+    // 	for (var v = 1; v < 7; v++) {
+    // 		serialization.push({
+    // 			col: h, row: v, size_x: 1, size_y: 1
+    // 		})
+    // 	}
+    // }
 
     $(function () {
 
@@ -49,12 +46,24 @@
             widget_margins: [0, 0]
         }).data('gridster');
 
-        gridster.remove_all_widgets();
+        function buildGrid(elements) {
+          gridster.remove_all_widgets();
 
-        $.each(serialization, function (i) {
-            gridster.add_widget('<li>'+(i+1)+'</li>', this.size_x, this.size_y, this.col, this.row);
+          elements = Gridster.sort_by_row_and_col_asc(elements);
+
+          $.each(elements, function (i, element) {
+            gridster.add_widget('<li>'+element.html+'</li>', element.size_x, element.size_y, element.col, element.row);
+          });
+        }
+
+        $.getJSON( "data.json", function( data ) {
+          $.each(data.blocks, function (i, block) {
+            serialization.push({
+              col: block.position[0], row: block.position[1], size_x: block.size[0], size_y: block.size[1], html: block.html
+            });
+          });
+          buildGrid(serialization);        
         });
-
     });
 
 	</script>
