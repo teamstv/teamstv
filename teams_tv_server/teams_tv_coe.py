@@ -13,7 +13,7 @@ def show_traffic():
     return render_template("traffic.html")
 
 @app.route('/rss')
-def show_traffic():
+def show_rss():
     return render_template("rss.html")
 
 @app.route('/image')
