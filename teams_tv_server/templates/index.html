@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>COE TV</title>
+
+<!--   <script src="./node_modules/angular/angular.min.js"></script> -->
+  <script src="./js/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+  <script src="./js/jquery.gridster.js" type="text/javascript"></script>
+ <!--  <script src="./node_modules/js-md5/src/md5.js" type="text/javascript"></script> -->
+  <!-- <script src="app.js"></script> -->
+
+  <link rel="stylesheet" type="text/css" href="./css/jquery.gridster.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./css/gridster_custom.css">
+
+  <!-- <meta http-equiv="refresh" content="30"> -->
+
+</head>
+<body>
+  	<div>
+  		<div class="gridster ready" id="grid-container">
+		    <ul>
+		    </ul>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+    var gridster;
+
+    var serialization = [];
+
+    // for grid testing
+    // for (var h = 1; h < 7; h++) {
+    // 	for (var v = 1; v < 7; v++) {
+    // 		serialization.push({
+    // 			col: h, row: v, size_x: 1, size_y: 1
+    // 		})
+    // 	}
+    // }
+
+    $(function () {
+
+        gridster = $(".gridster ul").gridster({
+            widget_base_dimensions: [341, 384],
+            widget_margins: [0, 0]
+        }).data('gridster');
+
+        function parseMap(map_data) {
+          var map_file;
+          console.log('map');
+          $.get( "map.html", function( data ) {
+             return data;
+          });
+        }
+
+        function getBlockLayout(block) {
+          switch (block) {
+            case "1": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 2,
+                        size_y: 1
+                      };
+                      break;
+            case "2": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 2,
+                        size_y: 2
+                      };
+                      break;
+            case "3": return {
+                        col: 3,
+                        row: 1,
+                        size_x: 1,
+                        size_y: 1
+                      };
+                      break;
+            case "4": return {
+                        col: 3,
+                        row: 2,
+                        size_x: 1,
+                        size_y: 1
+                      };
+                      break;
+
+            case "12": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 2,
+                        size_y: 2
+                      };
+                      break;
+            case "13": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 3,
+                        size_y: 1
+                      };
+                      break;
+            case "24": return {
+                        col: 1,
+                        row: 2,
+                        size_x: 3,
+                        size_y: 1
+                      };
+                      break;
+            case "34": return {
+                        col: 3,
+                        row: 1,
+                        size_x: 1,
+                        size_y: 2
+                      };
+                      break;
+
+            case "1234": return {
+                        col: 1,
+                        row: 1,
+                        size_x: 3,
+                        size_y: 2
+                      };
+                      break;
+          }
+        }
+
+        function parseBlock(id, type, data) {
+          console.log('parseBlock', id, type, data);
+          if (type === "map") {
+            var params = $.param(data);
+            $("#"+id).html('<iframe src="map.html' + ((data) ? '?'+params : '') + '"></iframe>');
+          }
+          if (type === "text" || type === "html") {
+            $("#"+id).html(data);
+          }
+          if (type === "carousel") {
+            var params = $.param(data);
+            $("#"+id).html('<iframe src="carousel.html' + ((data) ? '?'+params : '') + '"></iframe>');
+          }
+        }
+
+        function clearGrid() {
+          //serialization = [];
+          gridster.remove_all_widgets();
+          //$("#grid-container").find("ul").html("");
+          //console.log('cleared');
+        }
+
+        function buildGrid(elements) {
+          clearGrid();
+
+          elements = Gridster.sort_by_row_and_col_asc(elements);
+
+          $.each(elements, function (i, element) {
+            gridster.add_widget('<li id="' +element.uid+'" type="' + element.type + '"></li>', element.size_x, element.size_y, element.col, element.row);
+            parseBlock(element.uid, element.type, element.data);
+          });
+          console.log('build grid');
+        }
+
+        function getData() {
+          var eq = true;
+          var temp = [];
+
+          $.ajax({
+            dataType: "json",
+            url: "http://localhost:5000/events/current",
+            cache: false,
+            success: function (data) {
+              console.log('Get data', data);
+
+              $.each(data, function (i, block) {
+                var blockLayout = getBlockLayout(block.blocks.join(""));
+
+                temp.push({
+                  col: blockLayout.col,
+                  row: blockLayout.row,
+                  size_x: blockLayout.size_x,
+                  size_y: blockLayout.size_y,
+                  type: block.widget,
+                  data: block.data,
+                  uid: block.uid,
+                  modified: block.last_modified
+                });
+              });
+
+              //console.log('temp', temp);
+
+              if (serialization.length == 0) {
+                eq = false;
+              } else if (serialization.length != temp.length) {
+                eq = false;
+              } else {
+                // for (var t = 0; t < temp.length; t++) {
+                //   if ((temp[t].uid != serialization[t].uid) || (temp[t].last_modified != serialization[t].last_modified)) {
+                //     eq = false;
+                //   }
+                  // console.log(temp[t].md5, serialization[t].md5);
+                  // if (temp[t].md5 != serialization[t].md5) {
+                  //   console.log(temp[t].md5, serialization[t].md5);
+                  //   eq = false;
+                  // }
+                //}
+              }
+
+              if (!eq) {
+                serialization = temp;
+                buildGrid(serialization);
+                console.log("build data", serialization);
+              }
+            }
+          });
+        }
+
+        getData();
+        var interval = setInterval(function () {
+          getData();
+        }, 5000);
+
+        //getData();
+
+    });
+
+	</script>
+</body>
+</html>

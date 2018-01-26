@@ -27,6 +27,30 @@ def show_image():
 def get_telebot():
     return jsonify(tb.get())
 
+@app.route("/front_index")
+def test_index():
+    return render_template("index.html")
+
+@app.route("/map.html")
+def get_map():
+    return render_template("map.html")
+
+@app.route("/js/<script>")
+def get_some_js(script):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "js", script), mimetype="application/json")
+
+
+@app.route("/css/<style>")
+def get_some_css(style):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "css", style), mimetype="text/css")
+
+@app.route("/js/<dir>/<file>")
+def get_nested_js(dir, file):
+    img_path = os.path.join(settings.STATIC_FOLDER, "js")
+    folder_path = os.path.join(img_path, dir)
+    filename = os.path.join(folder_path, file)
+    return send_file(filename, mimetype='application/json')
+
 @app.route("/test_json")
 def test_json():
     calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
