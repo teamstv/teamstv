@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <title>COE TV</title>
 
-  <script src="./node_modules/angular/angular.min.js"></script>
+<!--   <script src="./node_modules/angular/angular.min.js"></script> -->
   <script src="./jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
   <script src="./dsmorse-gridster.js-2808cd7/dist/jquery.gridster.js" type="text/javascript"></script>
-  <script src="./node_modules/js-md5/src/md5.js" type="text/javascript"></script>
-  <script src="app.js"></script>
+ <!--  <script src="./node_modules/js-md5/src/md5.js" type="text/javascript"></script> -->
+  <!-- <script src="app.js"></script> -->
 
   <link rel="stylesheet" type="text/css" href="./dsmorse-gridster.js-2808cd7/dist/jquery.gridster.min.css">
 
@@ -17,8 +17,8 @@
   <!-- <meta http-equiv="refresh" content="30"> -->
 
 </head>
-<body ng-app="COETVApp">
-  	<div ng-controller="COETVAppController">
+<body>
+  	<div>
   		<div class="gridster ready" id="grid-container">
 		    <ul>
 		    </ul>
@@ -181,7 +181,7 @@
                 });
               });
 
-              console.log('temp', temp);
+              //console.log('temp', temp);
 
               if (serialization.length == 0) {
                 eq = false;
