@@ -298,6 +298,8 @@
               } else if (serialization.length != temp.length) {
                 eq = false;
               } else {
+                serialization.sort(function(a,b) {return (a.uid > b.uid) ? 1 : ((b.uid > a.uid) ? -1 : 0);} );
+                temp.sort(function(a,b) {return (a.uid > b.uid) ? 1 : ((b.uid > a.uid) ? -1 : 0);} );
                 for (var t = 0; t < temp.length; t++) {
                   tids = tids + temp[t].uid;// + temp[t].modified;
                   // if ((temp[t].uid != serialization[t].uid) || (temp[t].last_modified != serialization[t].last_modified)) {
