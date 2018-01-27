@@ -15,6 +15,8 @@
   <link rel="stylesheet" type="text/css" href="./css/jquery.gridster.min.css">
   <link rel="stylesheet" type="text/css" href="./css/gridster_custom.css">
   <link rel="stylesheet" type="text/css" href="./css/clock.css">
+  <link rel="stylesheet" type="text/css" href="./css/newClock.css">
+
 </head>
 <body>
   	<div>
@@ -312,7 +314,7 @@
                 }
 
                 if (tids != sids) {
-                  ed = false;
+                  eq = false;
                 }
 
               }
@@ -337,7 +339,7 @@
         var interval = setInterval(function () {
           getData("events/current");
         }, 30000);
-        
+
         function getTelebot() {
           getData("telebot", getTelebot);
         }

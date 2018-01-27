@@ -29,7 +29,7 @@ def next_event():
     tb.handle({'text':'/next'})
     return jsonify('OK')
 
-@app.route('/next')
+@app.route('/resume')
 def resume_event():
     tb.handle({'text':'/resume'})
     return jsonify('OK')
@@ -108,5 +108,5 @@ def get_image(folder, file):
     return send_file(filename, mimetype='image/gif')
 
 if __name__ == '__main__':
-    tb.start()
+    # tb.start()
     app.run(threaded=True, host='0.0.0.0')

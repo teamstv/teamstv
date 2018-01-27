@@ -144,7 +144,7 @@
 
     setClock.periodical(1000);
 */
-$(document).ready(function() {
+function clockInit() {
     /*var clock = new Vue({
         el: '#clock',
         data: {
@@ -172,7 +172,7 @@ $(document).ready(function() {
         }
         return (zero + num).slice(-digit);
     }
-});
+}
 
 
 //
