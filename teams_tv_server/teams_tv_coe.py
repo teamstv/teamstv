@@ -97,7 +97,7 @@ def get_image_list(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
     filelist = [file for file in os.listdir(folder_path) if file.endswith(".png") or file.endswith(".jpg")]
-    return json.dumps(filelist)
+    return json.dumps(["images/"+folder+"/"+file for file in filelist])
 
 
 @app.route("/images/<folder>/<file>")

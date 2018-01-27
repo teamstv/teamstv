@@ -56,7 +56,7 @@ def get_events(calendars, time_from, time_to):
 
 
 def get_now():
-    return datetime.now() + timedelta(**TIME_SHIFT)
+    return datetime.now()# + timedelta(**TIME_SHIFT)
 
 
 def get_current_events(calendars):

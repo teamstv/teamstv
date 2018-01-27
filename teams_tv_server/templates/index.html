@@ -178,7 +178,16 @@
             $("#"+id).html(data);
           }
           if (type === "carousel") {
-            placeCarousel(id, data.pages, data.interval);
+            imgs = []
+            $.ajax({
+                dataType: "json",
+                url: data.folder,
+                cache: false,
+                success: function (res) {
+                    imgs = res
+                    placeCarousel(id, imgs, data.interval);
+                }
+            });
           }
           if (type === "clock") {
             placeClock(id, data);
@@ -229,7 +238,7 @@
           function initCarousel(data, interval) {
 
             $.each(data, function (index, page) {
-                $("#"+cid).append("<div>"+page+"</div>");
+                $("#"+cid).append("<div><img src='"+page+"'/></div>");
             });
 
             $("#"+cid).owlCarousel({
