@@ -30,9 +30,8 @@ def get_events(calendars, time_from, time_to):
         for event in search_result:
             event.load()
             e = event.instance.vevent
-            summary = e.summary.value
-            if ':' in summary:
-                summary = summary.split(':')[0]
+            summary_value = e.summary.value
+            summary = summary_value.split(':')[0] if ":" in summary_value else summary_value
             start = e.dtstart.value
             end = e.dtend.value
             try:
@@ -47,12 +46,11 @@ def get_events(calendars, time_from, time_to):
                 "sdate": start,
                 "edate": end,
                 "blocks": blocks,
-                "widget": summary.split(':')[0],
+                "widget": summary,
                 "data": data,
                 "uid": uid[:-3], # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
                 "last_modified": last_modified
             })
-    print(res)
     return res
 
 def get_now():

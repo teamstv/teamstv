@@ -296,7 +296,7 @@
                 eq = false;
               } else {
                 for (var t = 0; t < temp.length; t++) {
-                  tids = tids + temp[t].uid + temp[t].modified;
+                  tids = tids + temp[t].uid;// + temp[t].modified;
                   // if ((temp[t].uid != serialization[t].uid) || (temp[t].last_modified != serialization[t].last_modified)) {
                   //   eq = false;
                   // }
@@ -308,7 +308,7 @@
                 }
 
                 for (var s = 0; s < serialization.length; s++) {
-                  sids = sids + serialization[s].uid +  serialization[s].modified;
+                  sids = sids + serialization[s].uid;// + serialization[s].modified;
                 }
 
                 if (tids != sids) {
