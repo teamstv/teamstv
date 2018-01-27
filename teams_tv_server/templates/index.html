@@ -266,6 +266,7 @@
         function getData(url, func) {
           var eq = true;
           var temp = [];
+          var tids, sids = "";
 
           $.ajax({
             dataType: "json",
@@ -294,16 +295,26 @@
               } else if (serialization.length != temp.length) {
                 eq = false;
               } else {
-                // for (var t = 0; t < temp.length; t++) {
-                //   if ((temp[t].uid != serialization[t].uid) || (temp[t].last_modified != serialization[t].last_modified)) {
-                //     eq = false;
-                //   }
+                for (var t = 0; t < temp.length; t++) {
+                  tids = tids + temp[t].uid + temp[t].modified;
+                  // if ((temp[t].uid != serialization[t].uid) || (temp[t].last_modified != serialization[t].last_modified)) {
+                  //   eq = false;
+                  // }
                   // console.log(temp[t].md5, serialization[t].md5);
                   // if (temp[t].md5 != serialization[t].md5) {
                   //   console.log(temp[t].md5, serialization[t].md5);
                   //   eq = false;
                   // }
-                //}
+                }
+
+                for (var s = 0; s < serialization.length; s++) {
+                  sids = sids + serialization[s].uid +  serialization[s].modified;
+                }
+
+                if (tids != sids) {
+                  ed = false;
+                }
+
               }
 
               if (!eq) {
@@ -325,7 +336,7 @@
         getData("events/current");
         var interval = setInterval(function () {
           getData("events/current");
-        }, 5000);
+        }, 30000);
         
         function getTelebot() {
           getData("telebot", getTelebot);

@@ -57,7 +57,7 @@ def get_current_events(calendars):
     :param calendars([calendar]):list of available calendars, active
     :return ([{event}]): list of obtained events for current moment
     """
-    d = datetime.now() + timedelta(days=2)
+    d = datetime.now() + timedelta(days=2) - timedelta(hours=3)
     print(d)
     return get_events(calendars, d, d)
 
