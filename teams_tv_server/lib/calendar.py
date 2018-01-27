@@ -17,6 +17,7 @@ def connect(user, password, url):
     calendars = principal.calendars()
     return calendars
 
+
 def get_events(calendars, time_from, time_to):
     """gets available events from all given calendars
     :param calendars([calendar]):list of available calendars, active
@@ -37,7 +38,7 @@ def get_events(calendars, time_from, time_to):
             try:
                 contents = json.loads(e.description.value)
             except Exception:
-                contents = ""
+                contents = {"blocks": [], "data": {}}
             blocks = contents["blocks"]
             data = contents["data"]
             uid = e.uid.value
@@ -48,13 +49,15 @@ def get_events(calendars, time_from, time_to):
                 "blocks": blocks,
                 "widget": summary,
                 "data": data,
-                "uid": uid[:-3], # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
+                "uid": uid[:-3],  # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
                 "last_modified": last_modified
             })
     return res
 
+
 def get_now():
     return datetime.now() + timedelta(**TIME_SHIFT)
+
 
 def get_current_events(calendars):
     """Returns
@@ -63,7 +66,9 @@ def get_current_events(calendars):
     """
     return get_events(calendars, get_now(), get_now())
 
+
 events_times = None
+
 
 def get_next_event_time(calendars):
     global events_times
@@ -71,13 +76,14 @@ def get_next_event_time(calendars):
         events_times = get_events_times(calendars)
     return events_times.pop(0)
 
+
 def get_next_events(calendars):
     time = get_next_event_time(calendars)
     if time:
         return get_events(calendars, time, time)
 
+
 def get_events_times(calendars):
     events = get_events(calendars, get_now().date(), get_now().date() + timedelta(days=1))
     events = list({event['sdate'] for event in events})
     return sorted(events)
-
