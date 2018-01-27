@@ -169,8 +169,6 @@
 
         function parseBlock(id, type, data) {
           console.log('parseBlock', id, type, data);
-          placeRss(id);
-
           if (type === "map") {
             placeMap(id, data);
           }
@@ -202,7 +200,9 @@
 
         function placeMap(id, options) {
           var mid = "map_"+id;
-          var wrapper = '<div id="'+mid+'"></div>';
+          var wrapper = '<div id="'+mid+'" style="width: 100%; height: 100%"></div>';
+
+	  
           var options = options || {};
 
           $("#"+id).html(wrapper);
