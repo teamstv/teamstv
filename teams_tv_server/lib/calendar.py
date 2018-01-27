@@ -32,6 +32,8 @@ def get_events(calendars, time_from, time_to):
             summary = e.summary.value
             start = e.dtstart.value
             end = e.dtend.value
+            print(summary)
+            print(e.description.value)
             contents = json.loads(e.description.value)
             blocks = contents["blocks"]
             data = contents["data"]
@@ -41,11 +43,12 @@ def get_events(calendars, time_from, time_to):
                 "sdate": start,
                 "edate": end,
                 "blocks": blocks,
-                "widget": summary,
+                "widget": summary.split(':')[0],
                 "data": data,
                 "uid": uid[:-3], # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
                 "last_modified": last_modified
             })
+    print(res)
     return res
 
 
@@ -54,7 +57,9 @@ def get_current_events(calendars):
     :param calendars([calendar]):list of available calendars, active
     :return ([{event}]): list of obtained events for current moment
     """
-    return get_events(calendars, datetime.now(), datetime.now())
+    d = datetime.now() + timedelta(days=2)
+    print(d)
+    return get_events(calendars, d, d)
 
 events_times = None
 

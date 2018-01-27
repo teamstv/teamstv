@@ -142,21 +142,50 @@
           });
         }
 
+        function placeRss(id) {
+          var wrapper;
+          var options = options || {};
+          var cid = "rss_"+id;
+
+          $("#"+id).html("<iframe id='"+cid+"' src='html/rss.html'></iframe>");
+
+          // $.ajax({
+          //   url: "html/rss.html",
+          //   cache: false,
+          //   success: function (data) {
+          //     $("#"+id).html(data);
+          //     rssInit();
+          //   }
+          // });
+        }
+
+        function placeLogo(id, option) {
+          if (options.src) {
+            $("#"+id).html("<img src='"+options.src+"' />");
+          }
+        }
+
         function parseBlock(id, type, data) {
           console.log('parseBlock', id, type, data);
+          placeRss(id);
 
           if (type === "map") {
-            var params = $.param(data);
             placeMap(id, data);
-            //$("#"+id).html('<iframe src="map.html' + ((data) ? '?'+params : '') + '"></iframe>');
           }
           if (type === "text" || type === "html") {
             $("#"+id).html(data);
           }
           if (type === "carousel") {
-            var params = $.param(data);
+            placeCarousel(id, data.pages, data.interval);
+          }
+          if (type === "clock") {
             placeClock(id, data);
-//            placeCarousel(id, data.pages, data.interval);
+          }
+          if (type === "rss") {
+            placeRss(id);
+          }
+          if (type === "logo") {
+            placeLogo(id);
           }
         }
 
