@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+from settings import TIME_SHIFT
 import caldav
 
 
@@ -30,11 +31,14 @@ def get_events(calendars, time_from, time_to):
             event.load()
             e = event.instance.vevent
             summary = e.summary.value
+            if ':' in summary:
+                summary = summary.split(':')[0]
             start = e.dtstart.value
             end = e.dtend.value
-            print(summary)
-            print(e.description.value)
-            contents = json.loads(e.description.value)
+            try:
+                contents = json.loads(e.description.value)
+            except Exception:
+                contents = ""
             blocks = contents["blocks"]
             data = contents["data"]
             uid = e.uid.value
@@ -51,15 +55,15 @@ def get_events(calendars, time_from, time_to):
     print(res)
     return res
 
+def get_now():
+    return datetime.now() + timedelta(**TIME_SHIFT)
 
 def get_current_events(calendars):
     """Returns
     :param calendars([calendar]):list of available calendars, active
     :return ([{event}]): list of obtained events for current moment
     """
-    d = datetime.now() + timedelta(days=2) - timedelta(hours=3)
-    print(d)
-    return get_events(calendars, d, d)
+    return get_events(calendars, get_now(), get_now())
 
 events_times = None
 
@@ -75,7 +79,7 @@ def get_next_events(calendars):
         return get_events(calendars, time, time)
 
 def get_events_times(calendars):
-    events = get_events(calendars, datetime.now().date(), datetime.now().date() + timedelta(days=1))
+    events = get_events(calendars, get_now().date(), get_now().date() + timedelta(days=1))
     events = list({event['sdate'] for event in events})
     return sorted(events)
 
