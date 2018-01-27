@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+from settings import TIME_SHIFT
 import caldav
 
 
@@ -16,6 +17,7 @@ def connect(user, password, url):
     calendars = principal.calendars()
     return calendars
 
+
 def get_events(calendars, time_from, time_to):
     """gets available events from all given calendars
     :param calendars([calendar]):list of available calendars, active
@@ -29,10 +31,14 @@ def get_events(calendars, time_from, time_to):
         for event in search_result:
             event.load()
             e = event.instance.vevent
-            summary = e.summary.value
+            summary_value = e.summary.value
+            summary = summary_value.split(':')[0] if ":" in summary_value else summary_value
             start = e.dtstart.value
             end = e.dtend.value
-            contents = json.loads(e.description.value)
+            try:
+                contents = json.loads(e.description.value)
+            except Exception:
+                contents = {"blocks": [], "data": {}}
             blocks = contents["blocks"]
             data = contents["data"]
             uid = e.uid.value
@@ -43,10 +49,14 @@ def get_events(calendars, time_from, time_to):
                 "blocks": blocks,
                 "widget": summary,
                 "data": data,
-                "uid": uid[:-3], # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
+                "uid": uid[:-3],  # YANDEX GENERATES UID WITH .RU AND WE CAN'T REALLY use it as tag id in html...
                 "last_modified": last_modified
             })
     return res
+
+
+def get_now():
+    return datetime.now() + timedelta(**TIME_SHIFT)
 
 
 def get_current_events(calendars):
@@ -54,9 +64,11 @@ def get_current_events(calendars):
     :param calendars([calendar]):list of available calendars, active
     :return ([{event}]): list of obtained events for current moment
     """
-    return get_events(calendars, datetime.now(), datetime.now())
+    return get_events(calendars, get_now(), get_now())
+
 
 events_times = None
+
 
 def get_next_event_time(calendars):
     global events_times
@@ -64,13 +76,14 @@ def get_next_event_time(calendars):
         events_times = get_events_times(calendars)
     return events_times.pop(0)
 
+
 def get_next_events(calendars):
     time = get_next_event_time(calendars)
     if time:
         return get_events(calendars, time, time)
 
+
 def get_events_times(calendars):
-    events = get_events(calendars, datetime.now().date(), datetime.now().date() + timedelta(days=1))
+    events = get_events(calendars, get_now().date(), get_now().date() + timedelta(days=1))
     events = list({event['sdate'] for event in events})
     return sorted(events)
-
