@@ -1,0 +1,62 @@
+.clock-wrapper {
+    background: #0f3854;
+    background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
+    background-size: 100%;
+    width: 100%;
+    height: 100%;
+}
+#clock p {
+    margin: 0;
+    padding: 0;
+}
+#clock {
+    font-family: 'Share Tech Mono', monospace;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #daf6ff;
+    text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
+}
+#clock .time {
+    letter-spacing: 0.05em;
+    font-size: 60px;
+    padding: 5px 0;
+}
+#clock  .date {
+    letter-spacing: 0.1em;
+    font-size: 24px;
+}
+#clock .text {
+    letter-spacing: 0.1em;
+    font-size: 20px;
+    padding: 5px 0 0;
+    text-align: left;
+    width: 115px;
+}
+
+#clock .text-bot {
+    text-align: left;
+    font-size: 20px;
+    margin-top: 5px;
+}
+.clock-right-text {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    vertical-align: top;
+}
+.QR_code {
+    width: 100px;
+    height: 100px;
+    background: url(../static/img/qrClock.png) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.clock-left-text {
+    width: 160px;
+    display: inline-block;
+}
