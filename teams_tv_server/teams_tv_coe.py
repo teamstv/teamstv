@@ -39,6 +39,10 @@ def get_map():
 def get_some_js(script):
     return send_file(os.path.join(settings.STATIC_FOLDER, "js", script), mimetype="application/json")
 
+@app.route("/html/<html>")
+def get_some_html(html):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "html", html), mimetype="text/html")
+
 
 @app.route("/css/<style>")
 def get_some_css(style):

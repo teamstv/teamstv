@@ -1,37 +1,36 @@
+function clockInit() {
 
-Element.Properties.transform = {
+    Element.Properties.transform = {
 
-    set: function(transform){
-        var property = 'transform';
-        console.log(Browser);
-        if(Browser.chrome) property = 'WebkitTransform';
-        if(Browser.firefox)  property = 'MozTransform';
-        if(Browser.opera) property = 'OTransform';
+        set: function(transform){
+            var property = 'transform';
+            console.log(Browser);
+            if(Browser.chrome) property = 'WebkitTransform';
+            if(Browser.firefox)  property = 'MozTransform';
+            if(Browser.opera) property = 'OTransform';
 
-        this.style[property] = transform;
-        this.store('transform', transform);
-    },
+            this.style[property] = transform;
+            this.store('transform', transform);
+        },
 
-    get: function(){
-        return this.retrieve('transform', '');
-    }
+        get: function(){
+            return this.retrieve('transform', '');
+        }
 
-};
+    };
 
-Element.implement({
+    Element.implement({
 
-    setTransform: function(value){
-        return this.set('transform', value);
-    },
+        setTransform: function(value){
+            return this.set('transform', value);
+        },
 
-    getTransform: function(){
-        return this.get('transform');
-    }
+        getTransform: function(){
+            return this.get('transform');
+        }
 
-});
+    });
 
-$(window).addEvent('domready', function()
-{
     var $hourWrap = $$('.hour-wrap');
     var $hourFront = $hourWrap.getElement('div.front');
     var $hourBack = $hourWrap.getElement('div.back')
@@ -144,4 +143,6 @@ $(window).addEvent('domready', function()
     }
 
     setClock.periodical(1000);
-});
+
+
+}
