@@ -36,10 +36,10 @@ class Telebot(object):
         self.bot.sendMessage(msg['chat']['id'], response)
 
     def _next(self, msg):
-        self.notify(msg)
+        self.notify('next')
 
     def _resume(self, msg):
-        self.notify(msg)
+        self.notify('resume')
 
     def __init__(self):
         self.CMDs = {
@@ -68,6 +68,7 @@ class Telebot(object):
             pass
 
     def handle(self, msg):
+        print(msg)
         self.CMDs[msg['text']](msg)
 
 

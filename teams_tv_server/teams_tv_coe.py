@@ -23,9 +23,34 @@ def show_image():
     full_filename = os.path.join(settings.IMG_FOLDER, 'Untitled.png')
     return render_template("image.html", user_image=full_filename)
 
+
+@app.route('/next')
+def next_event():
+    tb.handle({'text':'/next'})
+    return jsonify('OK')
+
+@app.route('/next')
+def resume_event():
+    tb.handle({'text':'/resume'})
+    return jsonify('OK')
+
 @app.route("/telebot", methods=['GET'])
 def get_telebot():
-    return jsonify(tb.get())
+    def next():
+        print('next')
+        calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
+        data = calendar.get_next_events(calendars)
+        return json.dumps(data, cls=misc.DateTimeEncoder)
+    def resume():
+        print('resume')
+        calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
+        data = calendar.get_current_events(calendars)
+        return json.dumps(data, cls=misc.DateTimeEncoder)
+    cmds = {
+        'next': next,
+        'resume': resume,
+    }
+    return cmds[tb.get()]()
 
 @app.route("/front_index")
 def test_index():
@@ -82,4 +107,4 @@ def get_image(folder, file):
 
 if __name__ == '__main__':
     tb.start()
-    app.run()
+    app.run(threaded=True, host='0.0.0.0')

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import caldav
 
 
@@ -15,7 +15,6 @@ def connect(user, password, url):
     principal = client.principal()
     calendars = principal.calendars()
     return calendars
-
 
 def get_events(calendars, time_from, time_to):
     """gets available events from all given calendars
@@ -56,3 +55,22 @@ def get_current_events(calendars):
     :return ([{event}]): list of obtained events for current moment
     """
     return get_events(calendars, datetime.now(), datetime.now())
+
+events_times = None
+
+def get_next_event_time(calendars):
+    if not events_times:
+        global events_times
+        events_times = get_events_times(calendars)
+    return events_times.pop(0)
+
+def get_next_events(calendars):
+    time = get_next_event_time(calendars)
+    if time:
+        return get_events(calendars, time, time)
+
+def get_events_times(calendars):
+    events = get_events(calendars, datetime.now().date(), datetime.now().date() + timedelta(days=1))
+    events = list({event['sdate'] for event in events})
+    return sorted(events)
+
