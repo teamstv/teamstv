@@ -59,8 +59,8 @@ def get_current_events(calendars):
 events_times = None
 
 def get_next_event_time(calendars):
+    global events_times
     if not events_times:
-        global events_times
         events_times = get_events_times(calendars)
     return events_times.pop(0)
 
