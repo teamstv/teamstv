@@ -234,13 +234,13 @@
           console.log('build grid');
         }
 
-        function getData() {
+        function getData(url, func) {
           var eq = true;
           var temp = [];
 
           $.ajax({
             dataType: "json",
-            url: "http://localhost:5000/events/current",
+            url: url,
             cache: false,
             success: function (data) {
               console.log('Get data', data);
@@ -282,14 +282,26 @@
                 buildGrid(serialization);
                 console.log("build data", serialization);
               }
+              //used for Telebot
+              if (func) {
+                func()
+              }
+            },
+            error: function() {
+              console.log("Request Error");
             }
           });
         }
 
-        getData();
+        getData("events/current");
         var interval = setInterval(function () {
-          getData();
+          getData("events/current");
         }, 5000);
+        
+        function getTelebot() {
+          getData("telebot", getTelebot);
+        }
+        getTelebot();
 
         //getData();
 
