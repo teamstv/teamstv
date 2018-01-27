@@ -37,12 +37,10 @@ def resume_event():
 @app.route("/telebot", methods=['GET'])
 def get_telebot():
     def next():
-        print('next')
         calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
         data = calendar.get_next_events(calendars)
         return json.dumps(data, cls=misc.DateTimeEncoder)
     def resume():
-        print('resume')
         calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
         data = calendar.get_current_events(calendars)
         return json.dumps(data, cls=misc.DateTimeEncoder)

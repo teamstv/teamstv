@@ -3,9 +3,8 @@ import logging
 from threading import Thread
 from queue import Queue, Empty
 import telepot
+from settings import BOT_TOKEN
 from telepot.loop import MessageLoop
-
-TOKEN = '463871639:AAEMtFe-8bxU2qEob3AvFKNYJUj7bBL52k4'
 
 class Client(object):
     def __init__(self):
@@ -51,8 +50,9 @@ class Telebot(object):
         self.clients = Queue()
 
     def start(self):
-        self.bot = telepot.Bot(TOKEN)
-        MessageLoop(self.bot, self.handle).run_as_thread()
+        if BOT_TOKEN:
+            self.bot = telepot.Bot(BOT_TOKEN)
+            MessageLoop(self.bot, self.handle).run_as_thread()
 
     def get(self):
         req = Client()
@@ -68,7 +68,6 @@ class Telebot(object):
             pass
 
     def handle(self, msg):
-        print(msg)
         self.CMDs[msg['text']](msg)
 
 
