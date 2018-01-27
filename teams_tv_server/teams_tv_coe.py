@@ -81,5 +81,5 @@ def get_image(folder, file):
     return send_file(filename, mimetype='image/gif')
 
 if __name__ == '__main__':
-    tb.start()
+    # tb.start()
     app.run()

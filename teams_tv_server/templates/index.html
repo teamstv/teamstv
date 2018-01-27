@@ -4,18 +4,14 @@
   <meta charset="UTF-8">
   <title>COE TV</title>
 
-<!--   <script src="./node_modules/angular/angular.min.js"></script> -->
   <script src="./js/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
   <script src="./js/jquery.gridster.js" type="text/javascript"></script>
- <!--  <script src="./node_modules/js-md5/src/md5.js" type="text/javascript"></script> -->
-  <!-- <script src="app.js"></script> -->
+  <script src="./js/owl.carousel.min.js" type="text/javascript"></script>
+  <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
+  <link rel="stylesheet" type="text/css" href="./css/owl.carousel.min.css">
   <link rel="stylesheet" type="text/css" href="./css/jquery.gridster.min.css">
-
   <link rel="stylesheet" type="text/css" href="./css/gridster_custom.css">
-
-  <!-- <meta http-equiv="refresh" content="30"> -->
-
 </head>
 <body>
   	<div>
@@ -129,22 +125,78 @@
           console.log('parseBlock', id, type, data);
           if (type === "map") {
             var params = $.param(data);
-            $("#"+id).html('<iframe src="map.html' + ((data) ? '?'+params : '') + '"></iframe>');
+            placeMap(id, data);
+            //$("#"+id).html('<iframe src="map.html' + ((data) ? '?'+params : '') + '"></iframe>');
           }
           if (type === "text" || type === "html") {
             $("#"+id).html(data);
           }
           if (type === "carousel") {
             var params = $.param(data);
-            $("#"+id).html('<iframe src="carousel.html' + ((data) ? '?'+params : '') + '"></iframe>');
+            placeCarousel(id, data.pages, data.interval);
           }
+        }
+
+        function placeMap(id, options) {
+          var mid = "map_"+id;
+          var wrapper = '<div id="'+mid+'"></div>';
+          var options = options || {};
+
+          $("#"+id).html(wrapper);
+
+          console.log('initMap', id, options);
+
+          ymaps.ready(init);
+
+          function init () {
+              var myMap = new ymaps.Map(mid, {
+                    center: options.center || center[59.913, 30.316564],
+                    zoom: options.zoom || 12,
+                    controls: []
+                  });
+
+              var trafficControl = new ymaps.control.TrafficControl({ state: {
+                      providerKey: 'traffic#actual',
+                      trafficShown: true
+                  }});
+              myMap.controls.add(trafficControl);
+              trafficControl.getProvider('traffic#actual').state.set('infoLayerShown', true);
+
+              console.log('init map', mid, options);
+          }
+        }
+
+        function placeCarousel(id, pages, interval) {
+          var cid = "carousel_"+id;
+          var wrapper = '<div class="owl-carousel owl-theme" id="'+cid+'"></div>';
+
+          $("#"+id).html(wrapper);
+
+          function initCarousel(data, interval) {
+
+            $.each(data, function (index, page) {
+                $("#"+cid).append("<div>"+page+"</div>");
+            });
+
+            $("#"+cid).owlCarousel({
+                items: 1,
+                loop:true,
+                nav:false,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: interval || 1500
+            });
+
+            console.log('placeCarousel', id, pages, interval);
+
+        }
+
+            initCarousel(pages, interval);
         }
 
         function clearGrid() {
           //serialization = [];
           gridster.remove_all_widgets();
-          //$("#grid-container").find("ul").html("");
-          //console.log('cleared');
         }
 
         function buildGrid(elements) {
@@ -184,8 +236,6 @@
                   modified: block.last_modified
                 });
               });
-
-              //console.log('temp', temp);
 
               if (serialization.length == 0) {
                 eq = false;
