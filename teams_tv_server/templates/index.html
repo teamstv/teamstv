@@ -43,18 +43,12 @@
 
     $(function () {
 
+      console.log(screen.width+' '+screen.height);
+
         gridster = $(".gridster ul").gridster({
-            widget_base_dimensions: [341, 384],
+            widget_base_dimensions: [Math.round(screen.width / 3), Math.round(screen.height / 2)],
             widget_margins: [0, 0]
         }).data('gridster');
-
-        // function parseMap(map_data) {
-        //   var map_file;
-        //   console.log('map');
-        //   $.get( "map.html", function( data ) {
-        //      return data;
-        //   });
-        // }
 
         function getBlockLayout(block) {
           switch (block) {
