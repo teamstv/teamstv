@@ -131,29 +131,23 @@
             cache: false,
             success: function (data) {
               $('#' + id).html(data);
+
               clockInit();
-              /*console.log('clock data', data);
-              console.log('id = ', id);
-              console.log('#id = ', $('#' + id));*/
             }
           });
         }
 
-        function placeRss(id) {
+        function placeRss(id, options) {
           var wrapper;
           var options = options || {};
           var cid = "rss_"+id;
 
-          $("#"+id).html("<iframe id='"+cid+"' src='html/rss.html'></iframe>");
+          console.log('rss', options);
 
-          // $.ajax({
-          //   url: "html/rss.html",
-          //   cache: false,
-          //   success: function (data) {
-          //     $("#"+id).html(data);
-          //     rssInit();
-          //   }
-          // });
+          var params = "";
+          // params = $.param(options); TODO: need to implement initRss() to parse the params properly
+
+          $("#"+id).html("<iframe id='"+cid+"' src='html/rss.html?"+ params +"'></iframe>");
         }
 
         function placeLogo(id, option) {
@@ -239,11 +233,11 @@
 
             $("#"+cid).owlCarousel({
                 items: 1,
-                loop:true,
-                nav:false,
+                loop: true,
+                nav: false,
                 dots: false,
                 autoplay: true,
-                autoplayTimeout: interval || 1500
+                autoplayTimeout: interval || 3000
             });
 
             console.log('placeCarousel', id, pages, interval);
