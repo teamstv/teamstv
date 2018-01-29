@@ -47,8 +47,9 @@
 
         gridster = $(".gridster ul").gridster({
             widget_base_dimensions: [Math.round(screen.width / 3), Math.round(screen.height / 2)],
-            widget_margins: [0, 0]
-        }).data('gridster');
+            widget_margins: [0, 0],
+            avoid_overlapped_widgets: false
+        }).data('gridster').disable();
 
         function getBlockLayout(block) {
           switch (block) {
