@@ -119,20 +119,28 @@
           var options = options || {};
           var cid = "clock_"+id;
 
-          $.ajax({
-            url: "html/clock.html",
-            cache: false,
-            success: function (data) {
-              $('#' + id).html(data);
+          $("#"+id).html("");
+          
+          $("#"+id).append("<iframe id='"+cid+"' src='./html/clock2.html'></iframe>");
+
+          
               
-              setTimeout(function () {
-                clockInit();
-              }, 250);
-              setTimeout(function() {
-                initWeatherWidget(document,"script","weatherwidget-io-js");
-              }, 750);
-            }
-          });
+          // setTimeout(function () {
+          //   clockInit();
+          // }, 250);
+          // setTimeout(function() {
+          //   initWeatherWidget(document,"script","weatherwidget-io-js");
+          // }, 750);
+
+          // $.ajax({
+          //   url: "html/clock.html",
+          //   cache: false,
+          //   success: function (data) {
+          //     $('#' + id).html(data);
+
+
+          //   }
+          // });
         }
 
         function placeRss(id, options) {
