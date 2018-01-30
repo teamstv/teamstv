@@ -8,7 +8,10 @@
     		js.src="https://weatherwidget.io/js/widget.min.js";
     		fjs.parentNode.insertBefore(js,fjs);
     	}
-    	console.log('initWeatherWidget', d, s, id, js, fjs);
+    	console.log('initWeatherWidget', d, s, id);
+        console.log('d.getElementsByTagName(s)', d.getElementsByTagName(s));
+        console.log('js', js);
+        console.log('fjs', fjs);
     }
     //initWeatherWidget(document,"script","weatherwidget-io-js");
     //(document,"script","weatherwidget-io-js");
