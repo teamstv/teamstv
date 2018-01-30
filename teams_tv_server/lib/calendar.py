@@ -1,7 +1,16 @@
+from __future__ import print_function
+import sys
 import json
-from datetime import datetime, timedelta
-from settings import TIME_SHIFT
-import caldav
+from datetime import datetime
+def eprint (*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+try:
+    import pytz
+    from tzlocal import get_localzone
+    import caldav
+except Exception:
+    eprint("can't import stuff. Try pip install pytz, tzlocal, caldav")
+
 
 
 def connect(user, password, url):
@@ -56,7 +65,8 @@ def get_events(calendars, time_from, time_to):
 
 
 def get_now():
-    return datetime.now()# + timedelta(**TIME_SHIFT)
+    local_tz = get_localzone()
+    return datetime.now(local_tz)
 
 
 def get_current_events(calendars):
@@ -66,24 +76,3 @@ def get_current_events(calendars):
     """
     return get_events(calendars, get_now(), get_now())
 
-
-events_times = None
-
-
-def get_next_event_time(calendars):
-    global events_times
-    if not events_times:
-        events_times = get_events_times(calendars)
-    return events_times.pop(0)
-
-
-def get_next_events(calendars):
-    time = get_next_event_time(calendars)
-    if time:
-        return get_events(calendars, time, time)
-
-
-def get_events_times(calendars):
-    events = get_events(calendars, get_now().date(), get_now().date() + timedelta(days=1))
-    events = list({event['sdate'] for event in events})
-    return sorted(events)
