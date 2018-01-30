@@ -6,10 +6,9 @@ def eprint (*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 try:
     import pytz
-    from tzlocal import get_localzone
     import caldav
 except Exception:
-    eprint("can't import stuff. Try pip install pytz, tzlocal, caldav")
+    eprint("can't import stuff. Try pip install pytz,caldav")
 
 
 
@@ -65,8 +64,7 @@ def get_events(calendars, time_from, time_to):
 
 
 def get_now():
-    local_tz = get_localzone()
-    return datetime.now(local_tz)
+    return datetime.now(pytz.utc)
 
 
 def get_current_events(calendars):
