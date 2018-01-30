@@ -201,7 +201,9 @@
 
         function placeMap(id, options) {
           var mid = "map_"+id;
-          var wrapper = '<div id="'+mid+'"></div>';
+          var wrapper = '<div id="'+mid+'" style="width: 100%; height: 100%"></div>';
+
+	  
           var options = options || {};
 
           $("#"+id).html(wrapper);
