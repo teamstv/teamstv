@@ -24,8 +24,29 @@
 <body>
 
 <script type="text/javascript">
+
+    function getQueryParam(url, key) {
+      var queryStartPos = url.indexOf('?');
+      if (queryStartPos === -1) {
+        return;
+      }
+      var params = url.substring(queryStartPos + 1).split('&');
+      for (var i = 0; i < params.length; i++) {
+        var pairs = params[i].split('=');
+        if (decodeURIComponent(pairs.shift()) == key) {
+          return decodeURIComponent(pairs.join('='));
+        }
+      }
+    }
+
+    var feed = "http://www.infostor.com/index/rssfaq/rss_article_and_wp.noncurrentissue.articles.infostor.html";
+    var interval = getQueryParam(window.location, "interval") || 5000;
+
+    console.log('rss params', getQueryParam(window.location, "feed"), getQueryParam(window.location, "interval"));
+
 rssfeed_url = new Array();
-rssfeed_url[0]="http://www.infostor.com/index/rssfaq/rss_article_and_wp.noncurrentissue.articles.infostor.html";
+rssfeed_url[0] = getQueryParam(window.location, "feed") || feed;
+
 rssfeed_frame_width="300";
 rssfeed_frame_height="500";
 rssfeed_scroll="on";
