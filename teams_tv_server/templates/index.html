@@ -147,6 +147,7 @@
             // THIS FIXES CLOCK BEING KNOCKED DOWN
             $(".weatherwidget-io").css({position:"static", display:"inline"});
         }, 50);
+
         }
 
         function placeRss(id, options) {
@@ -157,14 +158,22 @@
           console.log('rss', options);
 
           var params = "";
-          // params = $.param(options); TODO: need to implement initRss() to parse the params properly
+          var feed = "";
+          var interval = 5000;
 
-          $("#"+id).html("<iframe id='"+cid+"' src='html/rss.html?"+ params +"'></iframe>");
+          params = $.param(options); // TODO: need to implement initRss() to parse the params properly
+
+          if (params.feeds && params.feeds.length) {
+            feed = params.feeds[0];
+          }
+          interval = params.interval || interval;
+
+          $("#"+id).html("<iframe id='" + cid + "' src='html/rss.html?feed=" + feed + "&interval=" + interval + "></iframe>");
         }
 
         function placeLogo(id, option) {
           if (options.src) {
-            $("#"+id).html("<img src='"+options.src+"' />");
+            $("#"+id).html("<img src='" + options.src + "' />");
           }
         }
 
@@ -193,7 +202,7 @@
             placeClock(id, data);
           }
           if (type === "rss") {
-            placeRss(id);
+            placeRss(id, options);
           }
           if (type === "logo") {
             placeLogo(id);
@@ -264,13 +273,12 @@
               gridster.destroy();
               gridster = null;
               $('#grid-container ul').empty();
-              // $('body').find('iframe').remove();
-              // $('body').find('script').remove();
 
               gridster = $(".gridster ul").gridster({
                   widget_base_dimensions: [Math.round(screen.width / 3), Math.round(screen.height / 2)],
                   widget_margins: [0, 0],
-                  avoid_overlapped_widgets: false
+                  avoid_overlapped_widgets: false,
+                  shift_widgets_up: false
               }).data('gridster').disable();
           }
         }
