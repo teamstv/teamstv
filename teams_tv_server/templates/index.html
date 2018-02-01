@@ -157,18 +157,18 @@
 
           console.log('rss', options);
 
-          var params = "";
-          var feed = "";
           var interval = 5000;
 
-          params = $.param(options); // TODO: need to implement initRss() to parse the params properly
+          var params = {
+            interval: options.interval || interval,
+            feed: ""
+            }
+          if (options.feeds && options.feeds.length) {
 
-          if (params.feeds && params.feeds.length) {
-            feed = params.feeds[0];
+            params.feed = options.feeds[0];
           }
-          interval = params.interval || interval;
 
-          $("#"+id).html("<iframe id='" + cid + "' src='html/rss.html?feed=" + feed + "&interval=" + interval + "></iframe>");
+          $("#"+id).html("<iframe id='" + cid + "' src='html/rss.html?" + $.param(params) + "'></iframe>");
         }
 
         function placeLogo(id, option) {
@@ -202,7 +202,7 @@
             placeClock(id, data);
           }
           if (type === "rss") {
-            placeRss(id, options);
+            placeRss(id, data);
           }
           if (type === "logo") {
             placeLogo(id);
