@@ -1,7 +1,10 @@
 import sys
 import logging
 from threading import Thread
-from queue import Queue, Empty
+try:
+    from queue import Queue, Empty
+except Exception:
+    from Queue import Queue, Empty
 import telepot
 from settings import BOT_TOKEN
 from telepot.loop import MessageLoop
