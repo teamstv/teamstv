@@ -25,15 +25,6 @@
 
     var serialization = [];
 
-    // for grid testing
-    // for (var h = 1; h < 7; h++) {
-    //  for (var v = 1; v < 7; v++) {
-    //    serialization.push({
-    //      col: h, row: v, size_x: 1, size_y: 1
-    //    })
-    //  }
-    // }
-
     $(function () {
 
       console.log(screen.width+' '+screen.height);
@@ -41,7 +32,8 @@
         gridster = $(".gridster ul").gridster({
             widget_base_dimensions: [Math.round(screen.width / 3), Math.round(screen.height / 2)],
             widget_margins: [0, 0],
-            avoid_overlapped_widgets: false
+            avoid_overlapped_widgets: false,
+            shift_widgets_up: false
         }).data('gridster').disable();
 
         function getBlockLayout(block) {
@@ -120,27 +112,41 @@
           var cid = "clock_"+id;
 
           $("#"+id).html("");
-          
-          $("#"+id).append("<iframe id='"+cid+"' src='./html/clock2.html'></iframe>");
 
-          
-              
-          // setTimeout(function () {
-          //   clockInit();
-          // }, 250);
-          // setTimeout(function() {
-          //   initWeatherWidget(document,"script","weatherwidget-io-js");
-          // }, 750);
+          $("#"+id).append("<div id='"+cid+"' style='height:100%; width:100%;'></div>");
+          var weather_and_clock_content = '' +
+               '<a class="weatherwidget-io" href="https://forecast7.com/en/59d9330d34/saint-petersburg/" data-label_1="SAINT PETERSBURG" data-label_2="WEATHER" data-mode="Current" data-theme="original"></a>' +
+               '<div class="clock-wrapper">'+
+               '    <div id="clock">'+
+               '        <p class="date">{{ date }}</p>'+
+            '           <p class="time">{{ time }}</p>'+
 
-          // $.ajax({
-          //   url: "html/clock.html",
-          //   cache: false,
-          //   success: function (data) {
-          //     $('#' + id).html(data);
+            '           <div class="clock-left-text">'+
+            '               <div class="text">@TeamsTV_bot</div>'+
+            '               <div class="text-bot">#PiterDellEmc</div>'+
+            '           </div>'+
+            '           <div class="clock-right-text">'+
+            '               <div class="QR_code"></div>'+
+            '           </div>'+
+            '       </div>'+
+            '   </div>'
+            $("#"+cid).append(weather_and_clock_content);
+        function initWeatherWidget(d,s,id) {
+            var js, fjs=d.getElementsByTagName(s)[0];
 
-
-          //   }
-          // });
+            if(!d.getElementById(id)){
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "https://weatherwidget.io/js/widget.min.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }
+        }
+        clockInit();
+        initWeatherWidget(document, "script", "weatherwidget-io-js");
+        setTimeout(function () {
+            // THIS FIXES CLOCK BEING KNOCKED DOWN
+            $(".weatherwidget-io").css({position:"static", display:"inline"});
+        }, 50);
         }
 
         function placeRss(id, options) {
@@ -197,7 +203,7 @@
         function placeMap(id, options) {
           var mid = "map_"+id;
           var wrapper = '<div id="'+mid+'" style="width: 100%; height: 100%"></div>';
-    
+
           var options = options || {};
 
           $("#"+id).html(wrapper);
@@ -277,10 +283,8 @@
           temp_elements = Gridster.sort_by_row_and_col_asc(temp_elements);
 
           $.each(temp_elements, function (i, element) {
-            setTimeout(function () {
               gridster.add_widget('<li id="' +element.uid+'" type="' + element.type + '"></li>', element.size_x, element.size_y, element.col, element.row);
               parseBlock(element.uid, element.type, element.data);
-            }, ((i+1)*100));            
           });
           console.log('build grid', elements, temp_elements);
         }
@@ -322,10 +326,8 @@
               } else if (serialization.length != temp.length) {
                 eq = false;
               } else {
-                // serialization.sort(function(a,b) {return (a.uid > b.uid) ? 1 : ((b.uid > a.uid) ? -1 : 0);} );
-                // temp.sort(function(a,b) {return (a.uid > b.uid) ? 1 : ((b.uid > a.uid) ? -1 : 0);} );
                 for (var t = 0; t < temp.length; t++) {
-                  tids = tids + temp[t].modified; // temp[t].uid + 
+                  tids = tids + temp[t].modified; // temp[t].uid +
                 }
 
                 for (var s = 0; s < serialization.length; s++) {
