@@ -7,12 +7,8 @@ def eprint (*args, **kwargs):
 try:
     import pytz
     import caldav
-except Exception:
-    eprint("can't import stuff. Try pip install pytz,caldav,"
-           "when installing new caldav ensure that .../caldav/objects.py has "
-           "        path = unquote(self.url.path)"
-           "        exchange_path = path + '/'"
-           "on lines 184 and 185, if not - fix it manually")
+except Exception as e:
+    eprint("can't import stuff. Try pip install pytz")
 
 
 

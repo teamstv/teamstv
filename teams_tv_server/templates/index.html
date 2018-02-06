@@ -168,7 +168,7 @@
             params.feed = options.feeds[0];
           }
 
-          $("#"+id).html("<iframe id='" + cid + "' src='html/rss.html?" + $.param(params) + "'></iframe>");
+          $("#"+id).html("<iframe id='" + cid + "' src='/rss?" + $.param(params) + "'></iframe>");
         }
 
         function placeLogo(id, option) {
