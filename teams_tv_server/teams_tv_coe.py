@@ -1,14 +1,24 @@
-import json
+from __future__ import print_function
+import sys
 
-from flask import Flask, render_template, send_file, jsonify
-import os
 
-from lib import calendar, misc
-import settings
-from lib.telebot import Telebot
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+try:
+    import json
+    from flask import Flask, render_template, send_file, jsonify
+    import os
+    from lib import calendar, misc
+    import settings
+    from lib.telebot import Telebot
+except Exception as err:
+    eprint("Error during imports: {0}\n{1}"
+           .format(err, "Pls check dependencies or just run pip install -r requirements.txt"))
+
 
 app = Flask(__name__)
-tb = Telebot()
+tb = Telebot(settings.BOT_TOKEN)
 
 
 @app.route('/rss')
@@ -102,5 +112,5 @@ def get_image(folder, file):
 # --- WEB CONTENT END ---
 
 if __name__ == '__main__':
-    # tb.start()
+    tb.start()
     app.run(threaded=True, host='0.0.0.0')

@@ -1,0 +1,5 @@
+Flask>=0.12.2
+icalendar>=4.0.0
+pytz>=2017.3
+telepot>=12.5
+tzlocal==1.5.1

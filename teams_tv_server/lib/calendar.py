@@ -1,15 +1,8 @@
-from __future__ import print_function
-import sys
 import json
 from datetime import datetime
-def eprint (*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-try:
-    import pytz
-    import caldav
-except Exception as e:
-    eprint("can't import stuff. Try pip install pytz")
-
+# Here we import local caldav so that we are not dependent on buggy version of the pip installation
+import caldav
+import pytz
 
 
 def connect(user, password, url):
@@ -45,7 +38,7 @@ def get_events(calendars, time_from, time_to):
             end = e.dtend.value
             try:
                 contents = json.loads(e.description.value)
-            except Exception:
+            except Exception as err:
                 contents = {"blocks": [], "data": {}}
             blocks = contents["blocks"]
             data = contents["data"]
@@ -61,6 +54,10 @@ def get_events(calendars, time_from, time_to):
                 "last_modified": last_modified
             })
     return res
+
+
+def get_next_events():
+    raise NotImplementedError("This feature in not yet implemented properly.")
 
 
 def get_now():

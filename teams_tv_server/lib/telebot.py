@@ -6,8 +6,8 @@ try:
 except Exception:
     from Queue import Queue, Empty
 import telepot
-from settings import BOT_TOKEN
 from telepot.loop import MessageLoop
+
 
 class Client(object):
     def __init__(self):
@@ -43,7 +43,8 @@ class Telebot(object):
     def _resume(self, msg):
         self.notify('resume')
 
-    def __init__(self):
+    def __init__(self, token):
+        self.token = token
         self.CMDs = {
             '/start': self._start,
             '/help':  self._help,
@@ -53,8 +54,8 @@ class Telebot(object):
         self.clients = Queue()
 
     def start(self):
-        if BOT_TOKEN:
-            self.bot = telepot.Bot(BOT_TOKEN)
+        if self.token:
+            self.bot = telepot.Bot(self.token)
             MessageLoop(self.bot, self.handle).run_as_thread()
 
     def get(self):
