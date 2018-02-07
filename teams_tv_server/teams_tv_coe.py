@@ -5,16 +5,12 @@ import sys
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-try:
-    import json
-    from flask import Flask, render_template, send_file, jsonify
-    import os
-    from lib import calendar, misc
-    import settings
-    from lib.telebot import Telebot
-except Exception as err:
-    eprint("Error during imports: {0}\n{1}"
-           .format(err, "Pls check dependencies or just run pip install -r requirements.txt"))
+import json
+from flask import Flask, render_template, send_file, jsonify
+import os
+from lib import calendar, misc
+import settings
+from lib.telebot import Telebot
 
 
 app = Flask(__name__)

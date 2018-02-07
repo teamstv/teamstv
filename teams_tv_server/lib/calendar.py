@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 # Here we import local caldav so that we are not dependent on buggy version of the pip installation
-import caldav
+from lib.caldav.davclient import DAVClient
 import pytz
 import re
 
@@ -16,7 +16,7 @@ def increment_dead_kittens():
         f.seek(0)
         f.write(str(dead_kittens))
         f.truncate()
-    print "{0} kittens died".format(dead_kittens)
+    print ("{0} kittens died".format(dead_kittens))
 
 
 def extract_rss_feeds_from_html(description):
@@ -27,10 +27,10 @@ def extract_rss_feeds_from_html(description):
     # There are mixed overlapping quotes and weird tags. We are trying to fix this
     # The only solution I can imagine for it...
     # REGEXPS. Now you folks have problems...
-    print "Tags found in rss description/configurations. attempting to extract links from tags. " \
+    print ("Tags found in rss description/configurations. attempting to extract links from tags. " \
           "\nThis is plain stupid..." \
           "\nDon't do this. A kitten dies every time this happens" \
-          "\nYou know what? I'm counting..."
+          "\nYou know what? I'm counting...")
     increment_dead_kittens()
     # all contents from start of <a> tag to it's close,
     # except if there are many <a> tags, they must delimited with comma
@@ -63,7 +63,7 @@ def connect(user, password, url):
     :return ([calendar]): list of available calendars
     """
     full_url = "https://{0}:{1}@{2}".format(user, password, url)
-    client = caldav.DAVClient(full_url)
+    client = DAVClient(full_url)
     principal = client.principal()
     calendars = principal.calendars()
     return calendars
