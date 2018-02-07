@@ -1,27 +1,29 @@
-import json
+from __future__ import print_function
+import sys
 
-from flask import Flask, render_template, send_file, jsonify
-import os
 
-from lib import calendar, misc
-import settings
-from lib.telebot import Telebot
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+try:
+    import json
+    from flask import Flask, render_template, send_file, jsonify
+    import os
+    from lib import calendar, misc
+    import settings
+    from lib.telebot import Telebot
+except Exception as err:
+    eprint("Error during imports: {0}\n{1}"
+           .format(err, "Pls check dependencies or just run pip install -r requirements.txt"))
+
 
 app = Flask(__name__)
-tb = Telebot()
+tb = Telebot(settings.BOT_TOKEN)
 
-@app.route('/traffic')
-def show_traffic():
-    return render_template("traffic.html")
 
 @app.route('/rss')
 def show_rss():
     return render_template("rss.html")
-
-@app.route('/image')
-def show_image():
-    full_filename = os.path.join(settings.IMG_FOLDER, 'Untitled.png')
-    return render_template("image.html", user_image=full_filename)
 
 
 @app.route('/next')
@@ -29,10 +31,12 @@ def next_event():
     tb.handle({'text':'/next'})
     return jsonify('OK')
 
+
 @app.route('/resume')
 def resume_event():
     tb.handle({'text':'/resume'})
     return jsonify('OK')
+
 
 @app.route("/telebot", methods=['GET'])
 def get_telebot():
@@ -50,33 +54,6 @@ def get_telebot():
     }
     return cmds[tb.get()]()
 
-@app.route("/front_index")
-def test_index():
-    return render_template("index.html")
-
-@app.route("/map.html")
-def get_map():
-    return render_template("map.html")
-
-@app.route("/js/<script>")
-def get_some_js(script):
-    return send_file(os.path.join(settings.STATIC_FOLDER, "js", script), mimetype="application/json")
-
-@app.route("/html/<html>")
-def get_some_html(html):
-    return send_file(os.path.join(settings.STATIC_FOLDER, "html", html), mimetype="text/html")
-
-
-@app.route("/css/<style>")
-def get_some_css(style):
-    return send_file(os.path.join(settings.STATIC_FOLDER, "css", style), mimetype="text/css")
-
-@app.route("/js/<dir>/<file>")
-def get_nested_js(dir, file):
-    img_path = os.path.join(settings.STATIC_FOLDER, "js")
-    folder_path = os.path.join(img_path, dir)
-    filename = os.path.join(folder_path, file)
-    return send_file(filename, mimetype='application/json')
 
 @app.route("/test_json")
 def test_json():
@@ -90,6 +67,31 @@ def get_current_events():
     calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
     data = calendar.get_current_events(calendars)
     return json.dumps(data, cls=misc.DateTimeEncoder)
+
+
+# --- WEB CONTENT ---
+@app.route("/")
+@app.route("/index")
+def test_index():
+    return render_template("index.html")
+
+
+@app.route("/js/<script>")
+def get_some_js(script):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "js", script), mimetype="application/json")
+
+
+@app.route("/css/<style>")
+def get_some_css(style):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "css", style), mimetype="text/css")
+
+
+@app.route("/js/<dir>/<file>")
+def get_nested_js(dir, file):
+    img_path = os.path.join(settings.STATIC_FOLDER, "js")
+    folder_path = os.path.join(img_path, dir)
+    filename = os.path.join(folder_path, file)
+    return send_file(filename, mimetype='application/json')
 
 
 @app.route('/images/<folder>')
@@ -107,6 +109,8 @@ def get_image(folder, file):
     filename = os.path.join(folder_path, file)
     return send_file(filename, mimetype='image/gif')
 
+# --- WEB CONTENT END ---
+
 if __name__ == '__main__':
-    # tb.start()
+    tb.start()
     app.run(threaded=True, host='0.0.0.0')
