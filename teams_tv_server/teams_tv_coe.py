@@ -21,6 +21,9 @@ tb = Telebot(settings.BOT_TOKEN)
 def show_rss():
     return render_template("rss.html")
 
+@app.route('/clock')
+def show_clock():
+    return render_template("clock.html")
 
 @app.route('/next')
 def next_event():

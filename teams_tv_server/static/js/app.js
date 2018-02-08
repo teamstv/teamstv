@@ -92,46 +92,13 @@ $(function() {
         }
     }
 
+
     function placeClock(id, options) {
-        var wrapper;
         var options = options || {};
-        var cid = "clock_" + id;
+        var cid = "clock_"+id;
 
-        $("#" + id).html("");
-        $("#" + id).append("<div id='" + cid + "' style='height:100%; width:100%;'></div>");
-
-        var weather_and_clock_content = '' +
-            '<a class="weatherwidget-io" href="https://forecast7.com/en/59d9330d34/saint-petersburg/" data-label_1="SAINT PETERSBURG" data-label_2="WEATHER" data-mode="Current" data-theme="original"></a>' +
-            '<div class="clock-wrapper">' +
-            '    <div id="clock">' +
-            '        <p class="date">{{ date }}</p>' +
-            '           <p class="time">{{ time }}</p>' +
-
-            '           <div class="clock-left-text">' +
-            '               <div class="text">@TeamsTV_bot</div>' +
-            '               <div class="text-bot">#PiterDellEmc</div>' +
-            '           </div>' +
-            '           <div class="clock-right-text">' +
-            '               <div class="QR_code"></div>' +
-            '           </div>' +
-            '       </div>' +
-            '   </div>'
-
-        $("#" + cid).append(weather_and_clock_content);
-
-        function initWeatherWidget(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-
-            if (!d.getElementById(id)) {
-                js = d.createElement(s);
-                js.id = id;
-                js.src = "https://weatherwidget.io/js/widget.min.js";
-                fjs.parentNode.insertBefore(js, fjs);
-            }
-        }
-
-        clockInit();
-        initWeatherWidget(document, "script", "weatherwidget-io-js");
+        $("#"+id).html("");
+        $("#"+id).append("<iframe id='"+cid+"' src='/clock'></iframe>"); // It was decided to leave the clock in IFRAME
 
         setTimeout(function() {
             // THIS FIXES CLOCK BEING KNOCKED DOWN
@@ -140,7 +107,6 @@ $(function() {
                 display: "inline"
             });
         }, 50);
-
     }
 
     function placeRss(id, options) {
