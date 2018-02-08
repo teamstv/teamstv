@@ -130,27 +130,36 @@ $(function() {
         if (type === "map") {
             placeMap(id, data);
         }
+
         if (type === "text" || type === "html") {
             $("#" + id).html(data);
         }
-        if (type === "carousel") {
+
+        if (type === "carousel" || type === "carousel_img") {
             imgs = []
             $.ajax({
                 dataType: "json",
                 url: data.folder,
                 cache: false,
                 success: function(res) {
-                    imgs = res
-                    placeCarousel(id, imgs, data.interval);
+                    imgs = res;
+                    placeImgCarousel(id, imgs, data.interval);
                 }
             });
         }
+
+        if (type === "carousel_text" || type === "carousel_html") {
+            placeHtmlCarousel(id, data.pages, data.interval);
+        }
+
         if (type === "clock") {
             placeClock(id, data);
         }
+
         if (type === "news") {
             placeNews(id, data);
         }
+
         if (type === "logo") {
             placeLogo(id);
         }
@@ -176,7 +185,7 @@ $(function() {
             interval = setInterval(function () {
                 myMap.destroy();
                 init();
-            }, 60000);
+            }, 240000); // traffic provider usually updates the map events every 4 minutes
         }
 
         function init() {
@@ -196,12 +205,10 @@ $(function() {
             trafficControl.getProvider('traffic#actual').state.set('infoLayerShown', true);
 
             ticker();
-
-            console.log('Initializing map', mid, options);
         }
     }
 
-    function placeCarousel(id, pages, interval) {
+    function placeImgCarousel(id, pages, interval) {
         var cid = "carousel_" + id;
         var wrapper = '<div class="owl-carousel owl-theme" id="' + cid + '"></div>';
 
@@ -211,6 +218,31 @@ $(function() {
 
             $.each(data, function(index, page) {
                 $("#" + cid).append("<div><img src='" + page + "'/></div>");
+            });
+
+            $("#" + cid).owlCarousel({
+                items: 1,
+                loop: true,
+                nav: false,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: interval || 3000
+            });
+        }
+
+        initCarousel(pages, interval);
+    }
+
+    function placeHtmlCarousel(id, pages, interval) {
+        var cid = "carousel_" + id;
+        var wrapper = '<div class="owl-carousel owl-theme" id="' + cid + '"></div>';
+
+        $("#" + id).html(wrapper);
+
+        function initCarousel(data, interval) {
+
+            $.each(data, function(index, page) {
+                $("#" + cid).append("<div><center>" + page + "</center></div>");
             });
 
             $("#" + cid).owlCarousel({
