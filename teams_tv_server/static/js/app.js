@@ -170,6 +170,9 @@ $(function() {
         ymaps.ready(init);
 
         function ticker() {
+            if (interval) {
+                clearInterval(interval);
+            }
             interval = setInterval(function () {
                 myMap.destroy();
                 init();
