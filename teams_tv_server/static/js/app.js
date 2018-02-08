@@ -95,10 +95,10 @@ $(function() {
 
     function placeClock(id, options) {
         var options = options || {};
-        var cid = "clock_"+id;
+        var cid = "clock_" + id;
 
-        $("#"+id).html("");
-        $("#"+id).append("<iframe id='"+cid+"' src='/clock'></iframe>"); // It was decided to leave the clock in IFRAME
+        $("#" + id).html("");
+        $("#" + id).append("<iframe id='" + cid + "' src='/clock'></iframe>"); // It was decided to leave the clock in IFRAME
 
         setTimeout(function() {
             // THIS FIXES CLOCK BEING KNOCKED DOWN
@@ -109,24 +109,13 @@ $(function() {
         }, 50);
     }
 
-    function placeRss(id, options) {
-        var wrapper;
-        var options = options || {};
-        var cid = "rss_" + id;
+    function placeNews(id, options) {
+        options = options || {};
 
-        console.log('rss', options);
+        var cid = "news_"+id;
 
-        var interval = 5000;
-
-        var params = {
-            interval: options.interval || interval,
-            feed: ""
-        }
-        if (options.feeds && options.feeds.length) {
-            params.feed = options.feeds[0];
-        }
-
-        $("#" + id).html("<iframe id='" + cid + "' src='/rss?" + $.param(params) + "'></iframe>");
+        $("#"+id).html("");
+        $("#"+id).append("<iframe id='" + cid + "' src='/news?" + $.param(options) + "'></iframe>"); // Let it live in IFRAME
     }
 
     function placeLogo(id, option) {
@@ -136,7 +125,7 @@ $(function() {
     }
 
     function parseBlock(id, type, data) {
-        console.log('parseBlock', id, type, data);
+        console.log('Parsing block', id, type, data);
 
         if (type === "map") {
             placeMap(id, data);
@@ -159,8 +148,8 @@ $(function() {
         if (type === "clock") {
             placeClock(id, data);
         }
-        if (type === "rss") {
-            placeRss(id, data);
+        if (type === "news") {
+            placeNews(id, data);
         }
         if (type === "logo") {
             placeLogo(id);
@@ -174,8 +163,6 @@ $(function() {
         var options = options || {};
 
         $("#" + id).html(wrapper);
-
-        console.log('initMap', id, options);
 
         ymaps.ready(init);
 
@@ -195,7 +182,7 @@ $(function() {
             myMap.controls.add(trafficControl);
             trafficControl.getProvider('traffic#actual').state.set('infoLayerShown', true);
 
-            console.log('init map', mid, options);
+            console.log('Initializing map', mid, options);
         }
     }
 
@@ -219,9 +206,6 @@ $(function() {
                 autoplay: true,
                 autoplayTimeout: interval || 3000
             });
-
-            console.log('placeCarousel', id, pages, interval);
-
         }
 
         initCarousel(pages, interval);
@@ -254,7 +238,7 @@ $(function() {
             gridster.add_widget('<li id="' + element.uid + '" type="' + element.type + '"></li>', element.size_x, element.size_y, element.col, element.row);
             parseBlock(element.uid, element.type, element.data);
         });
-        console.log('build grid', elements, temp_elements);
+        console.log('Built grid', temp_elements);
     }
 
     function getData(url, func) {
@@ -269,7 +253,7 @@ $(function() {
             url: url,
             cache: false,
             success: function(data) {
-                console.log('Get data', data);
+                console.log('Got data', data);
 
                 $.each(data, function(i, block) {
                     var blockLayout = getBlockLayout(block.blocks.join(""));
@@ -295,16 +279,12 @@ $(function() {
                     eq = false;
                 } else {
                     for (var t = 0; t < temp.length; t++) {
-                        tids = tids + temp[t].modified; // temp[t].uid +
+                        tids = tids + temp[t].modified;
                     }
 
                     for (var s = 0; s < serialization.length; s++) {
-                        sids = sids + serialization[s].modified; // serialization[s].uid +
+                        sids = sids + serialization[s].modified;
                     }
-
-                    console.log(tids);
-                    console.log(sids);
-                    console.log(tids != sids);
 
                     if (tids != sids) {
                         eq = false;
@@ -317,7 +297,6 @@ $(function() {
                     else firstLoad = false;
                     serialization = temp;
                     buildGrid(serialization, !firstLoad);
-                    console.log("build data", serialization);
                 }
 
                 // Used for Telebot
@@ -325,8 +304,8 @@ $(function() {
                     func()
                 }
             },
-            error: function() {
-                console.log("Request Error");
+            error: function(error) {
+                console.log("Request Error", error);
             }
         });
     }
@@ -334,7 +313,7 @@ $(function() {
     getData("events/current");
     var interval = setInterval(function() {
         getData("events/current");
-    }, 30000);
+    }, 60000);
 
     function getTelebot() {
         getData("telebot", getTelebot);

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.easing.min.js"></script>
+    <script src="../js/moment.js"></script>
+    <script src="../js/qrcode.js"></script>
+    <script src="../js/utils.js"></script>
+
+    <style type="text/css">
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        a, a:hover, a:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        #title {
+            width: 100%;
+            margin: 0px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #text {
+            width: 100%;
+            height: 100%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        #img_container {
+            height: 100%;
+            width: 100%;
+        }
+
+        #img {
+            width: 100%;
+        }
+
+        #date {
+            font-weight: bolder;
+        }
+
+        #author {
+            font-weight: bolder;
+        }
+
+        #powered_by {
+            font-weight: normal;
+        }
+
+        body {
+            background-image: url("../static/img/newspaper.jpg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="title_container">
+                    <h2 id="title"></h2>
+                </div>                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-2">
+                <div id="img_container">
+                    <img id="img" />
+                    <div id="qr" style="margin-top: 10px; margin-left: 0; margin-right: 10%;"></div>
+                </div>
+            </div>
+            <div class="col-xs-10" style="padding: 0px;">
+                <div id="text_container">
+                    <h4 id="text"></h4>
+                </div>
+            </div>
+        </div>
+
+        <span id="date" style="position: absolute; bottom: 40px; left: 10%;"></span>
+
+        <span id="author" style="position: absolute; bottom: 40px; right: 10%;"></span>
+
+        <span style="position: absolute; bottom: 15px; left: 25%; right: 25%; text-align: center;">
+            <a href="https://newsapi.org/">Powered by News API</a>
+        </span>
+        
+    </div>
+
+    <script type="text/javascript">
+
+        var apiKey = "652649e023f34ecab97e82b9f26c861c"; // do not change the key
+        
+        var newsApiUrl = "https://newsapi.org/v2/top-headlines";
+
+        var newsUrl = newsApiUrl;
+
+        var newsRequest;
+
+        var id = 0;
+
+        var articles = [];
+
+        var interval;
+
+        var qrcode;
+
+        var timeout = 15000;
+        var animationTimeout = 500;
+
+        var momentCountry = "ru";
+
+        var showQRCode = true;
+
+        var defaultParams = {
+            apiKey: apiKey, // do not change this line
+            country: "ru",
+            category: "general"
+        };
+
+        var cachedQRCodes = [];
+
+        function show(id) {
+            $( "body" ).fadeOut( animationTimeout, function() {
+
+                var animationTimeoutIncrement = 0;
+
+                if (articles[id].urlToImage) {
+                    $("#img").attr("src", articles[id].urlToImage);
+                    $("#img").show();
+                } else {
+                    $("#img").hide();
+                }
+
+                if (articles[id].url && showQRCode) {
+                    getQRCodeForUrl(articles[id].url);
+                }
+
+                $("#title").html(articles[id].title || "");
+                $("#text").html(articles[id].description || "");
+
+                if (articles[id].publishedAt) {
+                    $("#date").html(moment(articles[id].publishedAt).format("LLL"));
+                }
+
+                if (articles[id].author) {
+                    $("#author").html(articles[id].author);
+                } else if (articles[id].source && articles[id].source.name) {
+                    $("#author").html(articles[id].source.name);
+                }
+
+                $( "body" ).fadeIn( animationTimeout + animationTimeoutIncrement );
+            });
+        };
+
+        function getShortUrlForLongUrl (url, callback) {
+            $.ajax({
+                type: "POST",
+                url: "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBkTVmU1OMCD4O53w-zzfBb-0LISTlgTi8",
+                data: JSON.stringify({"longUrl": url}),
+                success: callback,
+                dataType: "json",
+                contentType: "application/json"
+            });
+        }
+
+        function getQRCodeForUrl (longUrl) {
+
+            getShortUrlForLongUrl(longUrl, function (data) {
+                var url = data.id;
+
+                if (qrcode === undefined) {
+                    qrcode = new QRCode(document.getElementById("qr"), {
+                        text: url,
+                        width: 75,
+                        height: 75,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.L
+                    });
+                } else {
+                    qrcode.clear();
+                    qrcode.makeCode(url);
+                }
+            });
+        }
+
+        function showAll() {
+            if (interval === undefined) {
+                show(0);
+            }
+            interval = setInterval(function () {
+                id++;
+                if (id === articles.length) id = 0;
+                show(id);
+            }, timeout);
+        }
+
+        function initNews(params) {
+            params = params || {};
+
+            $("#img").hide();
+
+            var newParams = {
+                apiKey: defaultParams.apiKey // do not change this line
+            };
+
+            if (params.country || defaultParams.country) {
+                newParams["country"] = params.country || defaultParams.country;
+                if (moment.localeData(newParams["country"])) {
+                    momentCountry = newParams["country"];
+                }
+            }
+
+            if (params["locale"]) {
+                if (moment.localeData(params["locale"])) {
+                    momentCountry = params["locale"];
+                }
+            }
+
+            moment.locale(momentCountry);
+
+            if (params.category || defaultParams.category) {
+                newParams["category"] = params.category || defaultParams.category;
+            }
+
+            if (params.sources || defaultParams.sources) {
+                newParams["sources"] = params.sources || defaultParams.sources;
+            }
+
+            if (params.q || defaultParams.q) {
+                newParams["q"] = params.q || defaultParams.q;
+            }
+
+            if (params.pageSize || defaultParams.pageSize) {
+                newParams["pageSize"] = params.pageSize || defaultParams.pageSize;
+            }
+
+            var newParamsUrl = newsApiUrl + "?" + $.param(newParams);
+
+            newsRequest = new Request(newParamsUrl);
+
+            fetch(newsRequest)
+                .then(function(response) {
+                    response.json().then(function (data) {
+                        if (data.articles && data.articles.length) {
+                            articles = data.articles;
+                            showAll();
+                        }      
+                    });
+                });
+        }
+
+        var urlParams = {};
+
+        urlParams = createObjFromURI();
+
+        if (urlParams) {
+            initNews(urlParams);
+        } else {
+            initNews();
+        }
+        
+    </script>
+
+</body>
+</html>

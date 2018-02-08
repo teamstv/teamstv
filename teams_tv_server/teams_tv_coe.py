@@ -17,9 +17,9 @@ app = Flask(__name__)
 tb = Telebot(settings.BOT_TOKEN)
 
 
-@app.route('/rss')
-def show_rss():
-    return render_template("rss.html")
+@app.route('/news')
+def show_news():
+    return render_template("news.html")
 
 @app.route('/clock')
 def show_clock():
