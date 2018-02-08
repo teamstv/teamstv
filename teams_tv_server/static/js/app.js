@@ -159,6 +159,9 @@ $(function() {
     function placeMap(id, options) {
         var mid = "map_" + id;
         var wrapper = '<div id="' + mid + '" style="width: 100%; height: 100%"></div>';
+        var interval;
+
+        var myMap;
 
         var options = options || {};
 
@@ -166,8 +169,15 @@ $(function() {
 
         ymaps.ready(init);
 
+        function ticker() {
+            interval = setInterval(function () {
+                myMap.destroy();
+                init();
+            }, 60000);
+        }
+
         function init() {
-            var myMap = new ymaps.Map(mid, {
+            myMap = new ymaps.Map(mid, {
                 center: options.center || center[59.913, 30.316564],
                 zoom: options.zoom || 12,
                 controls: []
@@ -181,6 +191,8 @@ $(function() {
             });
             myMap.controls.add(trafficControl);
             trafficControl.getProvider('traffic#actual').state.set('infoLayerShown', true);
+
+            ticker();
 
             console.log('Initializing map', mid, options);
         }
