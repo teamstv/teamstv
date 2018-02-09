@@ -185,7 +185,7 @@ $(function() {
             refreshMapInterval = setInterval(function () {
                 myMap.destroy();
                 init();
-            }, 240000); // traffic provider usually updates the map events every 4 minutes
+            }, (5 * 60 * 1000)); // traffic provider does not update the map events more often
         }
 
         function init() {
@@ -217,7 +217,7 @@ $(function() {
         function initCarousel(data, interval) {
 
             $.each(data, function(index, page) {
-                $("#" + cid).append("<div><img src='" + page + "'/></div>");
+                $("#" + cid).append("<div style='height: 100%;'><img style='height: 100%; margin: auto;' src='" + page + "'/></div>");
             });
 
             $("#" + cid).owlCarousel({
@@ -226,7 +226,7 @@ $(function() {
                 nav: false,
                 dots: false,
                 autoplay: true,
-                autoplayTimeout: interval || 3000
+                autoplayTimeout: interval || (10 * 1000)
             });
         }
 
@@ -360,7 +360,7 @@ $(function() {
     getData("events/current");
     var getDataInterval = setInterval(function() {
         getData("events/current");
-    }, 60000);
+    }, (60 * 1000));
 
     function getTelebot() {
         getData("telebot", getTelebot);
