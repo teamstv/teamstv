@@ -87,13 +87,13 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-2">
+            <div class="col-xs-2" id="img_column">
                 <div id="img_container">
                     <img id="img" />
                     <div id="qr" style="margin-top: 10px; margin-left: 0; margin-right: 10%;"></div>
                 </div>
             </div>
-            <div class="col-xs-10" style="padding: 0px;">
+            <div class="col-xs-10" id="text_column" style="padding: 0px;">
                 <div id="text_container">
                     <h4 id="text"></h4>
                 </div>
@@ -133,7 +133,11 @@
 
         var momentCountry = "ru";
 
-        var showQRCode = true;
+        var showQRCode = false;
+
+        var showImage = false;
+
+        var linksCache = []; // TODO
 
         var defaultParams = {
             apiKey: apiKey, // do not change this line
@@ -148,7 +152,7 @@
 
                 var animationTimeoutIncrement = 0;
 
-                if (articles[id].urlToImage) {
+                if (articles[id].urlToImage && showImage) {
                     $("#img").attr("src", articles[id].urlToImage);
                     $("#img").show();
                 } else {
@@ -157,6 +161,13 @@
 
                 if (articles[id].url && showQRCode) {
                     getQRCodeForUrl(articles[id].url);
+                }
+
+                if (!showImage && !showQRCode) {
+                    $("#img_column").hide();
+                    $("#text_column").removeClass("col-xs-10");
+                    $("#text_column").addClass("col-xs-12");
+                    $("#text_column").css("padding-left", "15px");
                 }
 
                 $("#title").html(articles[id].title || "");
