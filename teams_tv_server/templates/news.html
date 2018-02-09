@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>News</title>
+    <meta charset="UTF-8">
+    <title></title>
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
 
@@ -123,7 +124,7 @@
 
         var articles = [];
 
-        var interval;
+        var rotateNewsInterval;
 
         var qrcode;
 
@@ -208,10 +209,12 @@
         }
 
         function showAll() {
-            if (interval === undefined) {
+            if (rotateNewsInterval === undefined) {
                 show(0);
+            } else {
+                clearInterval(rotateNewsInterval);
             }
-            interval = setInterval(function () {
+            rotateNewsInterval = setInterval(function () {
                 id++;
                 if (id === articles.length) id = 0;
                 show(id);

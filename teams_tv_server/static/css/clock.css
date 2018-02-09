@@ -1,57 +1,55 @@
 
-body{
-    padding:0px;
-    margin:0px;
-    background-color:#111;
-   /* background-image: url('http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/office.png');*/
+body {
+    padding: 0px;
+    margin: 0px;
+    background-color: #111;
     font-family: 'Oswald', sans-serif;
 }
 
-
-.clock-wrap{
-    width:410px;
+.clock-wrap {
+    width: 410px;
 
     margin: 5px auto 0px auto;
-    padding:15px;
+    padding: 15px;
 
-    background-color:rgba(0,0,0,.4);
+    background-color: rgba(0,0,0,.4);
     border-radius: 12px;
-    box-shadow:inset 0px 2px 15px rgba(0,0,0,.6);
+    box-shadow: inset 0px 2px 15px rgba(0,0,0,.6);
 }
 
 .min-wrap,
-.hour-wrap{
-    width:200px;
-    height:200px;
+.hour-wrap {
+    width: 200px;
+    height: 200px;
 
     display: inline-block;
     position: relative;
 }
 
-.min-wrap{
+.min-wrap {
     margin-left: 5px;
 }
 
 
 .digit-top,
-.digit-bottom{
-    width:200px;
-    height:98px;
+.digit-bottom {
+    width: 200px;
+    height: 98px;
     position: absolute;
 }
 
-.clock-wrap .front, .clock-wrap .back{
+.clock-wrap .front, .clock-wrap .back {
     width: 200px;
     height: 98px;
     position: absolute;
     overflow: hidden;
 
-    color:#fff;
+    color: #fff;
     text-align: center;
     font-size: 150px;
 
-    text-shadow:1px 1px 1px #000;
-    box-shadow:0px 1px 5px rgba(0,0,0,.6);
+    text-shadow: 1px 1px 1px #000;
+    box-shadow: 0px 1px 5px rgba(0,0,0,.6);
 
     transition: transform 800ms, z-index 800ms;
     -moz-transition: -moz-transform 800ms, z-index 800ms;
@@ -69,7 +67,7 @@ body{
     perspective: 200px;
 }
 
-.clock-wrap .front{
+.clock-wrap .front {
     z-index: 30;
 
     border-radius: 5px 5px 0px 0px;
@@ -86,9 +84,9 @@ body{
     backface-visibility: hidden;
 }
 
-.clock-wrap .back{
+.clock-wrap .back {
     z-index: 20;
-    top:100px;
+    top: 100px;
 
     border-radius: 0px 0px 5px 5px;
 
@@ -103,33 +101,33 @@ body{
     -o-transform: rotateX(180deg);
     backface-visibility: hidden;
 
-    line-height:5px;
+    line-height: 5px;
 }
 
 
-.digit-top{
-    line-height:200px;
-    border-radius:8px 8px 2px 2px;
-    top:4px;
+.digit-top {
+    line-height: 200px;
+    border-radius: 8px 8px 2px 2px;
+    top: 4px;
     z-index: 10;
 }
 
-.digit-bottom{
+.digit-bottom {
     top: 104px;
     background-color: #222;
-    line-height:5px;
-    border-radius:2px 2px 8px 8px;
+    line-height: 5px;
+    border-radius: 2px 2px 8px 8px;
     z-index: 5;
 }
 
-.digit-bottom .front{
+.digit-bottom .front {
     border-radius: 0px 0px 5px 5px;
 }
 
-.meridiem{
+.meridiem {
     font-size: 24px;
     position: absolute;
-    left:15px;
+    left: 15px;
     top: 30px;
 }
 
@@ -138,4 +136,83 @@ body{
     font-size: 35px;
     margin-top: 30px;
     text-align: center;
+}
+
+/* from newClock.css */
+
+.clock-wrapper {
+    background: #0f3854;
+    background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
+    background-size: 100%;
+    width: 100%;
+    height: 100%;
+}
+
+#clock p {
+    margin: 25px;
+}
+
+#clock {
+    margin-top: 35px;
+    font-family: 'Share Tech Mono', monospace;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #daf6ff;
+    text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
+}
+
+#clock .time {
+    letter-spacing: 0.05em;
+    font-size: 60px;
+    padding: 5px 0;
+}
+
+#clock  .date {
+    letter-spacing: 0.1em;
+    font-size: 24px;
+}
+
+#clock .text {
+    letter-spacing: 0.1em;
+    font-size: 20px;
+    padding: 5px 0 0;
+    text-align: left;
+    width: 115px;
+}
+
+#clock .text-bot {
+    text-align: left;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.clock-right-text {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    vertical-align: top;
+    margin-top: 13px;
+}
+
+.QR_code {
+    width: 100px;
+    height: 100px;
+    background: url(../static/img/qrClock.png) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.clock-left-text {
+    margin-top: 40px;
+    width: 160px;
+    display: inline-block;
+}
+
+a.weatherwidget-io {
+    height: 96px !important;
 }

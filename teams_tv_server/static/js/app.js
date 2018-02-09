@@ -168,7 +168,7 @@ $(function() {
     function placeMap(id, options) {
         var mid = "map_" + id;
         var wrapper = '<div id="' + mid + '" style="width: 100%; height: 100%"></div>';
-        var interval;
+        var refreshMapInterval;
 
         var myMap;
 
@@ -179,10 +179,10 @@ $(function() {
         ymaps.ready(init);
 
         function ticker() {
-            if (interval) {
-                clearInterval(interval);
+            if (refreshMapInterval) {
+                clearInterval(refreshMapInterval);
             }
-            interval = setInterval(function () {
+            refreshMapInterval = setInterval(function () {
                 myMap.destroy();
                 init();
             }, 240000); // traffic provider usually updates the map events every 4 minutes
@@ -358,7 +358,7 @@ $(function() {
     }
 
     getData("events/current");
-    var interval = setInterval(function() {
+    var getDataInterval = setInterval(function() {
         getData("events/current");
     }, 60000);
 
