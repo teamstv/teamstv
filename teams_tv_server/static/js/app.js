@@ -124,6 +124,12 @@ $(function() {
         }
     }
 
+    function placeMedals(id) {
+
+        $("#"+id).html("<IFRAME src='https://multimedia.scmp.com/widgets/sport/winter-olympics/embed-medal.html'></IFRAME");
+
+    };
+
     function parseBlock(id, type, data) {
         if (!id || !type) return;
 
@@ -167,6 +173,10 @@ $(function() {
         if (type === "logo") {
             placeLogo(id);
         }
+
+        if (type === "medals") {
+            placeMedals(id);
+        };
     }
 
     function placeMap(id, options) {
