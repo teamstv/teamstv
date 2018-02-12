@@ -26,9 +26,9 @@ $(function() {
             case "2":
                 return {
                     col: 1,
-                    row: 1,
+                    row: 2,
                     size_x: 2,
-                    size_y: 2
+                    size_y: 1
                 };
                 break;
             case "3":
@@ -125,6 +125,10 @@ $(function() {
     }
 
     function parseBlock(id, type, data) {
+        if (!id || !type) return;
+
+        type = type.toLowerCase();
+
         console.log('Parsing block', id, type, data);
 
         if (type === "map") {

@@ -52,6 +52,8 @@ li iframe {
 }
 
 .owl-carousel .owl-item img {
+  max-width: 100% !important;
+  max-height: 100% !important;
   width: auto !important;
   height: 100% !important;
 }
