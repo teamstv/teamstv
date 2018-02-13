@@ -239,6 +239,15 @@ $(function() {
         initCarousel(pages, interval);
     }
 
+    function placeFinanceCurrencies(id, options) {
+        options = options || {};
+
+        var cid = "fin_curr_"+id;
+
+        $("#"+id).html("");
+        $("#"+id).append("<iframe id='" + cid + "' src='/fin_curr?" + $.param(options) + "'></iframe>"); // Requires IFRAME
+    }
+
     function parseBlock(id, type, data) {
         if (!id || !type) return;
 
@@ -286,6 +295,12 @@ $(function() {
         if (type === "medals") {
             placeMedals(id);
         };
+
+        if (type === "fin_curr") {
+            placeFinanceCurrencies(id, data);
+        }
+
+        $(".gridster").find("ul").css("background-image", "none");
     }
 
     function clearGrid(cleanup) {
