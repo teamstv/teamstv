@@ -16,6 +16,9 @@ from lib.telebot import Telebot
 app = Flask(__name__)
 tb = Telebot(settings.BOT_TOKEN)
 
+@app.route('/fin_curr')
+def show_fin_curr():
+    return render_template("fin_curr.html")
 
 @app.route('/news')
 def show_news():

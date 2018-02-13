@@ -16,7 +16,8 @@ html, body {
 
 .gridster ul {
   background-color: white !important;
-  background: url(../static/img/logo.jpg) no-repeat;
+  background-image: url(../static/img/logo.jpg);
+  background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
