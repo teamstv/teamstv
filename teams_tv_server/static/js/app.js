@@ -125,59 +125,26 @@ $(function() {
     }
 
     function placeMedals(id) {
+        var updateMedalsInterval;
 
-        $("#"+id).html("<IFRAME src='https://multimedia.scmp.com/widgets/sport/winter-olympics/embed-medal.html'></IFRAME");
+        function tickerMedals() {
+            if (updateMedalsInterval) {
+                clearInterval(updateMedalsInterval);
+            }
+            updateMedalsInterval = setInterval(function () {
+                showMedals();
+            }, (15 * 60 * 1000));
+        }
 
+        function showMedals() {
+            $("#"+id).html("");
+            $("#"+id).html("<IFRAME src='https://multimedia.scmp.com/widgets/sport/winter-olympics/embed-medal.html'></IFRAME");
+
+            tickerMedals();
+        }
+
+        showMedals();
     };
-
-    function parseBlock(id, type, data) {
-        if (!id || !type) return;
-
-        type = type.toLowerCase();
-
-        console.log('Parsing block', id, type, data);
-
-        if (type === "map") {
-            placeMap(id, data);
-        }
-
-        if (type === "text" || type === "html") {
-            $("#" + id).html(data);
-        }
-
-        if (type === "carousel" || type === "carousel_img") {
-            imgs = []
-            $.ajax({
-                dataType: "json",
-                url: data.folder,
-                cache: false,
-                success: function(res) {
-                    imgs = res;
-                    placeImgCarousel(id, imgs, data.interval);
-                }
-            });
-        }
-
-        if (type === "carousel_text" || type === "carousel_html") {
-            placeHtmlCarousel(id, data.pages, data.interval);
-        }
-
-        if (type === "clock") {
-            placeClock(id, data);
-        }
-
-        if (type === "news") {
-            placeNews(id, data);
-        }
-
-        if (type === "logo") {
-            placeLogo(id);
-        }
-
-        if (type === "medals") {
-            placeMedals(id);
-        };
-    }
 
     function placeMap(id, options) {
         var mid = "map_" + id;
@@ -192,7 +159,7 @@ $(function() {
 
         ymaps.ready(init);
 
-        function ticker() {
+        function tickerMap() {
             if (refreshMapInterval) {
                 clearInterval(refreshMapInterval);
             }
@@ -218,7 +185,7 @@ $(function() {
             myMap.controls.add(trafficControl);
             trafficControl.getProvider('traffic#actual').state.set('infoLayerShown', true);
 
-            ticker();
+            tickerMap();
         }
     }
 
@@ -270,6 +237,55 @@ $(function() {
         }
 
         initCarousel(pages, interval);
+    }
+
+    function parseBlock(id, type, data) {
+        if (!id || !type) return;
+
+        type = type.toLowerCase();
+
+        console.log('Parsing block', id, type, data);
+
+        if (type === "map") {
+            placeMap(id, data);
+        }
+
+        if (type === "text" || type === "html") {
+            $("#" + id).html(data);
+        }
+
+        if (type === "carousel" || type === "carousel_img") {
+            imgs = []
+            $.ajax({
+                dataType: "json",
+                url: data.folder,
+                cache: false,
+                success: function(res) {
+                    imgs = res;
+                    placeImgCarousel(id, imgs, data.interval);
+                }
+            });
+        }
+
+        if (type === "carousel_text" || type === "carousel_html") {
+            placeHtmlCarousel(id, data.pages, data.interval);
+        }
+
+        if (type === "clock") {
+            placeClock(id, data);
+        }
+
+        if (type === "news") {
+            placeNews(id, data);
+        }
+
+        if (type === "logo") {
+            placeLogo(id);
+        }
+
+        if (type === "medals") {
+            placeMedals(id);
+        };
     }
 
     function clearGrid(cleanup) {
