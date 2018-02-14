@@ -87,6 +87,9 @@ def get_some_js(script):
 def get_some_css(style):
     return send_file(os.path.join(settings.STATIC_FOLDER, "css", style), mimetype="text/css")
 
+@app.route("/html/<html>")
+def get_some_html(html):
+    return send_file(os.path.join(settings.STATIC_FOLDER, "html", html), mimetype="text/html")
 
 @app.route("/js/<dir>/<file>")
 def get_nested_js(dir, file):
@@ -102,7 +105,6 @@ def get_image_list(folder):
     folder_path = os.path.join(img_path, folder)
     filelist = [file for file in os.listdir(folder_path) if file.endswith(".png") or file.endswith(".jpg")]
     return json.dumps(["images/"+folder+"/"+file for file in filelist])
-
 
 @app.route("/images/<folder>/<file>")
 def get_image(folder, file):

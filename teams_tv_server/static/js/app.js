@@ -118,6 +118,18 @@ $(function() {
         $("#"+id).append("<iframe id='" + cid + "' src='/news?" + $.param(options) + "'></iframe>"); // Let it live in IFRAME
     }
 
+    function placeHtml(id, options) {
+        options = options || {};
+
+        $.ajax({
+            url: "html/"+options.file,
+            cache: false,
+            success: function(content) {
+                $("#"+id).html(content);
+            }
+        });
+    }
+
     function placeLogo(id, option) {
         if (options.src) {
             $("#" + id).html("<img src='" + options.src + "' />");
@@ -126,6 +138,7 @@ $(function() {
 
     function placeMedals(id) {
         var updateMedalsInterval;
+        var RussianMedals = "";
 
         function tickerMedals() {
             if (updateMedalsInterval) {
@@ -140,8 +153,21 @@ $(function() {
             $("#"+id).html("");
             $("#"+id).html("<IFRAME src='https://multimedia.scmp.com/widgets/sport/winter-olympics/embed-medal.html'></IFRAME");
 
+            $("#"+id).find(".link").each(function() {
+                $(this).remove();
+            });
+
+            //getRussianMedals();
+
             tickerMedals();
         }
+
+        // function getRussianMedals() {
+        //     $("#"+id).append("<IFRAME id='hidden_"+id+"' src='http://www.scmp.com/sport/other-sport/article/2131694/medal-count-pyeongchang-2018-winter-olympic-games' style='display: none;'></IFRAME>");
+        //     $("#hidden_"+id).find(".table").each(function () {
+        //         console.log('tr', $(this).find("tr"));
+        //     });
+        // }
 
         showMedals();
     };
@@ -259,8 +285,12 @@ $(function() {
             placeMap(id, data);
         }
 
-        if (type === "text" || type === "html") {
+        if (type === "text") {
             $("#" + id).html(data);
+        }
+
+        if (type === "html") {
+            placeHtml(id, data);
         }
 
         if (type === "carousel" || type === "carousel_img") {
