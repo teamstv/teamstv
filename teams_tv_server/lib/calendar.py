@@ -4,7 +4,8 @@ from datetime import datetime
 from lib.caldav.davclient import DAVClient
 import pytz
 import re
-
+import requests
+from dateutil import parser
 
 def increment_dead_kittens():
     with open("dead_kittens", "r+") as f:
@@ -114,13 +115,29 @@ def get_next_events():
     raise NotImplementedError("This feature in not yet implemented properly.")
 
 
-def get_now():
-    return datetime.now(pytz.utc)
+def get_now(time_source):
+    """
+    :param time_source (str):LOCAL or url to get time from
+    :return:
+    """
+    if time_source == "LOCAL":
+        return datetime.now(pytz.utc)
+    else:
+        try:
+            response = requests.get(time_source)
+            return parser.parse(response.content)
+        except requests.exceptions.BaseHTTPError as e:
+            now = datetime.now(pytz.utc)
+            print("something went wrong during getting time from {0}:\n{1}\nRETURNING LOCAL {2}".format(time_source,
+                                                                                                        e, now))
+            return now
 
 
-def get_current_events(calendars):
+
+def get_current_events(calendars, time_source):
     """Returns
+    :param source_setting (str): LOCAL or url to get time from
     :param calendars([calendar]):list of available calendars, active
     :return ([{event}]): list of obtained events for current moment
     """
-    return get_events(calendars, get_now(), get_now())
+    return get_events(calendars, get_now(time_source), get_now(time_source))
