@@ -77,25 +77,29 @@ def get_current_events():
 def test_index():
     return render_template("index.html")
 
-
+#TODO: move abs_path somewhere else out of each method
 @app.route("/js/<script>")
 def get_some_js(script):
-    return send_file(os.path.join(settings.STATIC_FOLDER, "js", script), mimetype="application/json")
+    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), settings.STATIC_FOLDER)
+    return send_file(os.path.join(abs_path, "js", script), mimetype="application/json")
 
 
 @app.route("/css/<style>")
 def get_some_css(style):
-    return send_file(os.path.join(settings.STATIC_FOLDER, "css", style), mimetype="text/css")
+    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), settings.STATIC_FOLDER)
+    return send_file(os.path.join(abs_path, "css", style), mimetype="text/css")
 
 @app.route("/html/<html>")
 def get_some_html(html):
-    return send_file(os.path.join(settings.STATIC_FOLDER, "html", html), mimetype="text/html")
+    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), settings.STATIC_FOLDER)
+    return send_file(os.path.join(abs_path, "html", html), mimetype="text/html")
 
 @app.route("/js/<dir>/<file>")
 def get_nested_js(dir, file):
     img_path = os.path.join(settings.STATIC_FOLDER, "js")
     folder_path = os.path.join(img_path, dir)
-    filename = os.path.join(folder_path, file)
+    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
+    filename = os.path.join(abs_path, file)
     return send_file(filename, mimetype='application/json')
 
 
@@ -103,14 +107,16 @@ def get_nested_js(dir, file):
 def get_image_list(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
-    filelist = [file for file in os.listdir(folder_path) if file.endswith(".png") or file.endswith(".jpg")]
+    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
+    filelist = [file for file in os.listdir(abs_path) if file.endswith(".png") or file.endswith(".jpg")]
     return json.dumps(["images/"+folder+"/"+file for file in filelist])
 
 @app.route("/images/<folder>/<file>")
 def get_image(folder, file):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
-    filename = os.path.join(folder_path, file)
+    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
+    filename = os.path.join(abs_path, file)
     return send_file(filename, mimetype='image/gif')
 
 # --- WEB CONTENT END ---
