@@ -66,10 +66,13 @@ def test_json():
 
 @app.route("/events/current")
 def get_current_events():
-    calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
-    data = calendar.get_current_events(calendars, settings.TIME)
-    return json.dumps(data, cls=misc.DateTimeEncoder)
-
+    try:
+        calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
+        data = calendar.get_current_events(calendars, settings.TIME)
+        return json.dumps(data, cls=misc.DateTimeEncoder)
+    except Exception as e:
+        eprint("Couldn't get data from calendar: {0}".format(e))
+        return json.dumps(list())
 
 # --- WEB CONTENT ---
 @app.route("/")
