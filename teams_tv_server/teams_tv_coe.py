@@ -48,7 +48,7 @@ def get_telebot():
         return json.dumps(data, cls=misc.DateTimeEncoder)
     def resume():
         calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
-        data = calendar.get_current_events(calendars)
+        data = calendar.get_current_events(calendars, settings.TIME)
         return json.dumps(data, cls=misc.DateTimeEncoder)
     cmds = {
         'next': next,
@@ -60,14 +60,14 @@ def get_telebot():
 @app.route("/test_json")
 def test_json():
     calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
-    data = calendar.get_current_events(calendars)
+    data = calendar.get_current_events(calendars, settings.TIME)
     return json.dumps(data, cls=misc.DateTimeEncoder)
 
 
 @app.route("/events/current")
 def get_current_events():
     calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
-    data = calendar.get_current_events(calendars)
+    data = calendar.get_current_events(calendars, settings.TIME)
     return json.dumps(data, cls=misc.DateTimeEncoder)
 
 
