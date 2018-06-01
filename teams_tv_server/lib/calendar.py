@@ -7,6 +7,7 @@ import re
 import requests
 from dateutil import parser
 
+
 def increment_dead_kittens():
     with open("dead_kittens", "r+") as f:
         read = f.read()
