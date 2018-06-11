@@ -184,9 +184,9 @@ body {
 }
 
 #clock .text-bot {
-    text-align: left;
-    font-size: 20px;
-    margin-top: 5px;
+   text-align: left;
+   font-size: 20px;
+   margin-top: 10px;
 }
 
 .clock-right-text {
@@ -208,9 +208,10 @@ body {
 }
 
 .clock-left-text {
-    margin-top: 40px;
-    width: 160px;
-    display: inline-block;
+   margin-top: 20px;
+   margin-bottom: 20px;
+   width: 160px;
+   display: inline-block;
 }
 
 a.weatherwidget-io {
