@@ -136,42 +136,6 @@ $(function() {
         }
     }
 
-    function placeMedals(id) {
-        var updateMedalsInterval;
-        var RussianMedals = "";
-
-        function tickerMedals() {
-            if (updateMedalsInterval) {
-                clearInterval(updateMedalsInterval);
-            }
-            updateMedalsInterval = setInterval(function () {
-                showMedals();
-            }, (15 * 60 * 1000));
-        }
-
-        function showMedals() {
-            $("#"+id).html("");
-            $("#"+id).html("<IFRAME src='https://multimedia.scmp.com/widgets/sport/winter-olympics/embed-medal.html'></IFRAME");
-
-            $("#"+id).find(".link").each(function() {
-                $(this).remove();
-            });
-
-            //getRussianMedals();
-
-            tickerMedals();
-        }
-
-        // function getRussianMedals() {
-        //     $("#"+id).append("<IFRAME id='hidden_"+id+"' src='http://www.scmp.com/sport/other-sport/article/2131694/medal-count-pyeongchang-2018-winter-olympic-games' style='display: none;'></IFRAME>");
-        //     $("#hidden_"+id).find(".table").each(function () {
-        //         console.log('tr', $(this).find("tr"));
-        //     });
-        // }
-
-        showMedals();
-    };
-
     function placeMap(id, options) {
         var mid = "map_" + id;
         var wrapper = '<div id="' + mid + '" style="width: 100%; height: 100%"></div>';
@@ -275,12 +239,17 @@ $(function() {
         var tab1 = '<iframe src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=table&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
         var tab2 = '<iframe src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=matches&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
 
-        var timer = setInterval(function () {
-        	tab1_selected = !tab1_selected;
-
+        function add_fifa() {
         	$("#"+id).html("");
 	        $("#"+id).append((tab1_selected) ? tab1 : tab2); // Requires IFRAME
+        }
+
+        var timer = setInterval(function () {
+        	tab1_selected = !tab1_selected;
+        	add_fifa();
         }, timeout);
+
+        add_fifa();
     }
 
     function placeFinanceCurrencies(id, options) {
@@ -339,10 +308,6 @@ $(function() {
         if (type === "logo") {
             placeLogo(id);
         }
-
-        if (type === "medals") {
-            placeMedals(id);
-        };
 
         if (type === "fin_curr") {
             placeFinanceCurrencies(id, data);
