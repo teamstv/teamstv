@@ -265,6 +265,24 @@ $(function() {
         initCarousel(pages, interval);
     }
 
+    function placeFIFA2018(id, options) {
+        options = options || {};
+
+        var cid = "fifa_2018_"+id;
+        var timeout = 60 * 1000;
+        var tab1_selected = true;
+
+        var tab1 = '<iframe src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=table&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
+        var tab2 = '<iframe src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=matches&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
+
+        var timer = setInterval(function () {
+        	tab1_selected = !tab1_selected;
+
+        	$("#"+id).html("");
+	        $("#"+id).append((tab1_selected) ? tab1 : tab2); // Requires IFRAME
+        }, timeout);
+    }
+
     function placeFinanceCurrencies(id, options) {
         options = options || {};
 
@@ -328,6 +346,10 @@ $(function() {
 
         if (type === "fin_curr") {
             placeFinanceCurrencies(id, data);
+        }
+
+        if (type === "fifa_2018") {
+        	placeFIFA2018(id, data);
         }
 
         $(".gridster").find("ul").css("background-image", "none");
