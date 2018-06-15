@@ -117,7 +117,8 @@ def get_nested_js(dir, file):
     filename = os.path.join(abs_path, file)
     return send_file(filename, mimetype='application/json')
 
-
+# This doesn't properly work, ofc.
+# Gotta decide on final behaviour
 @app.route('/images/<folder>')
 def get_image_list(folder, timestamp=None):
     filelist = get_folder_images(folder)
@@ -158,7 +159,7 @@ def get_local_ip():
     ip = output[1].split()[1]
     return ip
 
-@app.route('/images/<folder>/')
+@app.route('/lmt/images/<folder>/')
 def get_image_folder_last_modify(folder):
     filelist = get_folder_images(folder)
     last_mtime = get_last_mtime(filelist)
