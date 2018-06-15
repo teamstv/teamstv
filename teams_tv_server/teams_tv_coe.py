@@ -13,6 +13,7 @@ from lib import calendar, misc
 import settings
 from lib.telebot import Telebot
 from datetime import datetime
+import subprocess
 
 app = Flask(__name__)
 tb = Telebot(settings.BOT_TOKEN)
@@ -135,7 +136,7 @@ def get_folder_images(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
     abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
-    filelist = [file for file in os.listdir(abs_path) if file.endswith(".png") or file.endswith(".jpg")]
+    filelist = [file for file in os.listdir(abs_path) if file.lower().endswith(".png") or file.lower().endswith(".jpg")]
     return filelist
 
 
@@ -148,6 +149,14 @@ def get_last_mtime(filelist):
             last_mtime = mtime
     return last_mtime
 
+
+@app.route("/address")
+def get_local_ip():
+    process = subprocess.Popen("ifconfig", stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    # Don't do that...
+    ip = output[1].split()[1]
+    return ip
 
 @app.route('/images/<folder>/')
 def get_image_folder_last_modify(folder):
