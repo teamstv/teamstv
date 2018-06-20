@@ -236,8 +236,8 @@ $(function() {
         var timeout = 60 * 1000;
         var tab1_selected = true;
 
-        var tab1 = '<iframe src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=table&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
-        var tab2 = '<iframe src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=matches&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
+        var tab1 = '<iframe style="width: 100%; height: 100%; overflow: hidden; border: none;" src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=table&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
+        var tab2 = '<iframe style="width: 100%; height: 100%; overflow: hidden; border: none;" src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=matches&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
 
         function add_fifa() {
         	$("#"+id).html("");
