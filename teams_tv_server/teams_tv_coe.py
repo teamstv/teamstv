@@ -16,6 +16,25 @@ from datetime import datetime
 import subprocess
 import socket
 import datetime
+import logging
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'file': {
+        'class': 'logging.handlers.RotatingFileHandler',
+        'formatter': 'default',
+        'filename': 'teamstv_flask.log',
+        'backupCount': 3
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['file']
+    }
+})
 
 app = Flask(__name__)
 tb = Telebot(settings.BOT_TOKEN)
@@ -23,27 +42,32 @@ tb = Telebot(settings.BOT_TOKEN)
 
 @app.route('/fin_curr')
 def show_fin_curr():
+    app.logger.info("Serving fin_curr.html")
     return render_template("fin_curr.html")
 
 
 @app.route('/news')
 def show_news():
+    app.logger.info("Serving news.html")
     return render_template("news.html")
 
 
 @app.route('/clock')
 def show_clock():
+    app.logger.info("Serving clock.html")
     return render_template("clock.html")
 
 
 @app.route('/next')
 def next_event():
+    app.logger.info("passing /next to bot")
     tb.handle({'text': '/next'})
     return jsonify('OK')
 
 
 @app.route('/resume')
 def resume_event():
+    app.logger.info("passing /resume to bot")
     tb.handle({'text': '/resume'})
     return jsonify('OK')
 
@@ -76,12 +100,16 @@ def test_json():
 
 @app.route("/events/current")
 def get_current_events():
+    app.logger.info("Serving current events")
     try:
         calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
+        app.logger.info("successfully connected to calendar")
     except Exception as e:
         eprint("Couldn't connect to external source: {0}".format(e))
+        app.logger.warn("failed to connect to calendar: {0}".format(e))
         return json.dumps(list()), 500
     data = calendar.get_current_events(calendars, settings.TIME)
+    app.logger.info("obtained schedule for now")
     return json.dumps(data, cls=misc.DateTimeEncoder)
 
 
@@ -89,6 +117,7 @@ def get_current_events():
 @app.route("/")
 @app.route("/index")
 def test_index():
+    app.logger.info("serving index")
     return render_template("index.html")
 
 
@@ -119,16 +148,21 @@ def get_nested_js(dir, file):
     filename = os.path.join(abs_path, file)
     return send_file(filename, mimetype='application/json')
 
+
 # This doesn't properly work, ofc.
 # Gotta decide on final behaviour
 @app.route('/images/<folder>')
 def get_image_list(folder):
+    app.logger.info("Serving images from {0}".format(folder))
     filelist = get_folder_images(folder)
     timestamp = request.args.get('mtime', None)
+    app.logger.info("mtime param is {0}".format(timestamp))
     if timestamp is None:
+        app.logger.info("Serving simple image list")
         return json.dumps(["images/" + folder + "/" + os.path.basename(file) for file in filelist])
     else:
         mtime = get_last_mtime(filelist)
+        app.logger.info("Serving images with mtime")
         return json.dumps({
             "images": ["images/" + folder + "/" + os.path.basename(file) for file in filelist],
             "last_mtime": mtime
@@ -140,7 +174,8 @@ def get_folder_images(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
     abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
-    filelist = [os.path.join(abs_path, file) for file in os.listdir(abs_path) if file.lower().endswith(".png") or file.lower().endswith(".jpg")]
+    filelist = [os.path.join(abs_path, file) for file in os.listdir(abs_path) if
+                file.lower().endswith(".png") or file.lower().endswith(".jpg")]
     return filelist
 
 
@@ -157,7 +192,9 @@ def get_last_mtime(filelist):
 @app.route("/address")
 def get_local_ip():
     ip = socket.gethostbyname(socket.gethostname())
+    app.logger.info("Serving ip addr: {0}".format(ip))
     return ip
+
 
 @app.route('/lmt/images/<folder>/')
 def get_image_folder_last_modify(folder):
