@@ -7,13 +7,15 @@ def eprint(*args, **kwargs):
 
 
 import json
-from flask import Flask, render_template, send_file, jsonify
+from flask import Flask, render_template, send_file, jsonify, request
 import os
 from lib import calendar, misc
 import settings
 from lib.telebot import Telebot
 from datetime import datetime
 import subprocess
+import socket
+import datetime
 
 app = Flask(__name__)
 tb = Telebot(settings.BOT_TOKEN)
@@ -120,14 +122,15 @@ def get_nested_js(dir, file):
 # This doesn't properly work, ofc.
 # Gotta decide on final behaviour
 @app.route('/images/<folder>')
-def get_image_list(folder, timestamp=None):
+def get_image_list(folder):
     filelist = get_folder_images(folder)
+    timestamp = request.args.get('mtime', None)
     if timestamp is None:
-        return json.dumps(["images/" + folder + "/" + file for file in filelist])
+        return json.dumps(["images/" + folder + "/" + os.path.basename(file) for file in filelist])
     else:
         mtime = get_last_mtime(filelist)
         return json.dumps({
-            "images": ["images/" + folder + "/" + file for file in filelist],
+            "images": ["images/" + folder + "/" + os.path.basename(file) for file in filelist],
             "last_mtime": mtime
         }, cls=misc.DateTimeEncoder)
 
@@ -137,7 +140,7 @@ def get_folder_images(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
     abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
-    filelist = [file for file in os.listdir(abs_path) if file.lower().endswith(".png") or file.lower().endswith(".jpg")]
+    filelist = [os.path.join(abs_path, file) for file in os.listdir(abs_path) if file.lower().endswith(".png") or file.lower().endswith(".jpg")]
     return filelist
 
 
@@ -153,17 +156,14 @@ def get_last_mtime(filelist):
 
 @app.route("/address")
 def get_local_ip():
-    process = subprocess.Popen("ifconfig", stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    # Don't do that...
-    ip = output[1].split()[1]
+    ip = socket.gethostbyname(socket.gethostname())
     return ip
 
 @app.route('/lmt/images/<folder>/')
 def get_image_folder_last_modify(folder):
     filelist = get_folder_images(folder)
     last_mtime = get_last_mtime(filelist)
-    return last_mtime
+    return json.dumps(last_mtime, cls=misc.DateTimeEncoder)
 
 
 @app.route("/images/<folder>/<file>")
