@@ -149,15 +149,22 @@ def get_nested_js(dir, file):
     return send_file(filename, mimetype='application/json')
 
 
-# This doesn't properly work, ofc.
-# Gotta decide on final behaviour
 @app.route('/images/<folder>')
 def get_image_list(folder):
     app.logger.info("Serving images from {0}".format(folder))
     filelist = get_folder_images(folder)
-    timestamp = request.args.get('mtime', None)
-    app.logger.info("mtime param is {0}".format(timestamp))
-    if timestamp is None:
+    with_mtime = request.args.get('mtime', None)
+    app.logger.info("mtime param is {0}".format(with_mtime))
+    order = request.args.get('order', "name")
+    app.logger.info("order param is {0}".format(order))
+
+    if order == 'mtime':
+        filelist = [item[1] for item in
+                    sorted((os.stat(path).st_mtime, path) for path in filelist)]
+    else:
+        filelist = sorted(filelist)
+
+    if with_mtime is None:
         app.logger.info("Serving simple image list")
         return json.dumps(["images/" + folder + "/" + os.path.basename(file) for file in filelist])
     else:
