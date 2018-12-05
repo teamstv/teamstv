@@ -196,9 +196,21 @@ def get_last_mtime(filelist):
     return last_mtime
 
 
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
 @app.route("/address")
 def get_local_ip():
-    ip = socket.gethostbyname(socket.gethostname())
+    ip = get_ip()
     app.logger.info("Serving ip addr: {0}".format(ip))
     return ip
 
