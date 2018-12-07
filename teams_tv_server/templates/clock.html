@@ -26,11 +26,20 @@
             <div class="clock-left-text">
                 <div class="text">@team_tv_staging_bot</div>
                 <div class="text-bot">#PiterDellEMC</div>
+                <div class="text-ip" id="ip-address">_</div>
             </div>
         </div>
     </div>
 
     <script>
+        function getIPAddress() {
+            console.log("Get IP Address");
+            $.get("address", function(data) {
+              console.log("IP Address: ", data);
+              $("#ip-address").html(data);
+            });
+        }
+        
         function clockInit() {
             let week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
             let timerID = setInterval(updateTime, 1000);
@@ -51,6 +60,8 @@
                 }
                 return (zero + num).slice(-digit);
             }
+
+            getIPAddress();
         }
 
         function initWeatherWidget(d,s,id) {

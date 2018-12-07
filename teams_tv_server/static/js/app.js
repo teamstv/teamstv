@@ -92,7 +92,6 @@ $(function() {
         }
     }
 
-
     function placeClock(id, options) {
         var options = options || {};
         var cid = "clock_" + id;
