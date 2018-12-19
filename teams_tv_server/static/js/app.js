@@ -262,7 +262,7 @@ $(function() {
             imgs = []
             $.ajax({
                 dataType: "json",
-                url: data.folder + "/?mtime=true&order=mtime",
+                url: data.folder + "?mtime=true&order=mtime",
                 cache: false,
                 success: function(res) {
                     imgs = res;
