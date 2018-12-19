@@ -196,6 +196,8 @@ $(function() {
                 nav: false,
                 dots: false,
                 autoplay: true,
+                lazyLoad: true,
+                lazyLoadEager: 3,
                 autoplayTimeout: interval || (10 * 1000)
             });
         }
@@ -226,32 +228,6 @@ $(function() {
         }
 
         initCarousel(pages, interval);
-    }
-
-    function placeFIFA2018(id, options) {
-        options = options || {};
-
-        var cid = "fifa_2018_"+id;
-        var timeout = 60 * 1000;
-        var tab1_selected = true;
-        var content;
-
-        var tab1 = '<iframe id="fifa_iframe_1" style="width: 100%; height: 100%; overflow: hidden; border: none;" src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=table&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
-        var tab2 = '<iframe id="fifa_iframe_2" style="width: 100%; height: 100%; overflow: hidden; border: none;" src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=matches&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
-
-        function add_fifa() {
-        	$("#"+id).html("");
-	        $("#"+id).append((tab1_selected) ? tab1 : tab2); // Requires IFRAME
-	        content = (tab1_selected) ? $("#fifa_iframe_1") : $("#fifa_iframe_2");
-	        content.scrollTop(100); // content.height()
-        }
-
-        var timer = setInterval(function () {
-        	tab1_selected = !tab1_selected;
-        	add_fifa();
-        }, timeout);
-
-        add_fifa();
     }
 
     function placeFinanceCurrencies(id, options) {
@@ -286,7 +262,7 @@ $(function() {
             imgs = []
             $.ajax({
                 dataType: "json",
-                url: data.folder,
+                url: data.folder + "/?mtime=true&order=mtime",
                 cache: false,
                 success: function(res) {
                     imgs = res;
@@ -313,10 +289,6 @@ $(function() {
 
         if (type === "fin_curr") {
             placeFinanceCurrencies(id, data);
-        }
-
-        if (type === "fifa_2018") {
-        	placeFIFA2018(id, data);
         }
 
         $(".gridster").find("ul").css("background-image", "none");
