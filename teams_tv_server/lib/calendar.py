@@ -18,7 +18,7 @@ def increment_dead_kittens():
         f.seek(0)
         f.write(str(dead_kittens))
         f.truncate()
-    print ("{0} kittens died".format(dead_kittens))
+    print("{0} kittens died".format(dead_kittens))
 
 
 def extract_rss_feeds_from_html(description):
@@ -29,7 +29,7 @@ def extract_rss_feeds_from_html(description):
     # There are mixed overlapping quotes and weird tags. We are trying to fix this
     # The only solution I can imagine for it...
     # REGEXPS. Now you folks have problems...
-    print ("Tags found in rss description/configurations. attempting to extract links from tags. " \
+    print("Tags found in rss description/configurations. attempting to extract links from tags. " \
           "\nThis is plain stupid..." \
           "\nDon't do this. A kitten dies every time this happens" \
           "\nYou know what? I'm counting...")
@@ -132,7 +132,13 @@ def get_now(time_source):
             print("something went wrong during getting time from {0}:\n{1}\nRETURNING LOCAL {2}".format(time_source,
                                                                                                         e, now))
             return now
-
+        except ValueError as e:
+            now = datetime.now(pytz.utc)
+            print(
+                "Could not parse external time\n"
+                "something went wrong during getting time from {0}:"
+                "\n{1}\nRETURNING LOCAL {2}".format(time_source, e, now))
+            return now
 
 
 def get_current_events(calendars, time_source):
