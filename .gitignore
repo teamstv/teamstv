@@ -1,4 +1,9 @@
-settings.py
 *.jar
 *.log
 logs/
+__pycache__
+teams_tv_server/settings.py
+teams_tv_server/static/img/
+!teams_tv_server/static/img/logo.jpg
+!teams_tv_server/static/img/newspaper.jpg
+!teams_tv_server/static/img/qrClock.png
