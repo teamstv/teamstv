@@ -185,8 +185,9 @@ $(function() {
         $("#" + id).html(wrapper);
 
         function initCarousel(data, interval) {
+            var images = data.images || data;
 
-            $.each(data, function(index, page) {
+            $.each(images, function(index, page) {
                 $("#" + cid).append("<div style='height: 100%;'><img style='height: 100%; margin: auto;' src='" + page + "'/></div>");
             });
 
