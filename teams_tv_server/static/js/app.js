@@ -188,17 +188,21 @@ $(function() {
             var images = data.images || data;
 
             $.each(images, function(index, page) {
-                $("#" + cid).append("<div style='height: 100%;'><img style='height: 100%; margin: auto;' src='" + page + "'/></div>");
+                $("#" + cid).append("<div style='width: 100%; height: 100%; background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);'><img style='margin: auto; object-fit: contain; object-position: 50% 50%;' class='owl-lazy' data-src='" + page + "'/></div>");
             });
 
             $("#" + cid).owlCarousel({
                 items: 1,
                 loop: true,
+                mouseDrag: false,
+                touchDrag: false,
+                pullDrag: false,
                 nav: false,
                 dots: false,
                 autoplay: true,
                 lazyLoad: true,
                 lazyLoadEager: 3,
+                // video: true,
                 autoplayTimeout: interval || (10 * 1000)
             });
         }
@@ -373,7 +377,6 @@ $(function() {
                     if (tids != sids) {
                         eq = false;
                     }
-
                 }
 
                 if (!eq) {
