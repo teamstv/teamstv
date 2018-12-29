@@ -2,6 +2,11 @@ var gridster;
 
 var serialization = [];
 
+var reInitCarouselTimer;
+
+var savedData;
+var savedId;
+
 $(function() {
 
     console.log(screen.width + ' ' + screen.height);
@@ -244,6 +249,31 @@ $(function() {
         $("#"+id).append("<iframe id='" + cid + "' src='/fin_curr?" + $.param(options) + "'></iframe>"); // Requires IFRAME
     }
 
+    function getCarouselImages(id, data) {
+        var imgs = [];
+        var useData;
+        var useId;
+
+        useId = id || savedId;
+        useData = data || savedData;
+
+        savedData = data || savedData;
+        savedId = id || savedId;
+
+        console.log("getCarouselImages", useId, useData);
+
+        $.ajax({
+            dataType: "json",
+            url: useData.folder + "?mtime=true&order=mtime",
+            cache: false,
+            success: function(res) {
+                imgs = res;
+                console.log("getCarouselImages() response: ", imgs);
+                placeImgCarousel(useId, imgs, useData.interval);
+            }
+        });
+    }
+
     function parseBlock(id, type, data) {
         if (!id || !type) return;
 
@@ -264,16 +294,10 @@ $(function() {
         }
 
         if (type === "carousel" || type === "carousel_img") {
-            imgs = []
-            $.ajax({
-                dataType: "json",
-                url: data.folder + "?mtime=true&order=mtime",
-                cache: false,
-                success: function(res) {
-                    imgs = res;
-                    placeImgCarousel(id, imgs, data.interval);
-                }
-            });
+            getCarouselImages(id, data);
+            reInitCarouselTimer = setInterval(function () {
+                getCarouselImages();
+            }, 60000);
         }
 
         if (type === "carousel_text" || type === "carousel_html") {
@@ -316,6 +340,7 @@ $(function() {
     }
 
     function buildGrid(elements, cleanup) {
+        clearInterval(reInitCarouselTimer);
         clearGrid(cleanup);
 
         var temp_elements = _.clone(elements);
