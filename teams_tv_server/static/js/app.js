@@ -6,6 +6,9 @@ var reInitCarouselTimer;
 
 var savedData;
 var savedId;
+var savedMTime;
+
+var reloadTimeout = 10000;
 
 $(function() {
 
@@ -269,7 +272,11 @@ $(function() {
             success: function(res) {
                 imgs = res;
                 console.log("getCarouselImages() response: ", imgs);
-                placeImgCarousel(useId, imgs, useData.interval);
+                if (imgs.last_mtime && imgs.last_mtime != savedMTime) {
+                    savedMTime = imgs.last_mtime;
+                    console.log("refreshing carousel", savedMTime);
+                    placeImgCarousel(useId, imgs, useData.interval);
+                }
             }
         });
     }
@@ -297,7 +304,7 @@ $(function() {
             getCarouselImages(id, data);
             reInitCarouselTimer = setInterval(function () {
                 getCarouselImages();
-            }, 60000);
+            }, reloadTimeout);
         }
 
         if (type === "carousel_text" || type === "carousel_html") {
@@ -425,7 +432,7 @@ $(function() {
     getData("events/current");
     var getDataInterval = setInterval(function() {
         getData("events/current");
-    }, (60 * 1000));
+    }, reloadTimeout);
 
     function getTelebot() {
         getData("telebot", getTelebot);
