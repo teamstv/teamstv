@@ -8,7 +8,7 @@ var savedData;
 var savedId;
 var savedMTime;
 
-var reloadTimeout = 10000;
+var reloadTimeout = 60000;
 
 $(function() {
 
