@@ -154,7 +154,8 @@ def get_image_list(folder):
     app.logger.info("Serving images from {0}".format(folder))
     filelist = get_folder_images(folder)
     with_mtime = request.args.get('mtime', None)
-    app.logger.info("mtime param is {0}".format(with_mtime))
+    with_hash = request.args.get('hash', with_mtime)
+    app.logger.info("hash param is {0}".format(with_hash))
     order = request.args.get('order', "name")
     app.logger.info("order param is {0}".format(order))
 
@@ -164,7 +165,7 @@ def get_image_list(folder):
     else:
         filelist = sorted(filelist)
 
-    if with_mtime is None:
+    if with_hash is None:
         app.logger.info("Serving simple image list")
         return json.dumps(["images/" + folder + "/" + os.path.basename(file) for file in filelist])
     else:
@@ -172,7 +173,7 @@ def get_image_list(folder):
         app.logger.info("Serving images with mtime")
         return json.dumps({
             "images": ["images/" + folder + "/" + os.path.basename(file) for file in filelist],
-            "last_mtime": mtime
+            "last_m_hash": hash(mtime) + hash(len(filelist))
         }, cls=misc.DateTimeEncoder)
 
 
