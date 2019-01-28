@@ -6,7 +6,7 @@ var reInitCarouselTimer;
 
 var savedData;
 var savedId;
-var savedMTime;
+var savedMHash;
 
 var reloadTimeout = 60000;
 
@@ -267,14 +267,14 @@ $(function() {
 
         $.ajax({
             dataType: "json",
-            url: useData.folder + "?mtime=true&order=mtime",
+            url: useData.folder + "?mtime=true&hash=true&order=mtime",
             cache: false,
             success: function(res) {
                 imgs = res;
                 console.log("getCarouselImages() response: ", imgs);
-                if (imgs.last_mtime && imgs.last_mtime != savedMTime) {
-                    savedMTime = imgs.last_mtime;
-                    console.log("refreshing carousel", savedMTime);
+                if (imgs.last_m_hash && imgs.last_m_hash != savedMHash) {
+                    savedMHash = imgs.last_m_hash;
+                    console.log("refreshing carousel", savedMHash);
                     placeImgCarousel(useId, imgs, useData.interval);
                 }
             }
