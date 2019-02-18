@@ -2,3 +2,8 @@ settings.py
 *.jar
 *.log
 logs/
+
+### Bot ###
+telegram-bot/target/
+telegram-bot/.idea
+telegram-bot/*.iml
