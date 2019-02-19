@@ -2,6 +2,8 @@ Flask>=0.12.2
 icalendar>=4.0.0
 pytz>=2017.3
 telepot>=12.5
-dateutil>=2.6.1
+python-dateutil>=2.6.1
 tzlocal==1.5.1
 lxml>=4.1.1
+requests>=2.21.0
+vobject>=0.9.6.1

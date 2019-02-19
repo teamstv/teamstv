@@ -170,7 +170,7 @@ body {
     padding: 5px 0;
 }
 
-#clock  .date {
+#clock .date {
     letter-spacing: 0.1em;
     font-size: 24px;
 }
@@ -187,6 +187,13 @@ body {
    text-align: left;
    font-size: 20px;
    margin-top: 10px;
+}
+
+#clock .text-ip {
+    opacity: 0.25;
+    text-align: left;
+    font-size: 20px;
+    margin-top: 10px;
 }
 
 .clock-right-text {

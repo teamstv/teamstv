@@ -2,6 +2,14 @@ var gridster;
 
 var serialization = [];
 
+var reInitCarouselTimer;
+
+var savedData;
+var savedId;
+var savedMHash;
+
+var reloadTimeout = 60000;
+
 $(function() {
 
     console.log(screen.width + ' ' + screen.height);
@@ -91,7 +99,6 @@ $(function() {
                 break;
         }
     }
-
 
     function placeClock(id, options) {
         var options = options || {};
@@ -186,17 +193,24 @@ $(function() {
         $("#" + id).html(wrapper);
 
         function initCarousel(data, interval) {
+            var images = data.images || data;
 
-            $.each(data, function(index, page) {
-                $("#" + cid).append("<div style='height: 100%;'><img style='height: 100%; margin: auto;' src='" + page + "'/></div>");
+            $.each(images, function(index, page) {
+                $("#" + cid).append("<div style='width: 100%; height: 100%; background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);'><img style='margin: auto; object-fit: contain; object-position: 50% 50%;' class='owl-lazy' data-src='" + page + "'/></div>");
             });
 
             $("#" + cid).owlCarousel({
                 items: 1,
                 loop: true,
+                mouseDrag: false,
+                touchDrag: false,
+                pullDrag: false,
                 nav: false,
                 dots: false,
                 autoplay: true,
+                lazyLoad: true,
+                lazyLoadEager: 3,
+                // video: true,
                 autoplayTimeout: interval || (10 * 1000)
             });
         }
@@ -229,32 +243,6 @@ $(function() {
         initCarousel(pages, interval);
     }
 
-    function placeFIFA2018(id, options) {
-        options = options || {};
-
-        var cid = "fifa_2018_"+id;
-        var timeout = 60 * 1000;
-        var tab1_selected = true;
-        var content;
-
-        var tab1 = '<iframe id="fifa_iframe_1" style="width: 100%; height: 100%; overflow: hidden; border: none;" src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=table&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
-        var tab2 = '<iframe id="fifa_iframe_2" style="width: 100%; height: 100%; overflow: hidden; border: none;" src="https://widgets.worldfootball.com/competition/440#?c_header=#4e4d4d&c_team=#95c596&columns=mp,mw,md,ml&tabs=matches&width_unit=pixels" width="500" height="500" frameborder="0"></iframe>';
-
-        function add_fifa() {
-        	$("#"+id).html("");
-	        $("#"+id).append((tab1_selected) ? tab1 : tab2); // Requires IFRAME
-	        content = (tab1_selected) ? $("#fifa_iframe_1") : $("#fifa_iframe_2");
-	        content.scrollTop(100); // content.height()
-        }
-
-        var timer = setInterval(function () {
-        	tab1_selected = !tab1_selected;
-        	add_fifa();
-        }, timeout);
-
-        add_fifa();
-    }
-
     function placeFinanceCurrencies(id, options) {
         options = options || {};
 
@@ -262,6 +250,35 @@ $(function() {
 
         $("#"+id).html("");
         $("#"+id).append("<iframe id='" + cid + "' src='/fin_curr?" + $.param(options) + "'></iframe>"); // Requires IFRAME
+    }
+
+    function getCarouselImages(id, data) {
+        var imgs = [];
+        var useData;
+        var useId;
+
+        useId = id || savedId;
+        useData = data || savedData;
+
+        savedData = data || savedData;
+        savedId = id || savedId;
+
+        console.log("getCarouselImages", useId, useData);
+
+        $.ajax({
+            dataType: "json",
+            url: useData.folder + "?mtime=true&hash=true&order=mtime",
+            cache: false,
+            success: function(res) {
+                imgs = res;
+                console.log("getCarouselImages() response: ", imgs);
+                if (imgs.last_m_hash && imgs.last_m_hash != savedMHash) {
+                    savedMHash = imgs.last_m_hash;
+                    console.log("refreshing carousel", savedMHash);
+                    placeImgCarousel(useId, imgs, useData.interval);
+                }
+            }
+        });
     }
 
     function parseBlock(id, type, data) {
@@ -284,16 +301,10 @@ $(function() {
         }
 
         if (type === "carousel" || type === "carousel_img") {
-            imgs = []
-            $.ajax({
-                dataType: "json",
-                url: data.folder,
-                cache: false,
-                success: function(res) {
-                    imgs = res;
-                    placeImgCarousel(id, imgs, data.interval);
-                }
-            });
+            getCarouselImages(id, data);
+            reInitCarouselTimer = setInterval(function () {
+                getCarouselImages();
+            }, reloadTimeout);
         }
 
         if (type === "carousel_text" || type === "carousel_html") {
@@ -316,10 +327,6 @@ $(function() {
             placeFinanceCurrencies(id, data);
         }
 
-        if (type === "fifa_2018") {
-        	placeFIFA2018(id, data);
-        }
-
         $(".gridster").find("ul").css("background-image", "none");
     }
 
@@ -340,6 +347,7 @@ $(function() {
     }
 
     function buildGrid(elements, cleanup) {
+        clearInterval(reInitCarouselTimer);
         clearGrid(cleanup);
 
         var temp_elements = _.clone(elements);
@@ -401,7 +409,6 @@ $(function() {
                     if (tids != sids) {
                         eq = false;
                     }
-
                 }
 
                 if (!eq) {
@@ -425,7 +432,7 @@ $(function() {
     getData("events/current");
     var getDataInterval = setInterval(function() {
         getData("events/current");
-    }, (60 * 1000));
+    }, reloadTimeout);
 
     function getTelebot() {
         getData("telebot", getTelebot);
