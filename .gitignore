@@ -7,3 +7,8 @@ teams_tv_server/static/img/
 !teams_tv_server/static/img/logo.jpg
 !teams_tv_server/static/img/newspaper.jpg
 !teams_tv_server/static/img/qrClock.png
+
+### Bot ###
+telegram-bot/target/
+telegram-bot/.idea
+telegram-bot/*.iml

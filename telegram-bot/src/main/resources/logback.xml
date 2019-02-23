@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d{HH:mm:ss.SSS} %-5level %logger{80} - %msg%n</Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILEOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/telegram-bot.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>telegram-bot-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 100MB -->
+        <maxFileSize>5MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!-- keep 30 days' worth of history -->
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder charset="UTF-8">
+      <pattern>%n[%level] - %date - %logger#%line: %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="FILEOUT"/>
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
