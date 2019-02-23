@@ -146,6 +146,8 @@ def get_image_list(folder):
 def get_description_list(folder, file):
     app.logger.info("Serving {0} description from {1}".format(folder, file))
     filename = get_file_abs_path(file, folder)
+    if not os.path.exists(filename):
+        return ""
     with open(filename, "r") as f:
         return f.read()
 
