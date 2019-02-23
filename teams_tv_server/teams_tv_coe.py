@@ -11,7 +11,6 @@ from flask import Flask, render_template, send_file, jsonify, request
 import os
 from lib import calendar, misc
 import settings
-from lib.telebot import Telebot
 from datetime import datetime
 import subprocess
 import socket
@@ -37,7 +36,6 @@ dictConfig({
 })
 
 app = Flask(__name__)
-tb = Telebot(settings.BOT_TOKEN)
 
 
 @app.route('/fin_curr')
@@ -56,39 +54,6 @@ def show_news():
 def show_clock():
     app.logger.info("Serving clock.html")
     return render_template("clock.html")
-
-
-@app.route('/next')
-def next_event():
-    app.logger.info("passing /next to bot")
-    tb.handle({'text': '/next'})
-    return jsonify('OK')
-
-
-@app.route('/resume')
-def resume_event():
-    app.logger.info("passing /resume to bot")
-    tb.handle({'text': '/resume'})
-    return jsonify('OK')
-
-
-@app.route("/telebot", methods=['GET'])
-def get_telebot():
-    def next():
-        calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
-        data = calendar.get_next_events(calendars)
-        return json.dumps(data, cls=misc.DateTimeEncoder)
-
-    def resume():
-        calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
-        data = calendar.get_current_events(calendars, settings.TIME)
-        return json.dumps(data, cls=misc.DateTimeEncoder)
-
-    cmds = {
-        'next': next,
-        'resume': resume,
-    }
-    return cmds[tb.get()]()
 
 
 @app.route("/test_json")
@@ -177,11 +142,30 @@ def get_image_list(folder):
         }, cls=misc.DateTimeEncoder)
 
 
-# TODO: move these two somewhere else
-def get_folder_images(folder):
+@app.route("/descriptions/<folder>/<file>")
+def get_description_list(folder, file):
+    app.logger.info("Serving {0} description from {1}".format(folder, file))
+    filename = get_file_abs_path(file, folder)
+    with open(filename, "r") as f:
+        return f.read()
+
+
+def get_file_abs_path(file, folder):
+    abs_path = get_folder_abs_path(folder)
+    filename = os.path.join(abs_path, file)
+    return filename
+
+
+def get_folder_abs_path(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
     abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
+    return abs_path
+
+
+# TODO: move these two somewhere else
+def get_folder_images(folder):
+    abs_path = get_folder_abs_path(folder)
     filelist = [os.path.join(abs_path, file) for file in os.listdir(abs_path) if
                 file.lower().endswith(".png") or file.lower().endswith(".jpg")]
     return filelist
@@ -209,6 +193,7 @@ def get_ip():
         s.close()
     return IP
 
+
 @app.route("/address")
 def get_local_ip():
     ip = get_ip()
@@ -225,15 +210,11 @@ def get_image_folder_last_modify(folder):
 
 @app.route("/images/<folder>/<file>")
 def get_image(folder, file):
-    img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
-    folder_path = os.path.join(img_path, folder)
-    abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
-    filename = os.path.join(abs_path, file)
+    filename = get_file_abs_path(file, folder)
     return send_file(filename, mimetype='image/gif')
 
 
 # --- WEB CONTENT END ---
 
 if __name__ == '__main__':
-    tb.start()
     app.run(threaded=True, host='0.0.0.0')
