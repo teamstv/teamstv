@@ -1,5 +1,6 @@
 package com.emc.teamstv.telegrambot.handlers;
 
+import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,14 +18,17 @@ public class HandlerFactory {
   private final PhotoMessageHandler photoMessageHandler;
   private final TextMessageHandler textMessageHandler;
   private final DownloadPhotoHandler downloadPhotoHandler;
+  private final CancelCallbackHandler cancelCallbackHandler;
 
   public HandlerFactory(
       PhotoMessageHandler photoMessageHandler,
       TextMessageHandler textMessageHandler,
-      DownloadPhotoHandler downloadPhotoHandler) {
+      DownloadPhotoHandler downloadPhotoHandler,
+      CancelCallbackHandler cancelCallbackHandler) {
     this.photoMessageHandler = photoMessageHandler;
     this.textMessageHandler = textMessageHandler;
     this.downloadPhotoHandler = downloadPhotoHandler;
+    this.cancelCallbackHandler = cancelCallbackHandler;
   }
 
   public Optional<Handler> getHandler(Update update) {
@@ -34,8 +38,11 @@ public class HandlerFactory {
     if (isText(update)) {
       return Optional.of(textMessageHandler);
     }
-    if (isDownloadPhotoCallback(update)) {
+    if (checkCallbackType(update, ButtonNameEnum.DOWNLOAD)) {
       return Optional.of(downloadPhotoHandler);
+    }
+    if (checkCallbackType(update, ButtonNameEnum.CANCEL)) {
+      return Optional.of(cancelCallbackHandler);
     }
     return Optional.empty();
   }
@@ -49,7 +56,8 @@ public class HandlerFactory {
         .startsWith("/");
   }
 
-  private boolean isDownloadPhotoCallback(Update update) {
-    return update.hasCallbackQuery() && update.getCallbackQuery().getData().endsWith("_download");
+  private boolean checkCallbackType(Update update, ButtonNameEnum nameEnum) {
+    return update.hasCallbackQuery() && update.getCallbackQuery().getData()
+        .endsWith(nameEnum.getData());
   }
 }

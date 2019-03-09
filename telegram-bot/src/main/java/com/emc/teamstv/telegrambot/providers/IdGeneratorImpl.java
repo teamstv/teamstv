@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Simple implementation of IdGenerator service based on AtomicLong
+ *
  * @author talipa
  */
 

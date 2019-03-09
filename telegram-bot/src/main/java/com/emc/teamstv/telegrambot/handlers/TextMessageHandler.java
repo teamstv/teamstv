@@ -24,7 +24,7 @@ public class TextMessageHandler implements Handler {
   public void onUpdateReceived(Update update, DefaultAbsSender sender) {
     if (update.hasMessage() && update.getMessage().hasText()) {
       SendMessage msg = prepareResponse(update, TEXT_NOT_SUPPORTED.getResponse());
-      sendText(msg, sender,update);
+      sendText(msg, sender, update);
     }
   }
 }

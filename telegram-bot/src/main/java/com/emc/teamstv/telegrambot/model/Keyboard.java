@@ -1,6 +1,8 @@
 package com.emc.teamstv.telegrambot.model;
 
-import static com.emc.teamstv.telegrambot.model.ButtonNameEnum.*;
+import static com.emc.teamstv.telegrambot.model.ButtonNameEnum.ADD_CAPTION;
+import static com.emc.teamstv.telegrambot.model.ButtonNameEnum.CANCEL;
+import static com.emc.teamstv.telegrambot.model.ButtonNameEnum.DOWNLOAD;
 
 import com.emc.teamstv.telegrambot.BotProperties;
 import java.util.Arrays;
@@ -11,6 +13,11 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+/**
+ * Class for inline keyboard.
+ *
+ * @author talipa
+ */
 @Component
 public class Keyboard {
 
@@ -20,7 +27,7 @@ public class Keyboard {
     this.properties = properties;
   }
 
-  public Optional<InlineKeyboardMarkup> keyboard(UserPhotoModel model, String id) {
+  public Optional<InlineKeyboardMarkup> keyboard(PhotoModel model, String id) {
     if (!model.isLoaded() && !model.hasCaption()) {
       return keyboard(getAllButtons(id));
     }

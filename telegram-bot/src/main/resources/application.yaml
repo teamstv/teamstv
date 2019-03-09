@@ -5,4 +5,5 @@ bot:
     path: .
     downloadButName: Загрузить на сервер
     addCaption: Добавить описание
-    cancelButton: Ничего не делать
+    cancelButton: Отменить загрузку
+    cleanUpTimeOut: 20

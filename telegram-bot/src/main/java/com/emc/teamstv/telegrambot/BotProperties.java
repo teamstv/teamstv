@@ -19,6 +19,7 @@ public class BotProperties {
   private String downloadButName;
   private String addCaption;
   private String cancelButton;
+  private Long cleanUpTimeOut;
 
   public String getToken() {
     return token;
@@ -66,5 +67,13 @@ public class BotProperties {
 
   public void setCancelButton(String cancelButton) {
     this.cancelButton = cancelButton;
+  }
+
+  public Long getCleanUpTimeOut() {
+    return cleanUpTimeOut;
+  }
+
+  public void setCleanUpTimeOut(Long cleanUpTimeOut) {
+    this.cleanUpTimeOut = cleanUpTimeOut;
   }
 }

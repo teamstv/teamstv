@@ -1,10 +1,10 @@
 package com.emc.teamstv.telegrambot.services;
 
 import java.util.Optional;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 /**
  * Service used to transfer data between handlers
+ *
  * @param <ID> id value, used to get necessary transfer object
  * @param <E> transfer object
  * @author talipa
@@ -12,6 +12,9 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 public interface TransferService<ID, E> {
 
   Optional<E> get(ID id);
+
   void put(ID id, E e);
+
+  void delete(ID id);
 
 }

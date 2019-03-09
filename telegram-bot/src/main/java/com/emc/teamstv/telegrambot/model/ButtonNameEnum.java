@@ -1,6 +1,6 @@
 package com.emc.teamstv.telegrambot.model;
 
-public enum  ButtonNameEnum {
+public enum ButtonNameEnum {
 
   DOWNLOAD("_download"),
   ADD_CAPTION("_caption"),
