@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Class which maps external props to POJO
+ *
  * @author talipa
  */
 
@@ -15,6 +16,8 @@ public class BotProperties {
   private String token;
   private String botName;
   private String path;
+  private String downloadButName;
+  private String addCaption;
 
   public String getToken() {
     return token;
@@ -38,5 +41,21 @@ public class BotProperties {
 
   public void setPath(String path) {
     this.path = path;
+  }
+
+  public String getDownloadButName() {
+    return downloadButName;
+  }
+
+  public void setDownloadButName(String downloadButName) {
+    this.downloadButName = downloadButName;
+  }
+
+  public String getAddCaption() {
+    return addCaption;
+  }
+
+  public void setAddCaption(String addCaption) {
+    this.addCaption = addCaption;
   }
 }

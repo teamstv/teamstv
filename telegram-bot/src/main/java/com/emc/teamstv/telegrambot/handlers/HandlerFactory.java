@@ -5,8 +5,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
- * Handler factory class returns Handler interface instance based on type of update
- * Private methods isText, isPhoto, etc used for simplify code
+ * Handler factory class returns Handler interface instance based on type of update Private methods
+ * isText, isPhoto, etc used for simplify code
+ *
  * @author talipa
  */
 

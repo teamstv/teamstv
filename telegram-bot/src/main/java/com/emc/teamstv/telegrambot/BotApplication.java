@@ -6,8 +6,9 @@ import org.telegram.telegrambots.ApiContextInitializer;
 
 /**
  * SpringBoot main class.
+ *
  * @author talipa
-*/
+ */
 
 @SpringBootApplication
 public class BotApplication {

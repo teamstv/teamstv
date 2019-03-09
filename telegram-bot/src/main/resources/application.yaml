@@ -3,3 +3,5 @@ bot:
     token: 740572402:AAHLQLD5XG_KadYJVJjuadlJrO1eESKikpU
     name: teams-tv telegram bot
     path: .
+    downloadButName: Загрузить на сервер
+    addCaption: Добавить описание
