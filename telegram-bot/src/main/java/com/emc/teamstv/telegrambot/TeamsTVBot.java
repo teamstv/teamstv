@@ -1,27 +1,28 @@
 package com.emc.teamstv.telegrambot;
 
-import static com.emc.teamstv.telegrambot.BotReplies.TEXT_NOT_SUPPORTED;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.emc.teamstv.telegrambot.handlers.Handler;
+import com.emc.teamstv.telegrambot.handlers.HandlerFactory;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 /**
- * Class represents abstract handler for telegram API
+ * Class represents telegram bot API which delegates methods to different handlers
  * @author talipa
  */
 
-public abstract class TeamsTVBot extends TelegramLongPollingBot {
+@Service
+public class TeamsTVBot extends TelegramLongPollingBot {
 
   private final BotProperties botProperties;
+  private final HandlerFactory factory;
 
-  public TeamsTVBot(BotProperties botProperties) {
+  public TeamsTVBot(BotProperties botProperties,
+      HandlerFactory factory) {
     this.botProperties = botProperties;
+    this.factory = factory;
   }
 
   public String getBotUsername() {
@@ -34,5 +35,18 @@ public abstract class TeamsTVBot extends TelegramLongPollingBot {
 
   public BotProperties getBotProperties() {
     return botProperties;
+  }
+
+  @Override
+  public void onUpdateReceived(Update update) {
+    factory.getHandler(update).ifPresent(h -> h.onUpdateReceived(update, this));
+  }
+
+  @Override
+  public void onUpdatesReceived(List<Update> updates) {
+    updates.stream()
+        .parallel()
+        .unordered()
+        .forEach(this::onUpdateReceived);
   }
 }

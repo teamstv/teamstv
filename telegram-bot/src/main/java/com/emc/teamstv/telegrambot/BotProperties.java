@@ -14,6 +14,7 @@ public class BotProperties {
 
   private String token;
   private String botName;
+  private String path;
 
   public String getToken() {
     return token;
@@ -29,5 +30,13 @@ public class BotProperties {
 
   public void setBotName(String botName) {
     this.botName = botName;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
   }
 }
