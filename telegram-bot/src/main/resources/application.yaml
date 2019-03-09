@@ -5,3 +5,4 @@ bot:
     path: .
     downloadButName: Загрузить на сервер
     addCaption: Добавить описание
+    cancelButton: Ничего не делать

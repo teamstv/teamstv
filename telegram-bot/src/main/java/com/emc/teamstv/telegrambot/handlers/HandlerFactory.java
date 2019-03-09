@@ -16,12 +16,15 @@ public class HandlerFactory {
 
   private final PhotoMessageHandler photoMessageHandler;
   private final TextMessageHandler textMessageHandler;
+  private final DownloadPhotoHandler downloadPhotoHandler;
 
   public HandlerFactory(
       PhotoMessageHandler photoMessageHandler,
-      TextMessageHandler textMessageHandler) {
+      TextMessageHandler textMessageHandler,
+      DownloadPhotoHandler downloadPhotoHandler) {
     this.photoMessageHandler = photoMessageHandler;
     this.textMessageHandler = textMessageHandler;
+    this.downloadPhotoHandler = downloadPhotoHandler;
   }
 
   public Optional<Handler> getHandler(Update update) {
@@ -30,6 +33,9 @@ public class HandlerFactory {
     }
     if (isText(update)) {
       return Optional.of(textMessageHandler);
+    }
+    if (isDownloadPhotoCallback(update)) {
+      return Optional.of(downloadPhotoHandler);
     }
     return Optional.empty();
   }
@@ -41,5 +47,9 @@ public class HandlerFactory {
   private boolean isText(Update update) {
     return update.hasMessage() && update.getMessage().hasText() && !update.getMessage().getText()
         .startsWith("/");
+  }
+
+  private boolean isDownloadPhotoCallback(Update update) {
+    return update.hasCallbackQuery() && update.getCallbackQuery().getData().endsWith("_download");
   }
 }

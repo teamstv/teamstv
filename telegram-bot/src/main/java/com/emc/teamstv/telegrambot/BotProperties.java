@@ -18,6 +18,7 @@ public class BotProperties {
   private String path;
   private String downloadButName;
   private String addCaption;
+  private String cancelButton;
 
   public String getToken() {
     return token;
@@ -57,5 +58,13 @@ public class BotProperties {
 
   public void setAddCaption(String addCaption) {
     this.addCaption = addCaption;
+  }
+
+  public String getCancelButton() {
+    return cancelButton;
+  }
+
+  public void setCancelButton(String cancelButton) {
+    this.cancelButton = cancelButton;
   }
 }
