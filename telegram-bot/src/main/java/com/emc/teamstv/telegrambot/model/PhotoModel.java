@@ -1,5 +1,6 @@
 package com.emc.teamstv.telegrambot.model;
 
+import java.time.Instant;
 import java.util.Objects;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -13,8 +14,9 @@ public class PhotoModel {
   private final PhotoSize photoSize;
   private final String fileId;
   private String localPath;
-  private boolean hasCaption;
+  private String caption;
   private boolean isLoaded;
+  private String transferId = "";
 
   private PhotoModel(PhotoSize photoSize, String fileId) {
     this.photoSize = photoSize;
@@ -23,10 +25,6 @@ public class PhotoModel {
 
   public static PhotoModel getPhotoModel(PhotoSize photoSize, String fileId) {
     return new PhotoModel(photoSize, fileId);
-  }
-
-  public void hasCaption(boolean hasCaption) {
-    this.hasCaption = hasCaption;
   }
 
   public PhotoSize getPhotoSize() {
@@ -46,7 +44,7 @@ public class PhotoModel {
   }
 
   public boolean hasCaption() {
-    return hasCaption;
+    return caption != null;
   }
 
   public boolean isLoaded() {
@@ -55,6 +53,22 @@ public class PhotoModel {
 
   public void setLoaded(boolean loaded) {
     isLoaded = loaded;
+  }
+
+  public String getCaption() {
+    return caption;
+  }
+
+  public void setCaption(String caption) {
+    this.caption = caption;
+  }
+
+  public String getTransferId() {
+    return transferId;
+  }
+
+  public void setTransferId(String transferId) {
+    this.transferId = transferId;
   }
 
   @Override
@@ -79,7 +93,7 @@ public class PhotoModel {
     return "PhotoModel{" +
         "fileId='" + fileId + '\'' +
         ", localPath='" + localPath + '\'' +
-        ", hasCaption=" + hasCaption +
+        ", caption='" + caption + '\'' +
         ", isLoaded=" + isLoaded +
         '}';
   }

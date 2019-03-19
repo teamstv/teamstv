@@ -39,7 +39,7 @@ public class PhotoMessageHandler implements Handler {
   public void onUpdateReceived(Update update, DefaultAbsSender sender) {
     if (update.hasMessage() && update.getMessage().hasPhoto()) {
       String user = update.getMessage().getFrom().getUserName();
-      boolean hasCaption = update.getMessage().getCaption() != null;
+      String caption = update.getMessage().getCaption();
       Optional<PhotoSize> photo = update.getMessage()
           .getPhoto()
           .stream()
@@ -47,9 +47,9 @@ public class PhotoMessageHandler implements Handler {
       photo.ifPresent(
           p -> {
             log.info("PhotoSize object from user " + user + " received");
-            SendMessage msg = prepareResponse(update, THANKS_FOR_PHOTO.getResponse());
+            SendMessage msg = prepareResponse(update, THANKS_FOR_PHOTO);
             PhotoModel model = PhotoModel.getPhotoModel(p, p.getFileId());
-            model.hasCaption(hasCaption);
+            model.setCaption(caption);
             model.setLoaded(false);
             String id = generator.getUniq();
             keyboard.keyboard(model, id).ifPresent(msg::setReplyMarkup);

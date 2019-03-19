@@ -54,7 +54,7 @@ public class CancelCallbackHandler implements Handler {
           }
         }
     );
-    EditMessageText msg = prepareCallbackReply(update, CLEAN_UP.getResponse());
+    EditMessageText msg = prepareCallbackReply(update, CLEAN_UP);
     sendText(msg, sender, update);
   }
 }

@@ -1,5 +1,6 @@
 package com.emc.teamstv.telegrambot.handlers;
 
+import com.emc.teamstv.telegrambot.BotReplies;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.PhotoModel;
 import com.emc.teamstv.telegrambot.services.TransferService;
@@ -27,10 +28,10 @@ public interface Handler {
 
   /**
    * @param update Update event from telegram API
-   * @param msgToSend String value from BotReplies should be used
+   * @param reply value from BotReplies enum
    * @return SendMessage object
    */
-  default SendMessage prepareResponse(Update update, String msgToSend) {
+  default SendMessage prepareResponse(Update update, BotReplies reply) {
     String msg = update.getMessage().getText();
     long chatId = update.getMessage().getChatId();
     int msgId = update.getMessage().getMessageId();
@@ -38,7 +39,7 @@ public interface Handler {
     return new SendMessage()
         .setReplyToMessageId(msgId)
         .setChatId(chatId)
-        .setText(getUser(update) + msgToSend);
+        .setText(getUser(update) + reply.getResponse());
   }
 
   @SuppressWarnings("unchecked")
@@ -58,13 +59,13 @@ public interface Handler {
     return update.getCallbackQuery().getFrom().getUserName();
   }
 
-  default EditMessageText prepareCallbackReply(Update update, String msgToSend) {
+  default EditMessageText prepareCallbackReply(Update update, BotReplies reply) {
     long message_id = update.getCallbackQuery().getMessage().getMessageId();
     long chat_id = update.getCallbackQuery().getMessage().getChatId();
     return new EditMessageText()
         .setChatId(chat_id)
         .setMessageId((int) message_id)
-        .setText(msgToSend);
+        .setText(reply.getResponse());
   }
 
   default String getTransferID(Update update, ButtonNameEnum nameEnum) {

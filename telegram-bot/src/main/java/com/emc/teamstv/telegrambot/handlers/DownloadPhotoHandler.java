@@ -8,12 +8,12 @@ import com.emc.teamstv.telegrambot.model.Keyboard;
 import com.emc.teamstv.telegrambot.model.PhotoModel;
 import com.emc.teamstv.telegrambot.services.BotRepo;
 import com.emc.teamstv.telegrambot.services.TransferService;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
@@ -25,6 +25,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 /**
  * Class for handling callbacks from inline keyboard. This one will load data into our server
+ *
  * @author talipa
  */
 @Service
@@ -48,7 +49,7 @@ public class DownloadPhotoHandler implements Handler {
 
   @Override
   public void onUpdateReceived(Update update, DefaultAbsSender sender) {
-    getPhotoModel(update,transferService, ButtonNameEnum.DOWNLOAD).ifPresent(
+    getPhotoModel(update, transferService, ButtonNameEnum.DOWNLOAD).ifPresent(
         model -> {
           String fileId = model.getPhotoSize().getFileId();
           try {
@@ -59,8 +60,9 @@ public class DownloadPhotoHandler implements Handler {
           }
           long userId = update.getCallbackQuery().getFrom().getId();
           botRepo.save(model, userId);
-          EditMessageText msg = prepareCallbackReply(update, LOAD_COMPLETED.getResponse());
-          keyboard.keyboard(model, getTransferID(update, ButtonNameEnum.DOWNLOAD)).ifPresent(msg::setReplyMarkup);
+          EditMessageText msg = prepareCallbackReply(update, LOAD_COMPLETED);
+          keyboard.keyboard(model, getTransferID(update, ButtonNameEnum.DOWNLOAD))
+              .ifPresent(msg::setReplyMarkup);
           sendText(msg, sender, update);
         }
     );
@@ -69,12 +71,12 @@ public class DownloadPhotoHandler implements Handler {
 
   private void saveFile(PhotoModel model, DefaultAbsSender sender) throws TelegramApiException {
     PhotoSize p = model.getPhotoSize();
-    java.io.File file = sender.downloadFile(getPath(p, sender));
-    try (InputStream ios = new FileInputStream(file);) {
-      String localPath = properties.getPath() + p.getFileId() + ".jpg";
-      java.io.File fileI = new java.io.File(localPath);
-      Files.copy(ios, fileI.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      log.info("File " + fileI.getPath() + " loaded");
+    Path file = sender.downloadFile(getPath(p, sender)).toPath();
+    try (InputStream ios = Files.newInputStream(file);) {
+      String localPath = properties.getPath() + java.io.File.separator + p.getFileId() + ".jpg";
+      Path fileI = Paths.get(localPath);
+      Files.copy(ios, fileI, StandardCopyOption.REPLACE_EXISTING);
+      log.info("File " + fileI + " loaded");
       model.setLoaded(true);
       model.setLocalPath(localPath);
     } catch (IOException e) {

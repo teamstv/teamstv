@@ -9,6 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
+/**
+ * Simple implementation of BotRepo service
+ *
+ * @author talipa
+ */
+
 @Service
 public class BotRepoImpl implements BotRepo<PhotoModel, Long> {
 

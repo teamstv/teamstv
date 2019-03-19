@@ -1,5 +1,10 @@
 package com.emc.teamstv.telegrambot.model;
 
+/**
+ * Enumeration represents available callback options
+ *
+ * @author talipa
+ */
 public enum ButtonNameEnum {
 
   DOWNLOAD("_download"),
