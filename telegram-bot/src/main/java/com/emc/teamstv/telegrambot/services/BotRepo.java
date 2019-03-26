@@ -1,5 +1,8 @@
 package com.emc.teamstv.telegrambot.services;
 
+import com.emc.teamstv.telegrambot.model.Photo;
+import java.util.List;
+
 public interface BotRepo<T, ID> {
 
   void save(T t, ID id);
@@ -11,4 +14,9 @@ public interface BotRepo<T, ID> {
   void deleteAll();
 
   void deleteByValue(ID id, T t);
+
+  Iterable<Photo> list(ID id);
+
+  Iterable<Photo> listAll();
+
 }

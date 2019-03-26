@@ -19,6 +19,37 @@ public class BotProperties {
   private String downloadButton;
   private String captionButton;
   private String cancelButton;
+  private SimpleRepoProps repoProps;
+
+  public class SimpleRepoProps {
+    private String storePath;
+    private int flushDelay;
+    private int cleanDelay;
+
+    public String getStorePath() {
+      return storePath;
+    }
+
+    public void setStorePath(String storePath) {
+      this.storePath = storePath;
+    }
+
+    public int getFlushDelay() {
+      return flushDelay;
+    }
+
+    public void setFlushDelay(int flushDelay) {
+      this.flushDelay = flushDelay;
+    }
+
+    public int getCleanDelay() {
+      return cleanDelay;
+    }
+
+    public void setCleanDelay(int cleanDelay) {
+      this.cleanDelay = cleanDelay;
+    }
+  }
 
   public String getToken() {
     return token;
@@ -68,4 +99,11 @@ public class BotProperties {
     this.cancelButton = cancelButton;
   }
 
+  public SimpleRepoProps getRepoProps() {
+    return repoProps;
+  }
+
+  public void setRepoProps(SimpleRepoProps repoProps) {
+    this.repoProps = repoProps;
+  }
 }

@@ -1,5 +1,8 @@
 package com.emc.teamstv.telegrambot.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -8,16 +11,23 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
  *
  * @author talipa
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Photo {
 
   private final PhotoSize photoSize;
   private final String fileId;
+  @JsonProperty("localPath")
   private String localPath;
+  @JsonProperty("caption")
   private String caption;
+  @JsonProperty("isLoaded")
   private boolean isLoaded;
+  @JsonProperty("transferId")
   private String transferId = "";
 
-  private Photo(PhotoSize photoSize, String fileId) {
+  @JsonCreator
+  private Photo(@JsonProperty("photoSize") PhotoSize photoSize,
+      @JsonProperty("fileId") String fileId) {
     this.photoSize = photoSize;
     this.fileId = fileId;
   }
@@ -64,6 +74,10 @@ public class Photo {
 
   public void setTransferId(String transferId) {
     this.transferId = transferId;
+  }
+
+  public String getCaption() {
+    return caption;
   }
 
   @Override

@@ -6,3 +6,7 @@ bot:
     downloadButton: Загрузить на сервер
     captionButton: Добавить описание
     cancelButton: Отменить загрузку
+    repoProps:
+      storePath: C:\\tmp
+      flushDelay: 300
+      cleanDelay: 3000
