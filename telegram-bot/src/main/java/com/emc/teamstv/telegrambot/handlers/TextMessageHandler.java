@@ -33,13 +33,11 @@ public class TextMessageHandler implements Handler {
 
   @Override
   public void onUpdateReceived(Update update, DefaultAbsSender sender) {
-    if (update.hasMessage() && update.getMessage().hasText()) {
-      if (waitForCaptionMsg(update, sender)) {
-        return;
-      }
-      SendMessage msg = prepareResponse(update, TEXT_NOT_SUPPORTED);
-      sendText(msg, sender, update);
+    if (waitForCaptionMsg(update, sender)) {
+      return;
     }
+    SendMessage msg = prepareResponse(update, TEXT_NOT_SUPPORTED);
+    sendText(msg, sender, update);
   }
 
   private boolean waitForCaptionMsg(Update update, DefaultAbsSender sender) {

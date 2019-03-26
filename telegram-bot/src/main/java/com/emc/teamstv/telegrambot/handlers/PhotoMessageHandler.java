@@ -37,26 +37,24 @@ public class PhotoMessageHandler implements Handler {
 
   @Override
   public void onUpdateReceived(Update update, DefaultAbsSender sender) {
-    if (update.hasMessage() && update.getMessage().hasPhoto()) {
-      String user = update.getMessage().getFrom().getUserName();
-      String caption = update.getMessage().getCaption();
-      Optional<PhotoSize> photo = update.getMessage()
-          .getPhoto()
-          .stream()
-          .max(Comparator.comparing(PhotoSize::getFileSize));
-      photo.ifPresent(
-          p -> {
-            log.info("PhotoSize object from user " + user + " received");
-            SendMessage msg = prepareResponse(update, THANKS_FOR_PHOTO);
-            Photo model = Photo.getPhotoModel(p, p.getFileId());
-            model.setCaption(caption);
-            model.setLoaded(false);
-            String id = generator.getUniq();
-            keyboard.keyboard(model, id).ifPresent(msg::setReplyMarkup);
-            transferService.set(String.valueOf(id), model);
-            sendText(msg, sender, update);
-          }
-      );
-    }
+    String user = update.getMessage().getFrom().getUserName();
+    String caption = update.getMessage().getCaption();
+    Optional<PhotoSize> photo = update.getMessage()
+        .getPhoto()
+        .stream()
+        .max(Comparator.comparing(PhotoSize::getFileSize));
+    photo.ifPresent(
+        p -> {
+          log.info("PhotoSize object from user " + user + " received");
+          SendMessage msg = prepareResponse(update, THANKS_FOR_PHOTO);
+          Photo model = Photo.getPhotoModel(p, p.getFileId());
+          model.setCaption(caption);
+          model.setLoaded(false);
+          String id = generator.getUniq();
+          keyboard.keyboard(model, id).ifPresent(msg::setReplyMarkup);
+          transferService.set(String.valueOf(id), model);
+          sendText(msg, sender, update);
+        }
+    );
   }
 }

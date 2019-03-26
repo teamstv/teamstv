@@ -20,25 +20,29 @@ public class HandlerFactory {
   private final DownloadCallbackHandler downloadCallbackHandler;
   private final CancelCallbackHandler cancelCallbackHandler;
   private final CaptionCallbackHandler captionCallbackHandler;
+  private final CommandHandler commandHandler;
+
 
   public HandlerFactory(
       PhotoMessageHandler photoMessageHandler,
       TextMessageHandler textMessageHandler,
       DownloadCallbackHandler downloadCallbackHandler,
       CancelCallbackHandler cancelCallbackHandler,
-      CaptionCallbackHandler captionCallbackHandler) {
+      CaptionCallbackHandler captionCallbackHandler,
+      CommandHandler commandHandler) {
     this.photoMessageHandler = photoMessageHandler;
     this.textMessageHandler = textMessageHandler;
     this.downloadCallbackHandler = downloadCallbackHandler;
     this.cancelCallbackHandler = cancelCallbackHandler;
     this.captionCallbackHandler = captionCallbackHandler;
+    this.commandHandler = commandHandler;
   }
 
   public Optional<Handler> getHandler(Update update) {
     if (isPhoto(update)) {
       return Optional.of(photoMessageHandler);
     }
-    if (isText(update)) {
+    if (isTextAndNotCommand(update)) {
       return Optional.of(textMessageHandler);
     }
     if (checkCallbackType(update, ButtonNameEnum.DOWNLOAD)) {
@@ -50,6 +54,9 @@ public class HandlerFactory {
     if (checkCallbackType(update, ButtonNameEnum.ADD_CAPTION)) {
       return Optional.of(captionCallbackHandler);
     }
+    if (isCommand(update)) {
+      return Optional.of(commandHandler);
+    }
     return Optional.empty();
   }
 
@@ -58,8 +65,15 @@ public class HandlerFactory {
   }
 
   private boolean isText(Update update) {
-    return update.hasMessage() && update.getMessage().hasText() && !update.getMessage().getText()
-        .startsWith("/");
+    return update.hasMessage() && update.getMessage().hasText();
+  }
+
+  private boolean isTextAndNotCommand(Update update) {
+    return isText(update) && !isCommand(update);
+  }
+
+  private boolean isCommand(Update update) {
+    return isText(update) && update.getMessage().getText().startsWith("/");
   }
 
   private boolean checkCallbackType(Update update, ButtonNameEnum nameEnum) {

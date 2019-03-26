@@ -12,7 +12,8 @@ public enum BotReplies {
   CLEAN_UP("Загрузка отменена, спасибо"),
   NULL_USER("Пожалуйста создайте имя пользователя в своем аккаунте телеграм."),
   SEND_CAPTION("Пожалуйста отправьте описание для фото"),
-  THANKS_FOR_CAPTION("Спасибо что предоставили описание к фото");
+  THANKS_FOR_CAPTION("Спасибо что предоставили описание к фото"),
+  UNKNOWN_COMMAND("Несуществующая команда");
 
   private final String response;
 

@@ -60,11 +60,11 @@ public interface Handler {
   }
 
   default EditMessageText prepareCallbackReply(Update update, BotReplies reply) {
-    long message_id = update.getCallbackQuery().getMessage().getMessageId();
-    long chat_id = update.getCallbackQuery().getMessage().getChatId();
+    long messageId = update.getCallbackQuery().getMessage().getMessageId();
+    long chatId = update.getCallbackQuery().getMessage().getChatId();
     return new EditMessageText()
-        .setChatId(chat_id)
-        .setMessageId((int) message_id)
+        .setChatId(chatId)
+        .setMessageId((int) messageId)
         .setText(reply.getResponse());
   }
 
