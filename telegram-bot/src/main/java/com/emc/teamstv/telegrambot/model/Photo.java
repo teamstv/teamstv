@@ -1,6 +1,5 @@
 package com.emc.teamstv.telegrambot.model;
 
-import java.time.Instant;
 import java.util.Objects;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -9,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
  *
  * @author talipa
  */
-public class PhotoModel {
+public class Photo {
 
   private final PhotoSize photoSize;
   private final String fileId;
@@ -18,13 +17,13 @@ public class PhotoModel {
   private boolean isLoaded;
   private String transferId = "";
 
-  private PhotoModel(PhotoSize photoSize, String fileId) {
+  private Photo(PhotoSize photoSize, String fileId) {
     this.photoSize = photoSize;
     this.fileId = fileId;
   }
 
-  public static PhotoModel getPhotoModel(PhotoSize photoSize, String fileId) {
-    return new PhotoModel(photoSize, fileId);
+  public static Photo getPhotoModel(PhotoSize photoSize, String fileId) {
+    return new Photo(photoSize, fileId);
   }
 
   public PhotoSize getPhotoSize() {
@@ -55,10 +54,6 @@ public class PhotoModel {
     isLoaded = loaded;
   }
 
-  public String getCaption() {
-    return caption;
-  }
-
   public void setCaption(String caption) {
     this.caption = caption;
   }
@@ -76,10 +71,10 @@ public class PhotoModel {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof PhotoModel)) {
+    if (!(o instanceof Photo)) {
       return false;
     }
-    PhotoModel that = (PhotoModel) o;
+    Photo that = (Photo) o;
     return fileId.equals(that.fileId);
   }
 
@@ -90,7 +85,7 @@ public class PhotoModel {
 
   @Override
   public String toString() {
-    return "PhotoModel{" +
+    return "Photo{" +
         "fileId='" + fileId + '\'' +
         ", localPath='" + localPath + '\'' +
         ", caption='" + caption + '\'' +

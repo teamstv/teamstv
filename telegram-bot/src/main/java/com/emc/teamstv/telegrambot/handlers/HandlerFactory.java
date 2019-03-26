@@ -17,19 +17,19 @@ public class HandlerFactory {
 
   private final PhotoMessageHandler photoMessageHandler;
   private final TextMessageHandler textMessageHandler;
-  private final DownloadPhotoHandler downloadPhotoHandler;
+  private final DownloadCallbackHandler downloadCallbackHandler;
   private final CancelCallbackHandler cancelCallbackHandler;
   private final CaptionCallbackHandler captionCallbackHandler;
 
   public HandlerFactory(
       PhotoMessageHandler photoMessageHandler,
       TextMessageHandler textMessageHandler,
-      DownloadPhotoHandler downloadPhotoHandler,
+      DownloadCallbackHandler downloadCallbackHandler,
       CancelCallbackHandler cancelCallbackHandler,
       CaptionCallbackHandler captionCallbackHandler) {
     this.photoMessageHandler = photoMessageHandler;
     this.textMessageHandler = textMessageHandler;
-    this.downloadPhotoHandler = downloadPhotoHandler;
+    this.downloadCallbackHandler = downloadCallbackHandler;
     this.cancelCallbackHandler = cancelCallbackHandler;
     this.captionCallbackHandler = captionCallbackHandler;
   }
@@ -42,7 +42,7 @@ public class HandlerFactory {
       return Optional.of(textMessageHandler);
     }
     if (checkCallbackType(update, ButtonNameEnum.DOWNLOAD)) {
-      return Optional.of(downloadPhotoHandler);
+      return Optional.of(downloadCallbackHandler);
     }
     if (checkCallbackType(update, ButtonNameEnum.CANCEL)) {
       return Optional.of(cancelCallbackHandler);

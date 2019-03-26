@@ -3,9 +3,8 @@ package com.emc.teamstv.telegrambot.handlers;
 import static com.emc.teamstv.telegrambot.BotReplies.TEXT_NOT_SUPPORTED;
 import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_CAPTION;
 
-import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Keyboard;
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Service
 public class TextMessageHandler implements Handler {
 
-  private final TransferService<String, PhotoModel> transferService;
+  private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
 
   public TextMessageHandler(
-      TransferService<String, PhotoModel> transferService,
+      TransferService<String, Photo> transferService,
       Keyboard keyboard) {
     this.transferService = transferService;
     this.keyboard = keyboard;
@@ -44,7 +43,7 @@ public class TextMessageHandler implements Handler {
   }
 
   private boolean waitForCaptionMsg(Update update, DefaultAbsSender sender) {
-    Optional<PhotoModel> optModel = transferService.get(getUser(update));
+    Optional<Photo> optModel = transferService.get(getUser(update));
     optModel.ifPresent(
         model -> {
           String caption = update.getMessage().getText();

@@ -16,10 +16,9 @@ public class BotProperties {
   private String token;
   private String botName;
   private String path;
-  private String downloadButName;
-  private String addCaption;
+  private String downloadButton;
+  private String captionButton;
   private String cancelButton;
-  private Long cleanUpTimeOut;
 
   public String getToken() {
     return token;
@@ -45,20 +44,20 @@ public class BotProperties {
     this.path = path;
   }
 
-  public String getDownloadButName() {
-    return downloadButName;
+  public String getDownloadButton() {
+    return downloadButton;
   }
 
-  public void setDownloadButName(String downloadButName) {
-    this.downloadButName = downloadButName;
+  public void setDownloadButton(String downloadButton) {
+    this.downloadButton = downloadButton;
   }
 
-  public String getAddCaption() {
-    return addCaption;
+  public String getCaptionButton() {
+    return captionButton;
   }
 
-  public void setAddCaption(String addCaption) {
-    this.addCaption = addCaption;
+  public void setCaptionButton(String captionButton) {
+    this.captionButton = captionButton;
   }
 
   public String getCancelButton() {
@@ -69,11 +68,4 @@ public class BotProperties {
     this.cancelButton = cancelButton;
   }
 
-  public Long getCleanUpTimeOut() {
-    return cleanUpTimeOut;
-  }
-
-  public void setCleanUpTimeOut(Long cleanUpTimeOut) {
-    this.cleanUpTimeOut = cleanUpTimeOut;
-  }
 }

@@ -13,7 +13,7 @@ public interface TransferService<ID, E> {
 
   Optional<E> get(ID id);
 
-  void put(ID id, E e);
+  void set(ID id, E e);
 
   void delete(ID id);
 

@@ -2,7 +2,7 @@ package com.emc.teamstv.telegrambot.handlers;
 
 import com.emc.teamstv.telegrambot.BotReplies;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -72,8 +72,8 @@ public interface Handler {
     return update.getCallbackQuery().getData().replace(nameEnum.getData(), "");
   }
 
-  default Optional<PhotoModel> getPhotoModel(Update update,
-      TransferService<String, PhotoModel> transferService, ButtonNameEnum nameEnum) {
+  default Optional<Photo> getPhotoModel(Update update,
+      TransferService<String, Photo> transferService, ButtonNameEnum nameEnum) {
     String data = update.getCallbackQuery().getData();
     log.info("Callback for data " + data + " received");
     return transferService.get(getTransferID(update, nameEnum));

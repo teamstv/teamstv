@@ -1,6 +1,6 @@
 package com.emc.teamstv.telegrambot.providers;
 
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.BotRepo;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class BotRepoImpl implements BotRepo<PhotoModel, Long> {
+public class BotRepoImpl implements BotRepo<Photo, Long> {
 
-  private final Map<Long, Set<PhotoModel>> map = new ConcurrentHashMap<>();
+  private final Map<Long, Set<Photo>> map = new ConcurrentHashMap<>();
 
   @PostConstruct
   private void init() {
@@ -26,18 +26,15 @@ public class BotRepoImpl implements BotRepo<PhotoModel, Long> {
   }
 
   @Override
-  public void save(PhotoModel model, Long aLong) {
-    Set<PhotoModel> models = map.getOrDefault(aLong, new HashSet<>());
+  public void save(Photo model, Long aLong) {
+    Set<Photo> models = map.getOrDefault(aLong, new HashSet<>());
     models.add(model);
-    map.put(aLong,models);
+    map.put(aLong, models);
   }
 
   @Override
-  public boolean checkByID(Long aLong, PhotoModel model) {
-    Set<PhotoModel> models = map.get(aLong);
-    if (models == null) {
-      return false;
-    }
+  public boolean checkByID(Long aLong, Photo model) {
+    Set<Photo> models = map.get(aLong);
     return models.stream().anyMatch(m -> m.equals(model));
   }
 
@@ -52,11 +49,8 @@ public class BotRepoImpl implements BotRepo<PhotoModel, Long> {
   }
 
   @Override
-  public void deleteByValue(Long aLong, PhotoModel model) {
-    Set<PhotoModel> models = map.get(aLong);
-    if (models == null) {
-      return;
-    }
+  public void deleteByValue(Long aLong, Photo model) {
+    Set<Photo> models = map.get(aLong);
     models.remove(model);
   }
 }

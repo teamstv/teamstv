@@ -1,6 +1,6 @@
 package com.emc.teamstv.telegrambot.providers;
 
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.util.Map;
 import java.util.Optional;
@@ -14,17 +14,17 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class PhotoTransferService implements TransferService<String, PhotoModel> {
+public class PhotoTransferServiceImpl implements TransferService<String, Photo> {
 
-  private final Map<String, PhotoModel> photoSizeMap = new ConcurrentHashMap<>();
+  private final Map<String, Photo> photoSizeMap = new ConcurrentHashMap<>();
 
   @Override
-  public Optional<PhotoModel> get(String s) {
+  public Optional<Photo> get(String s) {
     return Optional.ofNullable(photoSizeMap.get(s));
   }
 
   @Override
-  public void put(String s, PhotoModel model) {
+  public void set(String s, Photo model) {
     photoSizeMap.put(s, model);
   }
 

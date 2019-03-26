@@ -3,7 +3,7 @@ package com.emc.teamstv.telegrambot.handlers;
 import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_PHOTO;
 
 import com.emc.teamstv.telegrambot.model.Keyboard;
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.IdGenerator;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.util.Comparator;
@@ -24,11 +24,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class PhotoMessageHandler implements Handler {
 
   private final Keyboard keyboard;
-  private final TransferService<String, PhotoModel> transferService;
+  private final TransferService<String, Photo> transferService;
   private final IdGenerator<String> generator;
 
   public PhotoMessageHandler(Keyboard keyboard,
-      TransferService<String, PhotoModel> transferService,
+      TransferService<String, Photo> transferService,
       IdGenerator<String> generator) {
     this.keyboard = keyboard;
     this.transferService = transferService;
@@ -48,12 +48,12 @@ public class PhotoMessageHandler implements Handler {
           p -> {
             log.info("PhotoSize object from user " + user + " received");
             SendMessage msg = prepareResponse(update, THANKS_FOR_PHOTO);
-            PhotoModel model = PhotoModel.getPhotoModel(p, p.getFileId());
+            Photo model = Photo.getPhotoModel(p, p.getFileId());
             model.setCaption(caption);
             model.setLoaded(false);
             String id = generator.getUniq();
             keyboard.keyboard(model, id).ifPresent(msg::setReplyMarkup);
-            transferService.put(String.valueOf(id), model);
+            transferService.set(String.valueOf(id), model);
             sendText(msg, sender, update);
           }
       );

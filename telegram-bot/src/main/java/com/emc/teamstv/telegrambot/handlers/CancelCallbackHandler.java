@@ -3,7 +3,7 @@ package com.emc.teamstv.telegrambot.handlers;
 import static com.emc.teamstv.telegrambot.BotReplies.CLEAN_UP;
 
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.BotRepo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.io.IOException;
@@ -17,17 +17,18 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 /**
  * Class for handling callbacks from inline keyboard. This one will cancel any progression on data
  * loading
+ *
  * @author talipa
  */
 @Service
 public class CancelCallbackHandler implements Handler {
 
-  private final TransferService<String, PhotoModel> transferService;
-  private final BotRepo<PhotoModel, Long> botRepo;
+  private final TransferService<String, Photo> transferService;
+  private final BotRepo<Photo, Long> botRepo;
 
   public CancelCallbackHandler(
-      TransferService<String, PhotoModel> transferService,
-      BotRepo<PhotoModel, Long> botRepo) {
+      TransferService<String, Photo> transferService,
+      BotRepo<Photo, Long> botRepo) {
     this.transferService = transferService;
     this.botRepo = botRepo;
   }

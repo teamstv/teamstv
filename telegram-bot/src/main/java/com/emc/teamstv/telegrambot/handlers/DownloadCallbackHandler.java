@@ -5,7 +5,7 @@ import static com.emc.teamstv.telegrambot.BotReplies.LOAD_COMPLETED;
 import com.emc.teamstv.telegrambot.BotProperties;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Keyboard;
-import com.emc.teamstv.telegrambot.model.PhotoModel;
+import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.BotRepo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.io.IOException;
@@ -29,18 +29,18 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author talipa
  */
 @Service
-public class DownloadPhotoHandler implements Handler {
+public class DownloadCallbackHandler implements Handler {
 
-  private final TransferService<String, PhotoModel> transferService;
+  private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
   private final BotProperties properties;
-  private final BotRepo<PhotoModel, Long> botRepo;
+  private final BotRepo<Photo, Long> botRepo;
 
-  public DownloadPhotoHandler(
-      TransferService<String, PhotoModel> transferService,
+  public DownloadCallbackHandler(
+      TransferService<String, Photo> transferService,
       Keyboard keyboard,
       BotProperties properties,
-      BotRepo<PhotoModel, Long> botRepo) {
+      BotRepo<Photo, Long> botRepo) {
     this.transferService = transferService;
     this.keyboard = keyboard;
     this.properties = properties;
@@ -69,7 +69,7 @@ public class DownloadPhotoHandler implements Handler {
 
   }
 
-  private void saveFile(PhotoModel model, DefaultAbsSender sender) throws TelegramApiException {
+  private void saveFile(Photo model, DefaultAbsSender sender) throws TelegramApiException {
     PhotoSize p = model.getPhotoSize();
     Path file = sender.downloadFile(getPath(p, sender)).toPath();
     try (InputStream ios = Files.newInputStream(file);) {
