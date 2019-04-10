@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+from timeloop import Timeloop
 
 
 def eprint(*args, **kwargs):
@@ -12,10 +13,8 @@ import os
 from lib import calendar, misc
 import settings
 from datetime import datetime
-import subprocess
 import socket
 import datetime
-import logging
 from logging.config import dictConfig
 
 dictConfig({
@@ -36,6 +35,7 @@ dictConfig({
 })
 
 app = Flask(__name__)
+tl = Timeloop()
 
 
 @app.route('/fin_curr')
@@ -153,12 +153,12 @@ def get_description_list(folder, file):
 
 
 def get_file_abs_path(file, folder):
-    abs_path = get_folder_abs_path(folder)
+    abs_path = get_img_folder_abs_path(folder)
     filename = os.path.join(abs_path, file)
     return filename
 
 
-def get_folder_abs_path(folder):
+def get_img_folder_abs_path(folder):
     img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
     folder_path = os.path.join(img_path, folder)
     abs_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_path)
@@ -167,7 +167,7 @@ def get_folder_abs_path(folder):
 
 # TODO: move these two somewhere else
 def get_folder_images(folder):
-    abs_path = get_folder_abs_path(folder)
+    abs_path = get_img_folder_abs_path(folder)
     filelist = [os.path.join(abs_path, file) for file in os.listdir(abs_path) if
                 file.lower().endswith(".png") or file.lower().endswith(".jpg")]
     return filelist
@@ -176,11 +176,16 @@ def get_folder_images(folder):
 def get_last_mtime(filelist):
     last_mtime = datetime.datetime.now()
     for file in filelist:
-        stat = os.stat(file)
-        mtime = datetime.datetime.fromtimestamp(stat.st_mtime)
+        mtime = get_file_mtime(file)
         if mtime < last_mtime:
             last_mtime = mtime
     return last_mtime
+
+
+def get_file_mtime(file):
+    stat = os.stat(file)
+    mtime = datetime.datetime.fromtimestamp(stat.st_mtime)
+    return mtime
 
 
 def get_ip():
@@ -218,5 +223,19 @@ def get_image(folder, file):
 
 # --- WEB CONTENT END ---
 
+@tl.job(interval=datetime.timedelta(seconds=30))
+def clean_static():
+    img_path = os.path.join(settings.STATIC_FOLDER, settings.IMG_FOLDER)
+    abs_img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), img_path)
+
+    image_subdirs = [item for item in os.listdir(abs_img_path) if os.path.isdir(os.path.join(abs_img_path, item))]
+
+    for dir in image_subdirs:
+        for file in get_folder_images(dir):
+            if datetime.datetime.now() - get_file_mtime(file) > datetime.timedelta(days=settings.IMG_TTL):
+                os.remove(file)
+
+
 if __name__ == '__main__':
+    tl.start()
     app.run(threaded=True, host='0.0.0.0')

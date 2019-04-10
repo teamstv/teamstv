@@ -7,3 +7,4 @@ tzlocal==1.5.1
 lxml>=4.1.1
 requests>=2.21.0
 vobject>=0.9.6.1
+timeloop==1.0.2

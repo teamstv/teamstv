@@ -7,7 +7,5 @@ CALDAV_PASSWORD = ""
 # use 'LOCAL' or paste url that return datetime in iso format
 TIME = 'http://ikruglik.ru/current/date/'
 BOT_TOKEN = ''
-TIME_SHIFT = {
-    'days': 2,
-    'hours': -3
-}
+# Images time to live in days. Measured by mtime.
+IMG_TTL = 30
