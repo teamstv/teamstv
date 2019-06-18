@@ -1,13 +1,9 @@
 bot:
   properties:
-    token: token
-    name: teams-tv telegram bot
+    token: 984320629:AAHPR4dMzD8O21hNzW4aOERbVkXIEapZTio
+    botName: teams-tv telegram bot
     path: .
-    downloadButName: Загрузить на сервер
-    addCaption: Добавить описание
+    downloadButton: Загрузить на сервер
+    captionButton: Добавить описание
     cancelButton: Отменить загрузку
     cleanUpTimeOut: 20
-    repoProps:
-      storePath: C:\\tmp
-      flushDelay: 300
-      cleanDelay: 3000

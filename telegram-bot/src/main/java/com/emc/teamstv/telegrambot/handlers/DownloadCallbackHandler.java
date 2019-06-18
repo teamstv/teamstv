@@ -6,7 +6,6 @@ import com.emc.teamstv.telegrambot.BotProperties;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Keyboard;
 import com.emc.teamstv.telegrambot.model.Photo;
-import com.emc.teamstv.telegrambot.services.BotRepo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,17 +33,15 @@ public class DownloadCallbackHandler implements Handler {
   private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
   private final BotProperties properties;
-  private final BotRepo<Photo, Long> botRepo;
 
   public DownloadCallbackHandler(
       TransferService<String, Photo> transferService,
       Keyboard keyboard,
-      BotProperties properties,
-      BotRepo<Photo, Long> botRepo) {
+      BotProperties properties) {
     this.transferService = transferService;
     this.keyboard = keyboard;
     this.properties = properties;
-    this.botRepo = botRepo;
+
   }
 
   @Override
@@ -58,8 +55,6 @@ public class DownloadCallbackHandler implements Handler {
           } catch (TelegramApiException e) {
             log.error("Error while downloading file = " + fileId, e);
           }
-          long userId = update.getCallbackQuery().getFrom().getId();
-          botRepo.save(model, userId);
           EditMessageText msg = prepareCallbackReply(update, LOAD_COMPLETED);
           keyboard.keyboard(model, getTransferID(update, ButtonNameEnum.DOWNLOAD))
               .ifPresent(msg::setReplyMarkup);
@@ -72,7 +67,7 @@ public class DownloadCallbackHandler implements Handler {
   private void saveFile(Photo model, DefaultAbsSender sender) throws TelegramApiException {
     PhotoSize p = model.getPhotoSize();
     Path file = sender.downloadFile(getPath(p, sender)).toPath();
-    try (InputStream ios = Files.newInputStream(file);) {
+    try (InputStream ios = Files.newInputStream(file)) {
       String localPath = properties.getPath() + java.io.File.separator + p.getFileId() + ".jpg";
       Path fileI = Paths.get(localPath);
       Files.copy(ios, fileI, StandardCopyOption.REPLACE_EXISTING);

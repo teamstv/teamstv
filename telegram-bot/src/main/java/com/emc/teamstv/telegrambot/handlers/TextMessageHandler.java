@@ -3,9 +3,15 @@ package com.emc.teamstv.telegrambot.handlers;
 import static com.emc.teamstv.telegrambot.BotReplies.TEXT_NOT_SUPPORTED;
 import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_CAPTION;
 
+import com.emc.teamstv.telegrambot.BotProperties;
 import com.emc.teamstv.telegrambot.model.Keyboard;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
@@ -23,12 +29,14 @@ public class TextMessageHandler implements Handler {
 
   private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
+  private final BotProperties properties;
 
   public TextMessageHandler(
       TransferService<String, Photo> transferService,
-      Keyboard keyboard) {
+      Keyboard keyboard, BotProperties properties) {
     this.transferService = transferService;
     this.keyboard = keyboard;
+    this.properties = properties;
   }
 
   @Override
@@ -47,6 +55,8 @@ public class TextMessageHandler implements Handler {
           String caption = update.getMessage().getText();
           log.info("Caption: " + caption + ". For photo: " + model.getFileId() + " provided.");
           model.setCaption(caption);
+          Path captionPath = Paths.get(properties.getPath(),model.getFileId() + ".txt");
+          saveCaption(captionPath,caption);
           SendMessage msg = prepareResponse(update, THANKS_FOR_CAPTION);
           keyboard.keyboard(model, model.getTransferId())
               .ifPresent(msg::setReplyMarkup);
@@ -58,4 +68,12 @@ public class TextMessageHandler implements Handler {
     return optModel.isPresent();
   }
 
+  private void saveCaption(Path path, String msg){
+    try(BufferedWriter wr = Files.newBufferedWriter(path)) {
+      wr.write(msg);
+      wr.newLine();
+    } catch (IOException e) {
+      log.error(e.getMessage());
+    }
+  }
 }

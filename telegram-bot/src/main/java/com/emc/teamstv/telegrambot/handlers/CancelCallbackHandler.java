@@ -4,7 +4,6 @@ import static com.emc.teamstv.telegrambot.BotReplies.CLEAN_UP;
 
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Photo;
-import com.emc.teamstv.telegrambot.services.BotRepo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,13 +23,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class CancelCallbackHandler implements Handler {
 
   private final TransferService<String, Photo> transferService;
-  private final BotRepo<Photo, Long> botRepo;
 
   public CancelCallbackHandler(
-      TransferService<String, Photo> transferService,
-      BotRepo<Photo, Long> botRepo) {
+      TransferService<String, Photo> transferService) {
     this.transferService = transferService;
-    this.botRepo = botRepo;
   }
 
   @Override
@@ -40,11 +36,6 @@ public class CancelCallbackHandler implements Handler {
           String transferId = getTransferID(update, ButtonNameEnum.CANCEL);
           transferService.delete(transferId);
           log.info("Transfer service cleaned for transferId = " + transferId);
-          long userId = update.getCallbackQuery().getFrom().getId();
-          if (botRepo.checkByID(userId, model)) {
-            botRepo.deleteByValue(userId, model);
-          }
-          log.info("Photo deleted from repo: " + model);
           if (model.isLoaded()) {
             try {
               Files.deleteIfExists(Paths.get(model.getLocalPath()));
