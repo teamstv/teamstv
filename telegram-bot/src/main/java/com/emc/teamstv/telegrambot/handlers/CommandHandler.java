@@ -3,9 +3,7 @@ package com.emc.teamstv.telegrambot.handlers;
 import com.emc.teamstv.telegrambot.BotReplies;
 import com.emc.teamstv.telegrambot.model.BotCommandsEnum;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
  * Command handler
@@ -14,16 +12,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  */
 
 @Service
-public class CommandHandler implements Handler {
+public class CommandHandler extends Handler {
 
   @Override
-  public void onUpdateReceived(Update update, DefaultAbsSender sender) {
+  public void onUpdateReceived() {
     String command = update.getMessage().getText();
     if (isKnownCommand(command)) {
       executeCommand(command);
     } else {
-      SendMessage msg = prepareResponse(update, BotReplies.UNKNOWN_COMMAND);
-      sendText(msg, sender, update);
+      SendMessage msg = prepareResponse(BotReplies.UNKNOWN_COMMAND);
+      sendText(msg);
     }
   }
 

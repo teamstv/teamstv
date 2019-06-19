@@ -14,12 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 /**
@@ -28,7 +26,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author talipa
  */
 @Service
-public class DownloadCallbackHandler implements Handler {
+public class DownloadCallbackHandler extends Handler {
 
   private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
@@ -45,33 +43,33 @@ public class DownloadCallbackHandler implements Handler {
   }
 
   @Override
-  public void onUpdateReceived(Update update, DefaultAbsSender sender) {
-    getPhotoModel(update, transferService, ButtonNameEnum.DOWNLOAD).ifPresent(
+  public void onUpdateReceived() {
+    getPhotoModel(transferService, ButtonNameEnum.DOWNLOAD).ifPresent(
         model -> {
           String fileId = model.getPhotoSize().getFileId();
           try {
-            log.info("Found entry for fileId = " + fileId);
-            saveFile(model, sender);
+            log.info("Found entry for fileId ={}", fileId);
+            saveFile(model);
           } catch (TelegramApiException e) {
             log.error("Error while downloading file = " + fileId, e);
           }
-          EditMessageText msg = prepareCallbackReply(update, LOAD_COMPLETED);
-          keyboard.keyboard(model, getTransferID(update, ButtonNameEnum.DOWNLOAD))
+          EditMessageText msg = prepareCallbackReply(LOAD_COMPLETED);
+          keyboard.keyboard(model, getTransferID(ButtonNameEnum.DOWNLOAD))
               .ifPresent(msg::setReplyMarkup);
-          sendText(msg, sender, update);
+          sendText(msg);
         }
     );
 
   }
 
-  private void saveFile(Photo model, DefaultAbsSender sender) throws TelegramApiException {
+  private void saveFile(Photo model) throws TelegramApiException {
     PhotoSize p = model.getPhotoSize();
-    Path file = sender.downloadFile(getPath(p, sender)).toPath();
+    Path file = sender.downloadFile(getPath(p)).toPath();
     try (InputStream ios = Files.newInputStream(file)) {
       String localPath = properties.getPath() + java.io.File.separator + p.getFileId() + ".jpg";
       Path fileI = Paths.get(localPath);
       Files.copy(ios, fileI, StandardCopyOption.REPLACE_EXISTING);
-      log.info("File " + fileI + " loaded");
+      log.info("File {} loaded", fileI);
       model.setLoaded(true);
       model.setLocalPath(localPath);
     } catch (IOException e) {
@@ -79,7 +77,7 @@ public class DownloadCallbackHandler implements Handler {
     }
   }
 
-  private String getPath(PhotoSize p, DefaultAbsSender sender) throws TelegramApiException {
+  private String getPath(PhotoSize p) throws TelegramApiException {
     String path;
     if (p.hasFilePath()) {
       path = p.getFilePath();

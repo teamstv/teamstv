@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -25,7 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  */
 
 @Service
-public class TextMessageHandler implements Handler {
+public class TextMessageHandler extends Handler {
 
   private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
@@ -40,36 +39,36 @@ public class TextMessageHandler implements Handler {
   }
 
   @Override
-  public void onUpdateReceived(Update update, DefaultAbsSender sender) {
-    if (waitForCaptionMsg(update, sender)) {
+  public void onUpdateReceived() {
+    if (waitForCaptionMsg(update)) {
       return;
     }
-    SendMessage msg = prepareResponse(update, TEXT_NOT_SUPPORTED);
-    sendText(msg, sender, update);
+    SendMessage msg = prepareResponse(TEXT_NOT_SUPPORTED);
+    sendText(msg);
   }
 
-  private boolean waitForCaptionMsg(Update update, DefaultAbsSender sender) {
-    Optional<Photo> optModel = transferService.get(getUser(update));
+  private boolean waitForCaptionMsg(Update update) {
+    Optional<Photo> optModel = transferService.get(getUser());
     optModel.ifPresent(
         model -> {
           String caption = update.getMessage().getText();
-          log.info("Caption: " + caption + ". For photo: " + model.getFileId() + " provided.");
+          log.info("Caption: {}. For photo: {} provided.", caption, model.getFileId());
           model.setCaption(caption);
-          Path captionPath = Paths.get(properties.getPath(),model.getFileId() + ".txt");
-          saveCaption(captionPath,caption);
-          SendMessage msg = prepareResponse(update, THANKS_FOR_CAPTION);
+          Path captionPath = Paths.get(properties.getPath(), model.getFileId() + ".txt");
+          saveCaption(captionPath, caption);
+          SendMessage msg = prepareResponse(THANKS_FOR_CAPTION);
           keyboard.keyboard(model, model.getTransferId())
               .ifPresent(msg::setReplyMarkup);
-          sendText(msg, sender, update);
-          transferService.delete(getUser(update));
+          sendText(msg);
+          transferService.delete(getUser());
           model.setTransferId("");
         }
     );
     return optModel.isPresent();
   }
 
-  private void saveCaption(Path path, String msg){
-    try(BufferedWriter wr = Files.newBufferedWriter(path)) {
+  private void saveCaption(Path path, String msg) {
+    try (BufferedWriter wr = Files.newBufferedWriter(path)) {
       wr.write(msg);
       wr.newLine();
     } catch (IOException e) {

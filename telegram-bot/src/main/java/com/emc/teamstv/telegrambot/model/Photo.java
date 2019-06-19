@@ -64,10 +64,6 @@ public class Photo {
     isLoaded = loaded;
   }
 
-  public void setCaption(String caption) {
-    this.caption = caption;
-  }
-
   public String getTransferId() {
     return transferId;
   }
@@ -78,6 +74,10 @@ public class Photo {
 
   public String getCaption() {
     return caption;
+  }
+
+  public void setCaption(String caption) {
+    this.caption = caption;
   }
 
   @Override

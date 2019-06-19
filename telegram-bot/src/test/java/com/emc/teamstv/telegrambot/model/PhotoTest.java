@@ -1,6 +1,6 @@
 package com.emc.teamstv.telegrambot.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +16,7 @@ public class PhotoTest {
 
   private Photo photo;
   private ObjectMapper mapper;
+
   @Before
   public void setUp() throws Exception {
     PhotoSize photoSize = new PhotoSize();
@@ -27,7 +28,7 @@ public class PhotoTest {
   public void shouldSerializePhotoToGivenString() throws JsonProcessingException {
     PhotoSize photoSize = new PhotoSize();
     photo = Photo.getPhotoModel(photoSize, "test");
-    assertEquals(given,mapper.writeValueAsString(photo));
+    assertEquals(given, mapper.writeValueAsString(photo));
   }
 
   @Test

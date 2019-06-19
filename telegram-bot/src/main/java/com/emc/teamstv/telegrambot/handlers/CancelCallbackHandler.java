@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
  * Class for handling callbacks from inline keyboard. This one will cancel any progression on data
@@ -20,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  * @author talipa
  */
 @Service
-public class CancelCallbackHandler implements Handler {
+public class CancelCallbackHandler extends Handler {
 
   private final TransferService<String, Photo> transferService;
 
@@ -30,23 +28,23 @@ public class CancelCallbackHandler implements Handler {
   }
 
   @Override
-  public void onUpdateReceived(Update update, DefaultAbsSender sender) {
-    getPhotoModel(update, transferService, ButtonNameEnum.CANCEL).ifPresent(
+  public void onUpdateReceived() {
+    getPhotoModel(transferService, ButtonNameEnum.CANCEL).ifPresent(
         model -> {
-          String transferId = getTransferID(update, ButtonNameEnum.CANCEL);
+          String transferId = getTransferID(ButtonNameEnum.CANCEL);
           transferService.delete(transferId);
-          log.info("Transfer service cleaned for transferId = " + transferId);
+          log.info("Transfer service cleaned for transferId = {}", transferId);
           if (model.isLoaded()) {
             try {
               Files.deleteIfExists(Paths.get(model.getLocalPath()));
-              log.info("File " + model.getLocalPath() + " deleted");
+              log.info("File {} deleted", model.getLocalPath());
             } catch (IOException e) {
               log.error("Error while deleting file = " + model.getFileId(), e);
             }
           }
         }
     );
-    EditMessageText msg = prepareCallbackReply(update, CLEAN_UP);
-    sendText(msg, sender, update);
+    EditMessageText msg = prepareCallbackReply(CLEAN_UP);
+    sendText(msg);
   }
 }

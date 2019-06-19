@@ -2,11 +2,12 @@ package com.emc.teamstv.telegrambot.services;
 
 /**
  * Service provides uniq ID values
- * @param <ID> type of id value
+ *
+ * @param <T> type of id value
  * @author talipa
  */
 
-public interface IdGenerator<ID> {
+public interface IdGenerator<T> {
 
-  ID getUniq();
+  T getUniq();
 }
