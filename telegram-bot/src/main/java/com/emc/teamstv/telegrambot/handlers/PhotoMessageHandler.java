@@ -61,8 +61,7 @@ public class PhotoMessageHandler extends Handler {
   void createKeyboard(Photo model, BotApiMethod msg) {
     String id = generator.getUniq();
     if (msg instanceof SendMessage) {
-      SendMessage txtMsg = (SendMessage) msg;
-      keyboard.keyboard(model, id).ifPresent(txtMsg::setReplyMarkup);
+      keyboard.keyboard(model, id).ifPresent(((SendMessage)msg)::setReplyMarkup);
       transferService.set(String.valueOf(id), model);
     }
   }
