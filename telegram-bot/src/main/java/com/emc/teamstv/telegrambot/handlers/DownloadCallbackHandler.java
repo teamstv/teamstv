@@ -3,6 +3,7 @@ package com.emc.teamstv.telegrambot.handlers;
 import static com.emc.teamstv.telegrambot.BotReplies.LOAD_COMPLETED;
 
 import com.emc.teamstv.telegrambot.BotProperties;
+import com.emc.teamstv.telegrambot.handlers.messages.Response;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Keyboard;
 import com.emc.teamstv.telegrambot.model.Photo;
@@ -27,8 +28,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  */
 @Service
 public class DownloadCallbackHandler extends Handler {
-
-  private final TransferService<String, Photo> transferService;
   private final Keyboard keyboard;
   private final BotProperties properties;
 
@@ -36,7 +35,7 @@ public class DownloadCallbackHandler extends Handler {
       TransferService<String, Photo> transferService,
       Keyboard keyboard,
       BotProperties properties) {
-    this.transferService = transferService;
+    super(transferService);
     this.keyboard = keyboard;
     this.properties = properties;
 
@@ -53,12 +52,27 @@ public class DownloadCallbackHandler extends Handler {
           } catch (TelegramApiException e) {
             log.error("Error while downloading file = " + fileId, e);
           }
-          EditMessageText msg = prepareCallbackReply(LOAD_COMPLETED);
+          EditMessageText msg = (EditMessageText) prepareCallbackReply(LOAD_COMPLETED);
           keyboard.keyboard(model, getTransferID(ButtonNameEnum.DOWNLOAD))
               .ifPresent(msg::setReplyMarkup);
           sendText(msg);
         }
     );
+
+  }
+
+  @Override
+  void getContent() {
+
+  }
+
+  @Override
+  Response operateOnContent() {
+    return null;
+  }
+
+  @Override
+  void createKeyboard() {
 
   }
 
@@ -71,7 +85,7 @@ public class DownloadCallbackHandler extends Handler {
       Files.copy(ios, fileI, StandardCopyOption.REPLACE_EXISTING);
       log.info("File {} loaded", fileI);
       model.setLoaded(true);
-      model.setLocalPath(localPath);
+      model.setPhotoLocalPath(localPath);
     } catch (IOException e) {
       log.error("Error while moving downloaded file = " + p.getFileId(), e);
     }

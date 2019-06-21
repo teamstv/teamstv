@@ -4,16 +4,20 @@ import static com.emc.teamstv.telegrambot.BotReplies.TEXT_NOT_SUPPORTED;
 import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_CAPTION;
 
 import com.emc.teamstv.telegrambot.BotProperties;
+import com.emc.teamstv.telegrambot.BotReplies;
+import com.emc.teamstv.telegrambot.handlers.messages.Response;
 import com.emc.teamstv.telegrambot.model.Keyboard;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -26,14 +30,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Service
 public class TextMessageHandler extends Handler {
 
-  private final TransferService<String, Photo> transferService;
+
   private final Keyboard keyboard;
   private final BotProperties properties;
 
   public TextMessageHandler(
       TransferService<String, Photo> transferService,
       Keyboard keyboard, BotProperties properties) {
-    this.transferService = transferService;
+    super(transferService);
     this.keyboard = keyboard;
     this.properties = properties;
   }
@@ -43,8 +47,23 @@ public class TextMessageHandler extends Handler {
     if (waitForCaptionMsg(update)) {
       return;
     }
-    SendMessage msg = prepareResponse(TEXT_NOT_SUPPORTED);
+    BotApiMethod msg = prepareResponse(TEXT_NOT_SUPPORTED);
     sendText(msg);
+  }
+
+  @Override
+  void getContent() {
+
+  }
+
+  @Override
+  Response operateOnContent() {
+    return null;
+  }
+
+  @Override
+  void createKeyboard() {
+
   }
 
   private boolean waitForCaptionMsg(Update update) {
@@ -55,8 +74,9 @@ public class TextMessageHandler extends Handler {
           log.info("Caption: {}. For photo: {} provided.", caption, model.getFileId());
           model.setCaption(caption);
           Path captionPath = Paths.get(properties.getPath(), model.getFileId() + ".txt");
+          model.setCaptionLocalPath(captionPath.toString());
           saveCaption(captionPath, caption);
-          SendMessage msg = prepareResponse(THANKS_FOR_CAPTION);
+          SendMessage msg = (SendMessage) prepareResponse(THANKS_FOR_CAPTION);
           keyboard.keyboard(model, model.getTransferId())
               .ifPresent(msg::setReplyMarkup);
           sendText(msg);

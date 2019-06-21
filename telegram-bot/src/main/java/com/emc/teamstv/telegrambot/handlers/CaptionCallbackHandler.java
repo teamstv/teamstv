@@ -4,10 +4,12 @@ import static com.emc.teamstv.telegrambot.BotReplies.NULL_USER;
 import static com.emc.teamstv.telegrambot.BotReplies.SEND_CAPTION;
 
 import com.emc.teamstv.telegrambot.BotReplies;
+import com.emc.teamstv.telegrambot.handlers.messages.Response;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
 /**
@@ -19,11 +21,9 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 @Service
 public class CaptionCallbackHandler extends Handler {
 
-  private final TransferService<String, Photo> transferService;
-
   public CaptionCallbackHandler(
       TransferService<String, Photo> transferService) {
-    this.transferService = transferService;
+    super(transferService);
   }
 
   @Override
@@ -39,9 +39,24 @@ public class CaptionCallbackHandler extends Handler {
             transferService.set(user, model);
             response = SEND_CAPTION;
           }
-          EditMessageText msg = prepareCallbackReply(response);
+          BotApiMethod msg = prepareCallbackReply(response);
           sendText(msg);
         }
     );
+  }
+
+  @Override
+  void getContent() {
+
+  }
+
+  @Override
+  Response operateOnContent() {
+    return null;
+  }
+
+  @Override
+  void createKeyboard() {
+
   }
 }

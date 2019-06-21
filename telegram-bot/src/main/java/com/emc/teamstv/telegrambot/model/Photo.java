@@ -1,7 +1,6 @@
 package com.emc.teamstv.telegrambot.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
@@ -11,23 +10,17 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
  *
  * @author talipa
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Photo {
 
   private final PhotoSize photoSize;
   private final String fileId;
-  @JsonProperty("localPath")
-  private String localPath;
-  @JsonProperty("caption")
+  private String photoLocalPath;
+  private String captionLocalPath;
   private String caption;
-  @JsonProperty("isLoaded")
   private boolean isLoaded;
-  @JsonProperty("transferId")
   private String transferId = "";
 
-  @JsonCreator
-  private Photo(@JsonProperty("photoSize") PhotoSize photoSize,
-      @JsonProperty("fileId") String fileId) {
+  private Photo(PhotoSize photoSize, String fileId) {
     this.photoSize = photoSize;
     this.fileId = fileId;
   }
@@ -44,12 +37,12 @@ public class Photo {
     return fileId;
   }
 
-  public String getLocalPath() {
-    return localPath;
+  public String getPhotoLocalPath() {
+    return photoLocalPath;
   }
 
-  public void setLocalPath(String localPath) {
-    this.localPath = localPath;
+  public void setPhotoLocalPath(String photoLocalPath) {
+    this.photoLocalPath = photoLocalPath;
   }
 
   public boolean hasCaption() {
@@ -80,6 +73,14 @@ public class Photo {
     this.caption = caption;
   }
 
+  public String getCaptionLocalPath() {
+    return captionLocalPath;
+  }
+
+  public void setCaptionLocalPath(String captionLocalPath) {
+    this.captionLocalPath = captionLocalPath;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -101,7 +102,7 @@ public class Photo {
   public String toString() {
     return "Photo{" +
         "fileId='" + fileId + '\'' +
-        ", localPath='" + localPath + '\'' +
+        ", photoLocalPath='" + photoLocalPath + '\'' +
         ", caption='" + caption + '\'' +
         ", isLoaded=" + isLoaded +
         '}';

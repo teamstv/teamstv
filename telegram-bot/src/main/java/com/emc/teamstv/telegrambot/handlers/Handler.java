@@ -1,6 +1,7 @@
 package com.emc.teamstv.telegrambot.handlers;
 
 import com.emc.teamstv.telegrambot.BotReplies;
+import com.emc.teamstv.telegrambot.handlers.messages.Response;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
@@ -22,9 +23,15 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  */
 public abstract class Handler {
 
+  final TransferService<String, Photo> transferService;
   Update update;
   DefaultAbsSender sender;
   Logger log = LoggerFactory.getLogger(Handler.class);
+
+  protected Handler(
+      TransferService<String, Photo> transferService) {
+    this.transferService = transferService;
+  }
 
   public void setUpdate(Update update) {
     this.update = update;
@@ -34,21 +41,44 @@ public abstract class Handler {
     this.sender = sender;
   }
 
-  public abstract void onUpdateReceived();
+  final BotApiMethod prepareCallbackReply(BotReplies reply) {
+    long messageId = update.getCallbackQuery().getMessage().getMessageId();
+    long chatId = update.getCallbackQuery().getMessage().getChatId();
+    return new EditMessageText()
+        .setChatId(chatId)
+        .setMessageId((int) messageId)
+        .setText(reply.getResponse());
+  }
 
-  SendMessage prepareResponse(BotReplies reply) {
-    String msg = update.getMessage().getText();
+  final BotApiMethod prepareResponse(BotReplies reply) {
     long chatId = update.getMessage().getChatId();
     int msgId = update.getMessage().getMessageId();
-    log.debug("Message from user {} received. Message: {}", getUser(), msg);
     return new SendMessage()
         .setReplyToMessageId(msgId)
         .setChatId(chatId)
         .setText(getUser() + reply.getResponse());
   }
 
+  final BotApiMethod createResponse(Response reply) {
+    return reply.getResponse();
+  }
+
+  public void onUpdateReceived() {
+    getContent();
+    Response reply = operateOnContent();
+    createKeyboard();
+    sendText(createResponse(reply));
+  }
+
+  abstract void getContent();
+
+  abstract Response operateOnContent();
+
+  abstract void createKeyboard();
+
+
   @SuppressWarnings("unchecked")
-  void sendText(BotApiMethod msg) {
+  final void sendText(BotApiMethod msg) {
     try {
       sender.execute(msg);
       log.info("Text message to user {} sent.", getUser());
@@ -64,14 +94,7 @@ public abstract class Handler {
     return update.getCallbackQuery().getFrom().getUserName();
   }
 
-  EditMessageText prepareCallbackReply(BotReplies reply) {
-    long messageId = update.getCallbackQuery().getMessage().getMessageId();
-    long chatId = update.getCallbackQuery().getMessage().getChatId();
-    return new EditMessageText()
-        .setChatId(chatId)
-        .setMessageId((int) messageId)
-        .setText(reply.getResponse());
-  }
+
 
   String getTransferID(ButtonNameEnum nameEnum) {
     return update.getCallbackQuery().getData().replace(nameEnum.getData(), "");
