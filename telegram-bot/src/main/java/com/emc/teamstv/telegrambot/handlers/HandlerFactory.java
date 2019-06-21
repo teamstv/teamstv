@@ -20,7 +20,6 @@ public class HandlerFactory {
   private final DownloadCallbackHandler downloadCallbackHandler;
   private final CancelCallbackHandler cancelCallbackHandler;
   private final CaptionCallbackHandler captionCallbackHandler;
-  private final CommandHandler commandHandler;
 
 
   public HandlerFactory(
@@ -28,14 +27,12 @@ public class HandlerFactory {
       TextMessageHandler textMessageHandler,
       DownloadCallbackHandler downloadCallbackHandler,
       CancelCallbackHandler cancelCallbackHandler,
-      CaptionCallbackHandler captionCallbackHandler,
-      CommandHandler commandHandler) {
+      CaptionCallbackHandler captionCallbackHandler) {
     this.photoMessageHandler = photoMessageHandler;
     this.textMessageHandler = textMessageHandler;
     this.downloadCallbackHandler = downloadCallbackHandler;
     this.cancelCallbackHandler = cancelCallbackHandler;
     this.captionCallbackHandler = captionCallbackHandler;
-    this.commandHandler = commandHandler;
   }
 
   public Optional<Handler> getHandler(Update update) {
@@ -53,9 +50,6 @@ public class HandlerFactory {
     }
     if (checkCallbackType(update, ButtonNameEnum.ADD_CAPTION)) {
       return Optional.of(captionCallbackHandler);
-    }
-    if (isCommand(update)) {
-      return Optional.of(commandHandler);
     }
     return Optional.empty();
   }
