@@ -14,7 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.File;
@@ -28,6 +31,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  */
 @Service
 public class DownloadCallbackHandler extends Handler {
+
   private final Keyboard keyboard;
   private final BotProperties properties;
 
@@ -62,18 +66,23 @@ public class DownloadCallbackHandler extends Handler {
   }
 
   @Override
-  void getContent() {
+  Optional<? extends BotApiObject> getContent() {
+    return Optional.empty();
+  }
+
+  @Override
+  Optional<Photo> operateOnContent(BotApiObject content) {
+    return Optional.empty();
+  }
+
+  @Override
+  void createKeyboard(Photo model, BotApiMethod msg) {
 
   }
 
   @Override
-  Response operateOnContent() {
+  Response getResponse() {
     return null;
-  }
-
-  @Override
-  void createKeyboard() {
-
   }
 
   private void saveFile(Photo model) throws TelegramApiException {

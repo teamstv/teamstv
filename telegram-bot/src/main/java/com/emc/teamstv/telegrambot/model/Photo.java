@@ -1,7 +1,5 @@
 package com.emc.teamstv.telegrambot.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 

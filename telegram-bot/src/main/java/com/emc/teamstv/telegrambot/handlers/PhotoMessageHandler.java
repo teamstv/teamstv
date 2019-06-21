@@ -2,8 +2,8 @@ package com.emc.teamstv.telegrambot.handlers;
 
 import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_PHOTO;
 
-import com.emc.teamstv.telegrambot.BotReplies;
 import com.emc.teamstv.telegrambot.handlers.messages.Response;
+import com.emc.teamstv.telegrambot.handlers.messages.TextResponse;
 import com.emc.teamstv.telegrambot.model.Keyboard;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.IdGenerator;
@@ -11,6 +11,8 @@ import com.emc.teamstv.telegrambot.services.TransferService;
 import java.util.Comparator;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -36,40 +38,37 @@ public class PhotoMessageHandler extends Handler {
   }
 
   @Override
-  public void onUpdateReceived() {
-    String user = update.getMessage().getFrom().getUserName();
-    String caption = update.getMessage().getCaption();
-    Optional<PhotoSize> photo = update.getMessage()
+  Optional<? extends BotApiObject> getContent() {
+    return update.getMessage()
         .getPhoto()
         .stream()
         .max(Comparator.comparing(PhotoSize::getFileSize));
-    photo.ifPresent(
-        p -> {
-          log.info("PhotoSize object from user {} received", user);
-          SendMessage msg = (SendMessage) prepareResponse(THANKS_FOR_PHOTO);
-          Photo model = Photo.getPhotoModel(p, p.getFileId());
-          model.setCaption(caption);
-          model.setLoaded(false);
-          String id = generator.getUniq();
-          keyboard.keyboard(model, id).ifPresent(msg::setReplyMarkup);
-          transferService.set(String.valueOf(id), model);
-          sendText(msg);
-        }
-    );
   }
 
   @Override
-  void getContent() {
-
+  Optional<Photo> operateOnContent(BotApiObject content) {
+    Photo model = null;
+    if (content instanceof PhotoSize) {
+      PhotoSize photo = (PhotoSize) content;
+      model = Photo.getPhotoModel(photo, photo.getFileId());
+      model.setLoaded(false);
+      log.info("PhotoSize object from user {} received", getUser());
+    }
+    return Optional.ofNullable(model);
   }
 
   @Override
-  Response operateOnContent() {
-    return null;
+  void createKeyboard(Photo model, BotApiMethod msg) {
+    String id = generator.getUniq();
+    if (msg instanceof SendMessage) {
+      SendMessage txtMsg = (SendMessage) msg;
+      keyboard.keyboard(model, id).ifPresent(txtMsg::setReplyMarkup);
+      transferService.set(String.valueOf(id), model);
+    }
   }
 
   @Override
-  void createKeyboard() {
-
+  Response getResponse() {
+    return new TextResponse(THANKS_FOR_PHOTO.getResponse(), update);
   }
 }

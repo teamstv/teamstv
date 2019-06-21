@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
+import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -59,22 +60,33 @@ public abstract class Handler {
         .setText(getUser() + reply.getResponse());
   }
 
+  public void onUpdateReceived() {
+    Optional<? extends BotApiObject> content = getContent();
+    content.ifPresent(
+        c -> {
+          Optional<Photo> optionalPhoto = operateOnContent(c);
+          Response reply = getResponse();
+          BotApiMethod msg = createResponse(reply);
+          optionalPhoto.ifPresent(
+              p -> createKeyboard(p, msg)
+          );
+          sendText(msg);
+        }
+    );
+
+  }
+
+  abstract Optional<? extends BotApiObject> getContent();
+
+  abstract Optional<Photo> operateOnContent(BotApiObject content);
+
+  abstract void createKeyboard(Photo model, BotApiMethod msg);
+
+  abstract Response getResponse();
+
   final BotApiMethod createResponse(Response reply) {
     return reply.getResponse();
   }
-
-  public void onUpdateReceived() {
-    getContent();
-    Response reply = operateOnContent();
-    createKeyboard();
-    sendText(createResponse(reply));
-  }
-
-  abstract void getContent();
-
-  abstract Response operateOnContent();
-
-  abstract void createKeyboard();
 
 
   @SuppressWarnings("unchecked")
@@ -93,7 +105,6 @@ public abstract class Handler {
     }
     return update.getCallbackQuery().getFrom().getUserName();
   }
-
 
 
   String getTransferID(ButtonNameEnum nameEnum) {

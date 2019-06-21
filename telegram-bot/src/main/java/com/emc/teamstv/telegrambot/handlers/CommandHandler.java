@@ -5,9 +5,10 @@ import com.emc.teamstv.telegrambot.handlers.messages.Response;
 import com.emc.teamstv.telegrambot.model.BotCommandsEnum;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 /**
  * Command handler
@@ -34,18 +35,23 @@ public class CommandHandler extends Handler {
   }
 
   @Override
-  void getContent() {
+  Optional<? extends BotApiObject> getContent() {
+    return Optional.empty();
+  }
+
+  @Override
+  Optional<Photo> operateOnContent(BotApiObject content) {
+    return Optional.empty();
+  }
+
+  @Override
+  void createKeyboard(Photo model, BotApiMethod msg) {
 
   }
 
   @Override
-  Response operateOnContent() {
+  Response getResponse() {
     return null;
-  }
-
-  @Override
-  void createKeyboard() {
-
   }
 
   private boolean isKnownCommand(String command) {

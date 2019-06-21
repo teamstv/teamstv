@@ -1,35 +1,43 @@
 package com.emc.teamstv.telegrambot.handlers.messages;
 
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class CallbackResponse extends Response {
 
-  public CallbackResponse(String msg) {
-    super(msg);
+  private final EditMessageText editMessageText;
+
+  public CallbackResponse(String msg, Update update) {
+    super(msg, update);
+    editMessageText = new EditMessageText();
   }
 
   @Override
-  long getMessageId() {
-    return 0;
+  int getMessageId() {
+    return update.getCallbackQuery().getMessage().getMessageId();
   }
 
   @Override
   long getChatId() {
-    return 0;
+    return update.getCallbackQuery().getMessage().getChatId();
   }
 
   @Override
-  BotApiMethod setChatId(long id) {
-    return null;
+  Response setChatId(long id) {
+    editMessageText.setChatId(id);
+    return this;
   }
 
   @Override
-  BotApiMethod setMessageId(BotApiMethod response, long id) {
-    return null;
+  Response setMessageId(int id) {
+    editMessageText.setMessageId(id);
+    return this;
   }
 
   @Override
-  BotApiMethod setText(BotApiMethod response, String msg) {
-    return null;
+  BotApiMethod setText(String msg) {
+    editMessageText.setText(msg);
+    return editMessageText;
   }
 }
