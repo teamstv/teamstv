@@ -1,9 +1,9 @@
 package com.emc.teamstv.telegrambot.handlers;
 
-import static com.emc.teamstv.telegrambot.BotReplies.NULL_USER;
 import static com.emc.teamstv.telegrambot.BotReplies.SEND_CAPTION;
 
 import com.emc.teamstv.telegrambot.BotReplies;
+import com.emc.teamstv.telegrambot.handlers.messages.CallbackResponse;
 import com.emc.teamstv.telegrambot.handlers.messages.Response;
 import com.emc.teamstv.telegrambot.model.ButtonNameEnum;
 import com.emc.teamstv.telegrambot.model.Photo;
@@ -28,36 +28,19 @@ public class CaptionCallbackHandler extends CallbackHandler {
   }
 
   @Override
-  public void onUpdateReceived() {
+  Optional<Photo> operateOnContent(BotApiObject content) {
     getPhotoModel(ButtonNameEnum.ADD_CAPTION).ifPresent(
         model -> {
           String user = getUser();
-          BotReplies response;
           model.setTransferId(getTransferID(ButtonNameEnum.ADD_CAPTION));
-          if (user == null) {
-            response = NULL_USER;
-          } else {
-            transferService.set(user, model);
-            response = SEND_CAPTION;
-          }
-          BotApiMethod msg = prepareCallbackReply(response);
-          sendText(msg);
+          transferService.set(user, model);
         }
     );
-  }
-
-  @Override
-  Optional<Photo> operateOnContent(BotApiObject content) {
     return Optional.empty();
   }
 
   @Override
-  void createKeyboard(Photo model, BotApiMethod msg) {
-
-  }
-
-  @Override
   Response getResponse() {
-    return null;
+    return new CallbackResponse(SEND_CAPTION.getResponse(), update);
   }
 }

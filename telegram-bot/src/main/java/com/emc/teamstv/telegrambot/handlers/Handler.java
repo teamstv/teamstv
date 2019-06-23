@@ -1,7 +1,10 @@
 package com.emc.teamstv.telegrambot.handlers;
 
+import static com.emc.teamstv.telegrambot.BotReplies.NULL_USER;
+
 import com.emc.teamstv.telegrambot.BotReplies;
 import com.emc.teamstv.telegrambot.handlers.messages.Response;
+import com.emc.teamstv.telegrambot.handlers.messages.TextResponse;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.util.Optional;
@@ -50,6 +53,10 @@ public abstract class Handler {
   }
 
   public void onUpdateReceived() {
+    if (getUser() == null) {
+      nullUserAction();
+      return;
+    }
     Optional<? extends BotApiObject> content = getContent();
     content.ifPresent(
         c -> {
@@ -85,11 +92,18 @@ public abstract class Handler {
     return reply.getResponse();
   }
 
+  private void nullUserAction() {
+    Response msg = new TextResponse(NULL_USER.getResponse(), update);
+    sendText(createResponse(msg));
+  }
+
+  void createKeyboard(Photo model, BotApiMethod msg) {
+
+  }
+
   abstract Optional<? extends BotApiObject> getContent();
 
   abstract Optional<Photo> operateOnContent(BotApiObject content);
-
-  abstract void createKeyboard(Photo model, BotApiMethod msg);
 
   abstract Response getResponse();
 }
