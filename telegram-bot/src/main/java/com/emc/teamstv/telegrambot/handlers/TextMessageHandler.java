@@ -52,15 +52,12 @@ public class TextMessageHandler extends Handler {
     Optional<Photo> optModel = transferService.get(getUser());
     optModel.ifPresent(
         model -> {
-          if (content instanceof Message) {
-            Message msg = (Message) content;
-            String caption = msg.getText();
-            log.info("Caption: {}. For photo: {} provided.", caption, model.getFileId());
-            model.setCaption(caption);
-            Path captionPath = Paths.get(properties.getPath(), model.getFileId() + ".txt");
-            model.setCaptionLocalPath(captionPath.toString());
-            saveCaption(captionPath, caption);
-          }
+          String caption = ((Message) content).getText();
+          log.info("Caption: {}. For photo: {} provided.", caption, model.getFileId());
+          model.setCaption(caption);
+          Path captionPath = Paths.get(properties.getPath(), model.getFileId() + ".txt");
+          model.setCaptionLocalPath(captionPath.toString());
+          saveCaption(captionPath, caption);
         }
     );
     return optModel;
@@ -68,10 +65,8 @@ public class TextMessageHandler extends Handler {
 
   @Override
   void createKeyboard(Photo model, BotApiMethod msg) {
-    if (msg instanceof SendMessage) {
-      keyboard.keyboard(model, model.getTransferId())
-          .ifPresent(((SendMessage) msg)::setReplyMarkup);
-    }
+    keyboard.keyboard(model, model.getTransferId())
+        .ifPresent(((SendMessage) msg)::setReplyMarkup);
     transferService.delete(getUser());
     model.setTransferId("");
   }

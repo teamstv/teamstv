@@ -47,11 +47,6 @@ public class CaptionCallbackHandler extends CallbackHandler {
   }
 
   @Override
-  Optional<? extends BotApiObject> getContent() {
-    return Optional.empty();
-  }
-
-  @Override
   Optional<Photo> operateOnContent(BotApiObject content) {
     return Optional.empty();
   }

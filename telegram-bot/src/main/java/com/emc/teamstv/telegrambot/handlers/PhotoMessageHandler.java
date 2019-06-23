@@ -47,23 +47,18 @@ public class PhotoMessageHandler extends Handler {
 
   @Override
   Optional<Photo> operateOnContent(BotApiObject content) {
-    Photo model = null;
-    if (content instanceof PhotoSize) {
-      PhotoSize photo = (PhotoSize) content;
-      model = Photo.getPhotoModel(photo, photo.getFileId());
-      model.setLoaded(false);
-      log.info("PhotoSize object from user {} received", getUser());
-    }
-    return Optional.ofNullable(model);
+    PhotoSize photo = (PhotoSize) content;
+    Photo model = Photo.getPhotoModel(photo, photo.getFileId());
+    model.setLoaded(false);
+    log.info("PhotoSize object from user {} received", getUser());
+    return Optional.of(model);
   }
 
   @Override
   void createKeyboard(Photo model, BotApiMethod msg) {
     String id = generator.getUniq();
-    if (msg instanceof SendMessage) {
-      keyboard.keyboard(model, id).ifPresent(((SendMessage) msg)::setReplyMarkup);
-      transferService.set(String.valueOf(id), model);
-    }
+    keyboard.keyboard(model, id).ifPresent(((SendMessage) msg)::setReplyMarkup);
+    transferService.set(String.valueOf(id), model);
   }
 
   @Override
