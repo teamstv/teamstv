@@ -37,7 +37,7 @@ public class DownloadCallbackHandler extends CallbackHandler {
   private final BotProperties properties;
 
   public DownloadCallbackHandler(
-      TransferService<String, Photo> transferService,
+      TransferService<Integer, String, Photo> transferService,
       Keyboard keyboard,
       BotProperties properties) {
     super(transferService);

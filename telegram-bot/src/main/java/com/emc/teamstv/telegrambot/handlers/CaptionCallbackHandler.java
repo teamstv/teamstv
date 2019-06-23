@@ -23,7 +23,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 public class CaptionCallbackHandler extends CallbackHandler {
 
   public CaptionCallbackHandler(
-      TransferService<String, Photo> transferService) {
+      TransferService<Integer, String, Photo> transferService) {
     super(transferService);
   }
 
@@ -32,8 +32,8 @@ public class CaptionCallbackHandler extends CallbackHandler {
     getPhotoModel(ButtonNameEnum.ADD_CAPTION).ifPresent(
         model -> {
           String user = getUser();
-          model.setTransferId(getTransferID(ButtonNameEnum.ADD_CAPTION));
-          transferService.set(user, model);
+          int id = getTransferID(ButtonNameEnum.ADD_CAPTION);
+          transferService.set(user, id);
         }
     );
     return Optional.empty();

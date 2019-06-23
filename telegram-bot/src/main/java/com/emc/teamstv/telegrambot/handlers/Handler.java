@@ -25,13 +25,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  */
 public abstract class Handler {
 
-  final TransferService<String, Photo> transferService;
+  final TransferService<Integer, String, Photo> transferService;
   Update update;
   DefaultAbsSender sender;
   Logger log = LoggerFactory.getLogger(Handler.class);
 
   protected Handler(
-      TransferService<String, Photo> transferService) {
+      TransferService<Integer, String, Photo> transferService) {
     this.transferService = transferService;
   }
 
@@ -41,15 +41,6 @@ public abstract class Handler {
 
   public void setSender(DefaultAbsSender sender) {
     this.sender = sender;
-  }
-
-  final BotApiMethod prepareCallbackReply(BotReplies reply) {
-    long messageId = update.getCallbackQuery().getMessage().getMessageId();
-    long chatId = update.getCallbackQuery().getMessage().getChatId();
-    return new EditMessageText()
-        .setChatId(chatId)
-        .setMessageId((int) messageId)
-        .setText(reply.getResponse());
   }
 
   public final void onUpdateReceived() {

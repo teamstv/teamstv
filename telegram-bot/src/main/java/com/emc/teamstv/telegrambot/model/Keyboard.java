@@ -27,7 +27,7 @@ public class Keyboard {
     this.properties = properties;
   }
 
-  public Optional<InlineKeyboardMarkup> keyboard(Photo model, String id) {
+  public Optional<InlineKeyboardMarkup> keyboard(Photo model, int id) {
     if (!model.isLoaded() && !model.hasCaption()) {
       return keyboard(getAllButtons(id));
     }
@@ -46,7 +46,7 @@ public class Keyboard {
     return Optional.of(markupInline);
   }
 
-  private List<InlineKeyboardButton> getAllButtons(String id) {
+  private List<InlineKeyboardButton> getAllButtons(int id) {
     return Arrays.asList(
         getButton(properties.getDownloadButton(), id + DOWNLOAD.getData()),
         getButton(properties.getCaptionButton(), id + ADD_CAPTION.getData()),
@@ -54,14 +54,14 @@ public class Keyboard {
     );
   }
 
-  private List<InlineKeyboardButton> getDownloadButtons(String id) {
+  private List<InlineKeyboardButton> getDownloadButtons(int id) {
     return Arrays.asList(
         getButton(properties.getDownloadButton(), id + DOWNLOAD.getData()),
         getButton(properties.getCancelButton(), id + CANCEL.getData())
     );
   }
 
-  private List<InlineKeyboardButton> getCaptionButtons(String id) {
+  private List<InlineKeyboardButton> getCaptionButtons(int id) {
     return Arrays.asList(
         getButton(properties.getCaptionButton(), id + ADD_CAPTION.getData()),
         getButton(properties.getCancelButton(), id + CANCEL.getData())

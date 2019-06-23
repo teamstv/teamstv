@@ -22,7 +22,7 @@ import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 public class CancelCallbackHandler extends CallbackHandler {
 
   public CancelCallbackHandler(
-      TransferService<String, Photo> transferService) {
+      TransferService<Integer,String, Photo> transferService) {
     super(transferService);
   }
 
@@ -30,13 +30,13 @@ public class CancelCallbackHandler extends CallbackHandler {
   Optional<Photo> operateOnContent(BotApiObject content) {
     getPhotoModel(ButtonNameEnum.CANCEL).ifPresent(
         model -> {
-          String transferId = getTransferID(ButtonNameEnum.CANCEL);
+          int transferId = getTransferID(ButtonNameEnum.CANCEL);
           transferService.delete(transferId);
           log.info("Transfer service cleaned for transferId = {}", transferId);
           try {
             model.delete();
           } catch (IOException e) {
-            log.error("Error while deleting file for model = {} ", model.getFileId(), e);
+            log.error("Error while deleting files for model = {} ", model.getFileId(), e);
           }
         }
     );

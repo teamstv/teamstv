@@ -5,16 +5,22 @@ import java.util.Optional;
 /**
  * Service used to transfer data between handlers
  *
- * @param <ID> id value, used to get necessary transfer object
+ * @param <T> id value, used to get necessary transfer object
  * @param <E> transfer object
  * @author talipa
  */
-public interface TransferService<ID, E> {
+public interface TransferService<T extends Number, U, E> {
 
-  Optional<E> get(ID id);
+  Optional<E> get(T id);
 
-  void set(ID id, E e);
+  void set(T id, E e);
 
-  void delete(ID id);
+  void delete(T id);
+
+  Optional<E> get(U user);
+
+  void set(U user, T id);
+
+  void delete(U user);
 
 }

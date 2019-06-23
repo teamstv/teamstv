@@ -26,12 +26,12 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 public class PhotoMessageHandler extends Handler {
 
   private final Keyboard keyboard;
-  private final IdGenerator<String> generator;
+  private final IdGenerator<Integer> generator;
 
   public PhotoMessageHandler(
       Keyboard keyboard,
-      TransferService<String, Photo> transferService,
-      IdGenerator<String> generator) {
+      TransferService<Integer, String, Photo> transferService,
+      IdGenerator<Integer> generator) {
     super(transferService);
     this.keyboard = keyboard;
     this.generator = generator;
@@ -56,9 +56,9 @@ public class PhotoMessageHandler extends Handler {
 
   @Override
   void createKeyboard(Photo model, BotApiMethod msg) {
-    String id = generator.getUniq();
+    int id = generator.getUniq();
     keyboard.keyboard(model, id).ifPresent(((SendMessage) msg)::setReplyMarkup);
-    transferService.set(String.valueOf(id), model);
+    transferService.set(id, model);
   }
 
   @Override

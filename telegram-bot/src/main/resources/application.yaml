@@ -6,4 +6,4 @@ bot:
     downloadButton: Загрузить на сервер
     captionButton: Добавить описание
     cancelButton: Отменить загрузку
-    cleanUpTimeOut: 20
+    transferServiceCapacity: 4

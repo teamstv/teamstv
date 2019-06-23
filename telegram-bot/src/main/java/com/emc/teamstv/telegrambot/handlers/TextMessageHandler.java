@@ -35,7 +35,7 @@ public class TextMessageHandler extends Handler {
   private final BotProperties properties;
 
   public TextMessageHandler(
-      TransferService<String, Photo> transferService,
+      TransferService<Integer, String, Photo> transferService,
       Keyboard keyboard, BotProperties properties) {
     super(transferService);
     this.keyboard = keyboard;
@@ -68,7 +68,6 @@ public class TextMessageHandler extends Handler {
     keyboard.keyboard(model, model.getTransferId())
         .ifPresent(((SendMessage) msg)::setReplyMarkup);
     transferService.delete(getUser());
-    model.setTransferId("");
   }
 
   @Override
