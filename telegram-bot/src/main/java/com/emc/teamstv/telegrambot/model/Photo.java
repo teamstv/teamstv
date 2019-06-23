@@ -18,8 +18,9 @@ public class Photo {
   private String photoLocalPath;
   private String captionLocalPath;
   private String caption;
-  private boolean isLoaded;
+  private boolean loaded;
   private int transferId;
+  private boolean listed;
 
   private Photo(PhotoSize photoSize, String fileId) {
     this.photoSize = photoSize;
@@ -47,11 +48,11 @@ public class Photo {
   }
 
   public boolean isLoaded() {
-    return isLoaded;
+    return loaded;
   }
 
   public void setLoaded(boolean loaded) {
-    isLoaded = loaded;
+    this.loaded = loaded;
   }
 
   public int getTransferId() {
@@ -62,16 +63,28 @@ public class Photo {
     this.transferId = transferId;
   }
 
-  public void setCaption(String caption) {
-    this.caption = caption;
-  }
-
   public void setCaptionLocalPath(String captionLocalPath) {
     this.captionLocalPath = captionLocalPath;
   }
 
+  public String getCaption() {
+    return caption;
+  }
+
+  public void setCaption(String caption) {
+    this.caption = caption;
+  }
+
+  public boolean isListed() {
+    return listed;
+  }
+
+  public void setListed(boolean listed) {
+    this.listed = listed;
+  }
+
   public void delete() throws IOException {
-    if (isLoaded) {
+    if (loaded) {
       Files.deleteIfExists(Paths.get(photoLocalPath));
     }
     if (hasCaption()) {
@@ -102,7 +115,7 @@ public class Photo {
         "fileId='" + fileId + '\'' +
         ", photoLocalPath='" + photoLocalPath + '\'' +
         ", caption='" + caption + '\'' +
-        ", isLoaded=" + isLoaded +
+        ", isLoaded=" + loaded +
         '}';
   }
 }

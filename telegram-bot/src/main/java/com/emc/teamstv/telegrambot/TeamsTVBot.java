@@ -38,7 +38,7 @@ public class TeamsTVBot extends TelegramLongPollingBot {
   }
 
   @Override
-  public void onUpdateReceived(Update update) {
+  public synchronized void onUpdateReceived(Update update) {
     factory.getHandler(update).ifPresent(h -> {
       h.setUpdate(update);
       h.setSender(this);

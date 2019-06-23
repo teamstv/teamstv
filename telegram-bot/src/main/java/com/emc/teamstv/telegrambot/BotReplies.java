@@ -13,7 +13,7 @@ public enum BotReplies {
   NULL_USER("Пожалуйста создайте имя пользователя в своем аккаунте телеграм."),
   SEND_CAPTION("Пожалуйста отправьте описание для фото"),
   THANKS_FOR_CAPTION("Спасибо что предоставили описание к фото"),
-  UNKNOWN_COMMAND("Несуществующая команда");
+  REMOVE("Для удаления фото нажмите кнопку");
 
   private final String response;
 

@@ -19,6 +19,7 @@ public class BotProperties {
   private String downloadButton;
   private String captionButton;
   private String cancelButton;
+  private String deleteButton;
   private int transferServiceCapacity;
 
   public String getToken() {
@@ -67,6 +68,14 @@ public class BotProperties {
 
   public void setCancelButton(String cancelButton) {
     this.cancelButton = cancelButton;
+  }
+
+  public String getDeleteButton() {
+    return deleteButton;
+  }
+
+  public void setDeleteButton(String deleteButton) {
+    this.deleteButton = deleteButton;
   }
 
   public int getTransferServiceCapacity() {

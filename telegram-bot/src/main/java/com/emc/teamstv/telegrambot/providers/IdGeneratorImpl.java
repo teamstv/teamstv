@@ -2,7 +2,6 @@ package com.emc.teamstv.telegrambot.providers;
 
 import com.emc.teamstv.telegrambot.services.IdGenerator;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +17,7 @@ public class IdGeneratorImpl implements IdGenerator<Integer> {
 
   @Override
   public Integer getUniq() {
-    if(generator.get() == Integer.MAX_VALUE) {
+    if (generator.get() == Integer.MAX_VALUE) {
       generator.set(0);
     }
     return generator.incrementAndGet();

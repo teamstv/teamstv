@@ -37,6 +37,9 @@ public class Keyboard {
     if (!model.hasCaption()) {
       return keyboard(getCaptionButtons(id));
     }
+    if (model.isListed()) {
+      return keyboard(getDeleteButton(id));
+    }
     return Optional.empty();
   }
 
@@ -65,6 +68,12 @@ public class Keyboard {
     return Arrays.asList(
         getButton(properties.getCaptionButton(), id + ADD_CAPTION.getData()),
         getButton(properties.getCancelButton(), id + CANCEL.getData())
+    );
+  }
+
+  private List<InlineKeyboardButton> getDeleteButton(int id) {
+    return Collections.singletonList(
+        getButton(properties.getDeleteButton(), id + CANCEL.getData())
     );
   }
 

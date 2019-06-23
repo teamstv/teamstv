@@ -18,8 +18,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
@@ -37,7 +37,7 @@ public class DownloadCallbackHandler extends CallbackHandler {
   private final BotProperties properties;
 
   public DownloadCallbackHandler(
-      TransferService<Integer, String, Photo> transferService,
+      TransferService<Integer, Photo> transferService,
       Keyboard keyboard,
       BotProperties properties) {
     super(transferService);
@@ -64,9 +64,9 @@ public class DownloadCallbackHandler extends CallbackHandler {
   }
 
   @Override
-  void createKeyboard(Photo model, BotApiMethod msg) {
+  void createKeyboard(Photo model, PartialBotApiMethod msg) {
     keyboard.keyboard(model, getTransferID(ButtonNameEnum.DOWNLOAD))
-        .ifPresent(((EditMessageText)msg)::setReplyMarkup);
+        .ifPresent(((EditMessageText) msg)::setReplyMarkup);
   }
 
   @Override
@@ -78,7 +78,7 @@ public class DownloadCallbackHandler extends CallbackHandler {
     PhotoSize p = model.getPhotoSize();
     Path file = sender.downloadFile(getPath(p)).toPath();
     try (InputStream ios = Files.newInputStream(file)) {
-      Path fileI = Paths.get(properties.getPath(),p.getFileId() + ".jpg");
+      Path fileI = Paths.get(properties.getPath(), p.getFileId() + ".jpg");
       Files.copy(ios, fileI, StandardCopyOption.REPLACE_EXISTING);
       log.info("File {} loaded", fileI);
       model.setLoaded(true);

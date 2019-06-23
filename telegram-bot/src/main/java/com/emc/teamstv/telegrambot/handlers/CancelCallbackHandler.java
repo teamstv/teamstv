@@ -22,7 +22,7 @@ import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 public class CancelCallbackHandler extends CallbackHandler {
 
   public CancelCallbackHandler(
-      TransferService<Integer,String, Photo> transferService) {
+      TransferService<Integer, Photo> transferService) {
     super(transferService);
   }
 

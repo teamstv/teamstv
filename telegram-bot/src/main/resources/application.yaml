@@ -3,7 +3,8 @@ bot:
     token: 984320629:AAHPR4dMzD8O21hNzW4aOERbVkXIEapZTio
     botName: teams-tv telegram bot
     path: .
-    downloadButton: Загрузить на сервер
-    captionButton: Добавить описание
-    cancelButton: Отменить загрузку
+    downloadButton: Загрузить
+    captionButton: Описание
+    cancelButton: Отменить
+    deleteButton: Удалить
     transferServiceCapacity: 4

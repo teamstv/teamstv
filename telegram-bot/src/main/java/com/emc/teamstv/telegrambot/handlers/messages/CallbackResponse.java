@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public class CallbackResponse extends Response {
+public class CallbackResponse extends Response<String> {
 
   private final EditMessageText editMessageText;
 

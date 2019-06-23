@@ -3,16 +3,17 @@ package com.emc.teamstv.telegrambot.handlers.messages;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public abstract class Response {
+public abstract class Response<T> {
 
   final Update update;
-  private final String msg;
+  private final T msg;
 
-  protected Response(String msg, Update update) {
+  protected Response(T msg, Update update) {
     this.msg = msg;
     this.update = update;
   }
 
+  @SuppressWarnings("unchecked")
   public final BotApiMethod getResponse() {
     int msgId = getMessageId();
     long chatId = getChatId();
@@ -29,5 +30,5 @@ public abstract class Response {
 
   abstract Response setChatId(long id);
 
-  abstract BotApiMethod setText(String msg);
+  abstract BotApiMethod setText(T msg);
 }

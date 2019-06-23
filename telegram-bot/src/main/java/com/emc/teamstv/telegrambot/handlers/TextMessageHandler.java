@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -35,7 +35,7 @@ public class TextMessageHandler extends Handler {
   private final BotProperties properties;
 
   public TextMessageHandler(
-      TransferService<Integer, String, Photo> transferService,
+      TransferService<Integer, Photo> transferService,
       Keyboard keyboard, BotProperties properties) {
     super(transferService);
     this.keyboard = keyboard;
@@ -64,7 +64,7 @@ public class TextMessageHandler extends Handler {
   }
 
   @Override
-  void createKeyboard(Photo model, BotApiMethod msg) {
+  void createKeyboard(Photo model, PartialBotApiMethod msg) {
     keyboard.keyboard(model, model.getTransferId())
         .ifPresent(((SendMessage) msg)::setReplyMarkup);
     transferService.delete(getUser());

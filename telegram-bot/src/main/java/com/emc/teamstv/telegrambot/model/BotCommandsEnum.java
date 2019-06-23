@@ -7,11 +7,8 @@ package com.emc.teamstv.telegrambot.model;
  */
 
 public enum BotCommandsEnum {
-  DELETE("/delete"),
-  DELETE_ALL("/deleteall"),
-  LIST("/list"),
-  LIST_ALL("/listall"),
-  HELP("/help");
+
+  LIST("/list");
 
   private final String name;
 

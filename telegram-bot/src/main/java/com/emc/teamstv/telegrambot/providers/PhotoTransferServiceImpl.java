@@ -4,6 +4,7 @@ import com.emc.teamstv.telegrambot.BotProperties;
 import com.emc.teamstv.telegrambot.model.Photo;
 import com.emc.teamstv.telegrambot.services.TransferService;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class PhotoTransferServiceImpl implements TransferService<Integer, String, Photo> {
+public class PhotoTransferServiceImpl implements TransferService<Integer, Photo> {
 
   private final int capacity;
   private final Map<Integer, Photo> photoSizeMap;
@@ -76,11 +77,23 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, String
   @Override
   public void delete(String user) {
     Queue<Integer> actions = userMap.get(user);
-    if(actions != null && !actions.isEmpty() ) {
+    if (actions != null && !actions.isEmpty()) {
       actions.poll();
       return;
     }
     userMap.remove(user);
+  }
+
+  @Override
+  public Collection<Photo> getAll() {
+    return photoSizeMap.values();
+  }
+
+  @Override
+  public Optional<Photo> getByFileID(String fileID) {
+    return photoSizeMap.values().parallelStream().filter(
+        p -> p.getFileId().equals(fileID)
+    ).findFirst();
   }
 
   private void addModelToQueue(Photo photo) {

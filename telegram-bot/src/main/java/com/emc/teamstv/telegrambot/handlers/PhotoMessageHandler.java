@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -30,7 +30,7 @@ public class PhotoMessageHandler extends Handler {
 
   public PhotoMessageHandler(
       Keyboard keyboard,
-      TransferService<Integer, String, Photo> transferService,
+      TransferService<Integer, Photo> transferService,
       IdGenerator<Integer> generator) {
     super(transferService);
     this.keyboard = keyboard;
@@ -55,7 +55,7 @@ public class PhotoMessageHandler extends Handler {
   }
 
   @Override
-  void createKeyboard(Photo model, BotApiMethod msg) {
+  void createKeyboard(Photo model, PartialBotApiMethod msg) {
     int id = generator.getUniq();
     keyboard.keyboard(model, id).ifPresent(((SendMessage) msg)::setReplyMarkup);
     transferService.set(id, model);

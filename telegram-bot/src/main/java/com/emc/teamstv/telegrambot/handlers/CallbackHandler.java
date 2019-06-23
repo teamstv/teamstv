@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 public abstract class CallbackHandler extends Handler {
 
   protected CallbackHandler(
-      TransferService<Integer, String, Photo> transferService) {
+      TransferService<Integer, Photo> transferService) {
     super(transferService);
   }
 
@@ -21,7 +21,7 @@ public abstract class CallbackHandler extends Handler {
 
   final int getTransferID(ButtonNameEnum nameEnum) {
     return getContent().map(
-       c -> ((CallbackQuery)c).getData().replace(nameEnum.getData(), "")
+        c -> ((CallbackQuery) c).getData().replace(nameEnum.getData(), "")
     ).map(Integer::valueOf).orElse(Integer.MAX_VALUE);
   }
 

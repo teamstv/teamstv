@@ -1,5 +1,6 @@
 package com.emc.teamstv.telegrambot.services;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Optional;
  * @param <E> transfer object
  * @author talipa
  */
-public interface TransferService<T extends Number, U, E> {
+public interface TransferService<T extends Number, E> {
 
   Optional<E> get(T id);
 
@@ -17,10 +18,14 @@ public interface TransferService<T extends Number, U, E> {
 
   void delete(T id);
 
-  Optional<E> get(U user);
+  Optional<E> get(String user);
 
-  void set(U user, T id);
+  void set(String user, T id);
 
-  void delete(U user);
+  void delete(String user);
+
+  Collection<E> getAll();
+
+  Optional<E> getByFileID(String fileID);
 
 }
