@@ -30,7 +30,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author talipa
  */
 @Service
-public class DownloadCallbackHandler extends Handler {
+public class DownloadCallbackHandler extends CallbackHandler {
 
   private final Keyboard keyboard;
   private final BotProperties properties;
@@ -47,7 +47,7 @@ public class DownloadCallbackHandler extends Handler {
 
   @Override
   public void onUpdateReceived() {
-    getPhotoModel(transferService, ButtonNameEnum.DOWNLOAD).ifPresent(
+    getPhotoModel(ButtonNameEnum.DOWNLOAD).ifPresent(
         model -> {
           String fileId = model.getPhotoSize().getFileId();
           try {

@@ -20,7 +20,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
  */
 
 @Service
-public class CaptionCallbackHandler extends Handler {
+public class CaptionCallbackHandler extends CallbackHandler {
 
   public CaptionCallbackHandler(
       TransferService<String, Photo> transferService) {
@@ -29,7 +29,7 @@ public class CaptionCallbackHandler extends Handler {
 
   @Override
   public void onUpdateReceived() {
-    getPhotoModel(transferService, ButtonNameEnum.ADD_CAPTION).ifPresent(
+    getPhotoModel(ButtonNameEnum.ADD_CAPTION).ifPresent(
         model -> {
           String user = getUser();
           BotReplies response;

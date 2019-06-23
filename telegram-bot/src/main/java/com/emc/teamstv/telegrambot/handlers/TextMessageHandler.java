@@ -2,7 +2,6 @@ package com.emc.teamstv.telegrambot.handlers;
 
 import static com.emc.teamstv.telegrambot.BotReplies.TEXT_NOT_SUPPORTED;
 import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_CAPTION;
-import static com.emc.teamstv.telegrambot.BotReplies.THANKS_FOR_PHOTO;
 
 import com.emc.teamstv.telegrambot.BotProperties;
 import com.emc.teamstv.telegrambot.handlers.messages.Response;
@@ -21,7 +20,6 @@ import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
  * Class for handling text messages(not commands)
@@ -54,8 +52,8 @@ public class TextMessageHandler extends Handler {
     Optional<Photo> optModel = transferService.get(getUser());
     optModel.ifPresent(
         model -> {
-          if(content instanceof Message) {
-            Message msg = (Message)content;
+          if (content instanceof Message) {
+            Message msg = (Message) content;
             String caption = msg.getText();
             log.info("Caption: {}. For photo: {} provided.", caption, model.getFileId());
             model.setCaption(caption);
@@ -72,7 +70,7 @@ public class TextMessageHandler extends Handler {
   void createKeyboard(Photo model, BotApiMethod msg) {
     if (msg instanceof SendMessage) {
       keyboard.keyboard(model, model.getTransferId())
-          .ifPresent(((SendMessage)msg)::setReplyMarkup);
+          .ifPresent(((SendMessage) msg)::setReplyMarkup);
     }
     transferService.delete(getUser());
     model.setTransferId("");

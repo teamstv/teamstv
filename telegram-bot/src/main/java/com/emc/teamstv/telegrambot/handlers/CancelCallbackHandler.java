@@ -21,7 +21,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
  * @author talipa
  */
 @Service
-public class CancelCallbackHandler extends Handler {
+public class CancelCallbackHandler extends CallbackHandler {
 
   public CancelCallbackHandler(
       TransferService<String, Photo> transferService) {
@@ -30,7 +30,7 @@ public class CancelCallbackHandler extends Handler {
 
   @Override
   public void onUpdateReceived() {
-    getPhotoModel(transferService, ButtonNameEnum.CANCEL).ifPresent(
+    getPhotoModel(ButtonNameEnum.CANCEL).ifPresent(
         model -> {
           String transferId = getTransferID(ButtonNameEnum.CANCEL);
           transferService.delete(transferId);
