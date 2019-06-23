@@ -52,7 +52,7 @@ public abstract class Handler {
         .setText(reply.getResponse());
   }
 
-  public void onUpdateReceived() {
+  public final void onUpdateReceived() {
     if (getUser() == null) {
       nullUserAction();
       return;

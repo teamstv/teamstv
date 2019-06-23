@@ -1,5 +1,8 @@
 package com.emc.teamstv.telegrambot.model;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Objects;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -77,6 +80,14 @@ public class Photo {
 
   public void setCaptionLocalPath(String captionLocalPath) {
     this.captionLocalPath = captionLocalPath;
+  }
+
+  public void delete() throws IOException {
+    if (isLoaded) {
+      Files.deleteIfExists(Paths.get(getPhotoLocalPath()));
+    } else if (hasCaption()) {
+      Files.deleteIfExists(Paths.get(getCaptionLocalPath()));
+    }
   }
 
   @Override
