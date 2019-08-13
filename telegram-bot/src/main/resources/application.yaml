@@ -1,10 +1,10 @@
 bot:
   properties:
-    token: 984320629:AAHPR4dMzD8O21hNzW4aOERbVkXIEapZTio
+    token: token
     botName: teams-tv telegram bot
-    path: .
+    path: /home/pi/teamstv/teams_tv_server/static/img/events
     downloadButton: Загрузить
     captionButton: Описание
     cancelButton: Отменить
     deleteButton: Удалить
-    transferServiceCapacity: 4
+    transferServiceCapacity: 128
