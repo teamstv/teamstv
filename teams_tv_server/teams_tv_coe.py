@@ -159,7 +159,7 @@ def get_description_list(folder, file):
     filename = get_file_abs_path(description_file, folder)
     if not os.path.exists(filename):
         return ""
-    with open(filename, "r") as f:
+    with open(filename, "r", encoding='utf-8') as f:
         return f.read()
 
 

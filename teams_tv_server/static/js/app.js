@@ -196,7 +196,7 @@ $(function() {
             var images = data.images || data;
 
             $.each(images, function(index, page) {
-                $("#" + cid).append("<div style='width: 100%; height: 100%; background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);'><img style='margin: auto; object-fit: contain; object-position: 50% 50%;' class='owl-lazy' data-src='" + (page.image) ? page.image : page + "'/></div>");
+                $("#" + cid).append("<div style='width: 100%; height: 100%; background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);'><h2 style='position: absolute; display: block; z-index: 100; background-color: white; color: black;'>" + ((page.description) ? page.description : '') + "</h2><img style='margin: auto; object-fit: contain; object-position: 50% 50%;' class='owl-lazy' data-src='" + ((page.image) ? page.image : page) + "'/></div>");
             });
 
             $("#" + cid).owlCarousel({
