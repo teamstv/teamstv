@@ -42,7 +42,7 @@ public class PhotoMessageHandler extends Handler {
     return update.getMessage()
         .getPhoto()
         .stream()
-        .min(Comparator.comparing(PhotoSize::getFileSize));
+        .max(Comparator.comparing(PhotoSize::getFileSize));
   }
 
   @Override
