@@ -19,7 +19,7 @@
             display: none; 
         }
 
-        #twee-div {
+        #twitter-container-div {
             position: absolute;
             left: 1px;
             top: 10px;
@@ -41,10 +41,12 @@
     </style>
 
     <script src="../js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" type="text/javascript"></script> -->
 </head>
 <body>
 
-    <div id="twee-div"></div>
+    <div id="twitter-container-div"></div>
 
     <a class="twitter-timeline" 
        href="https://twitter.com/teams_tv/lists/teamstv"
@@ -53,30 +55,30 @@
        data-tweet-limit="20">
     </a> 
 
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
     <script type="text/javascript">
+        
+        const startStopDelay = 1   * 1000;
+        const scrollTimeDown = 600 * 1000;
+        const scrollTimeUp   = 3   * 1000;
 
-        var loadTimeout    = 5   * 1000;
-        var startStopDelay = 5   * 1000;
-        var scrollTimeDown = 500 * 1000;
-        var scrollTimeUp   = 5   * 1000;
+        $(document).ready(() => {
+            twttr.events.bind("rendered", (event) => {
+                console.log("Created twitter widget, id: ", event.target.id);
+                document.getElementById("twitter-container-div").innerHTML = 
+                document.getElementById(event.target.id).contentWindow.document.getElementsByClassName("timeline-Body")[0].innerHTML;
 
-        setTimeout(() => {
+                function animateFeed() {
+                    $("html, body").delay(startStopDelay)
+                                   .animate({ scrollTop: $("#twitter-container-div").get(0).scrollHeight }, { duration: scrollTimeDown, easing: "linear" })
+                                   .delay(startStopDelay)
+                                   .animate({ scrollTop: 0 },                                  { duration: scrollTimeUp,   easing: "linear", complete: animateFeed });
+                }
 
-            document.getElementById("twee-div").innerHTML = 
-            document.getElementById("twitter-widget-0").contentWindow.document.getElementsByClassName("timeline-Body")[0].innerHTML;
-
-            function animateFeed() {
-                $("html, body").delay(startStopDelay)
-                               .animate({ scrollTop: $("#twee-div").get(0).scrollHeight }, { duration: scrollTimeDown, easing: "linear" })
-                               .delay(startStopDelay)
-                               .animate({ scrollTop: 0 },                                  { duration: scrollTimeUp,   easing: "linear", complete: animateFeed });
-            }
-
-            animateFeed();
-
-        }, loadTimeout);
+                animateFeed();
+            });
+        });
 
 </script>
 

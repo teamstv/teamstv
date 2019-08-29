@@ -122,6 +122,15 @@ $(function() {
         var cid = "news_"+id;
 
         $("#"+id).html("");
+        $("#"+id).append("<iframe id='" + cid + "' src='/news?" + $.param(options) + "'></iframe>"); // Let it live in IFRAME
+    }
+
+    function placeTwitter(id, options) {
+        options = options || {};
+
+        var cid = "twitter_"+id;
+
+        $("#"+id).html("");
         $("#"+id).append("<iframe id='" + cid + "' src='/twitter?" + $.param(options) + "'></iframe>"); // Let it live in IFRAME
     }
 
@@ -315,8 +324,8 @@ $(function() {
             placeClock(id, data);
         }
 
-        if (type === "news") {
-            placeNews(id, data);
+        if (type === "news" || type === "twitter") {
+            placeTwitter(id, data);
         }
 
         if (type === "logo") {

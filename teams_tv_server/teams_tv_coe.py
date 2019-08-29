@@ -60,6 +60,11 @@ def show_twitter():
     app.logger.info("Serving twitter.html")
     return render_template("twitter.html")
 
+@app.route('/weather')
+def show_weather():
+    app.logger.info("Serving weather.html")
+    return render_template("weather.html")
+
 @app.route("/test_json")
 def test_json():
     calendars = calendar.connect(settings.CALDAV_USER, settings.CALDAV_PASSWORD, settings.CALDAV_URL)
