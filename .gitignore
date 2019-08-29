@@ -12,3 +12,9 @@ teams_tv_server/static/img/
 telegram-bot/target/
 telegram-bot/.idea
 telegram-bot/*.iml
+
+*/node_modules/
+*/build/
+*/typings/
+*/generated/
+*.log
