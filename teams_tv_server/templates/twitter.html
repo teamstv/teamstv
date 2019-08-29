@@ -66,14 +66,26 @@
         $(document).ready(() => {
             twttr.events.bind("rendered", (event) => {
                 console.log("Created twitter widget, id: ", event.target.id);
+                
                 document.getElementById("twitter-container-div").innerHTML = 
                 document.getElementById(event.target.id).contentWindow.document.getElementsByClassName("timeline-Body")[0].innerHTML;
 
                 function animateFeed() {
                     $("html, body").delay(startStopDelay)
-                                   .animate({ scrollTop: $("#twitter-container-div").get(0).scrollHeight }, { duration: scrollTimeDown, easing: "linear" })
+                                   .animate({ 
+                                        scrollTop: $("#twitter-container-div").get(0).scrollHeight 
+                                    }, { 
+                                        duration: scrollTimeDown, 
+                                        easing: "linear" 
+                                    })
                                    .delay(startStopDelay)
-                                   .animate({ scrollTop: 0 },                                  { duration: scrollTimeUp,   easing: "linear", complete: animateFeed });
+                                   .animate({ 
+                                        scrollTop: 0 
+                                    }, { 
+                                        duration: scrollTimeUp, 
+                                        easing: "linear", 
+                                        complete: animateFeed 
+                                    });
                 }
 
                 animateFeed();
