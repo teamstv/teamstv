@@ -13,7 +13,7 @@ telegram-bot/target/
 telegram-bot/.idea
 telegram-bot/*.iml
 
-*/node_modules/*
+node_modules
 */build/
 */typings/
 */generated/
