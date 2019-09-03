@@ -2,14 +2,20 @@ package com.teamstv.telegrambot.providers;
 
 import com.teamstv.telegrambot.BotProperties;
 import com.teamstv.telegrambot.model.Photo;
+import com.teamstv.telegrambot.services.IdGenerator;
 import com.teamstv.telegrambot.services.TransferService;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,13 +33,31 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, Photo>
   private final Map<Integer, Photo> photoSizeMap;
   private final Map<String, Queue<Integer>> userMap;
   private final Queue<Photo> photoQueue;
-  private Logger log = LoggerFactory.getLogger(TransferService.class);
+  private final BotProperties properties;
+  private final IdGenerator<Integer> idGenerator;
 
-  public PhotoTransferServiceImpl(BotProperties properties) {
+  @PostConstruct
+  public void init() throws IOException {
+    Path path = Paths.get(properties.getPath());
+    try (Stream<Path> files = Files.walk(path, 1)) {
+      files.map(Path::getFileName)
+          .map(Path::toString)
+          .filter(s -> s.endsWith(".jpg"))
+          .map(s -> s.replace(".jpg", ""))
+          .forEach(s ->
+              photoSizeMap.put(idGenerator.getUniq(), Photo.getPhotoModel(null, s))
+          );
+    }
+  }
+
+  public PhotoTransferServiceImpl(BotProperties properties,
+      IdGenerator<Integer> idGenerator) {
     capacity = properties.getTransferServiceCapacity();
+    this.idGenerator = idGenerator;
     photoSizeMap = new ConcurrentHashMap<>(2 * capacity);
     userMap = new ConcurrentHashMap<>(2 * capacity);
     photoQueue = new ArrayBlockingQueue<>(capacity);
+    this.properties = properties;
   }
 
   @Override
@@ -106,6 +130,7 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, Photo>
       try {
         model.delete();
       } catch (IOException e) {
+        Logger log = LoggerFactory.getLogger(TransferService.class);
         log.error("Error while deleting files for model = {} ", model.getFileId(), e);
       }
     }
