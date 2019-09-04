@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 /**
  * Simple implementation of transfer service based on ConcurrentHashMap
@@ -44,9 +45,25 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, Photo>
           .map(Path::toString)
           .filter(s -> s.endsWith(".jpg"))
           .map(s -> s.replace(".jpg", ""))
-          .forEach(s ->
-              photoSizeMap.put(idGenerator.getUniq(), Photo.getPhotoModel(null, s))
+          .forEach(s ->{
+            PhotoSize photoSize = new PhotoSizeDecorator(s);
+            photoSizeMap.put(idGenerator.getUniq(), Photo.getPhotoModel(photoSize, s));
+          }
+
           );
+    }
+  }
+
+  private class PhotoSizeDecorator extends PhotoSize{
+    private final String fileId;
+
+    private PhotoSizeDecorator(String fileId) {
+      this.fileId = fileId;
+    }
+
+    @Override
+    public String getFileId() {
+      return fileId;
     }
   }
 
