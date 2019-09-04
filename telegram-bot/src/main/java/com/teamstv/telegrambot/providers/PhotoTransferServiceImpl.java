@@ -68,7 +68,10 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, Photo>
     PhotoSize photoSize = new PhotoSizeDecorator(s);
     Photo photo = Photo.getPhotoModel(photoSize, s);
     photo.setLoaded(true);
-    String caption = readCaption(Paths.get(path.toString(), s + ".txt"));
+    photo.setPhotoLocalPath(Paths.get(path.toString(), s + ".jpg").toString());
+    Path captionPath = Paths.get(path.toString(), s + ".txt");
+    photo.setCaptionLocalPath(captionPath.toString());
+    String caption = readCaption(captionPath);
     photo.setCaption(caption);
     return photo;
   }
