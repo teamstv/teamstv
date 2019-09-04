@@ -51,7 +51,7 @@ public class DownloadCallbackHandler extends CallbackHandler {
     Optional<Photo> optionalModel = getPhotoModel(ButtonNameEnum.DOWNLOAD);
     optionalModel.ifPresent(
         model -> {
-          String fileId = model.getPhotoSize().getFileId();
+          String fileId = model.getFileId();
           try {
             log.info("Found entry for fileId ={}", fileId);
             saveFile(model);
