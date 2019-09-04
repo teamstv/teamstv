@@ -8,6 +8,8 @@ import com.teamstv.telegrambot.services.IdGenerator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
@@ -17,33 +19,53 @@ public class PhotoTransferServiceImplTest {
 
   private String filePath = "test.jpg";
   private String dirPath = "events";
+  private PhotoTransferServiceImpl transferService;
 
   @Before
-  public void init() throws IOException {
+  public void init() throws IOException, InterruptedException {
+    BotProperties properties = new BotProperties();
+    properties.setTransferServiceCapacity(128);
+    properties.setPath(dirPath);
+    IdGenerator<Integer> idGenerator = new IdGeneratorImpl();
+    transferService = new PhotoTransferServiceImpl(properties, idGenerator);
     Files.createDirectory(Paths.get(dirPath));
-    Files.createFile(Paths.get(dirPath, filePath));
+    for (int i = 0; i < 128 ; i++) {
+      Thread.sleep(10);
+      Files.createFile(Paths.get(dirPath, filePath + i + ".jpg"));
+    }
+
+    transferService.init();
   }
 
   @Test
-  public void initTest() throws IOException {
-    BotProperties properties = new BotProperties();
-    properties.setTransferServiceCapacity(10);
-    properties.setPath(dirPath);
-    IdGenerator<Integer> idGenerator = new IdGeneratorImpl();
-    PhotoTransferServiceImpl transferService = new PhotoTransferServiceImpl(properties, idGenerator);
-    transferService.init();
+  public void initTest() {
     Optional<Photo> optionalPhoto = transferService.get(1);
     if(optionalPhoto.isPresent()) {
       Photo photo = optionalPhoto.get();
-      assertEquals("test", photo.getFileId());
+      assertEquals("test0", photo.getFileId());
+      assertEquals("", photo.getCaption());
+      assertTrue(photo.isLoaded());
     } else {
       throw new AssertionError();
     }
   }
 
+  @Test
+  public void getAllTest() {
+    Collection<Photo> photos = transferService.getAll();
+    Iterator<Photo> photoIterator = photos.iterator();
+    int i = 0;
+    while (photoIterator.hasNext()) {
+      assertEquals("test"+ i, photoIterator.next().getFileId());
+      i++;
+    }
+  }
+
   @After
   public void tearDown() throws IOException {
-    Files.deleteIfExists(Paths.get(dirPath, filePath));
+    for (int i = 0; i < 128 ; i++) {
+      Files.deleteIfExists(Paths.get(dirPath, filePath + i + ".jpg"));
+    }
     Files.deleteIfExists(Paths.get(dirPath));
   }
 }
