@@ -58,7 +58,7 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, Photo>
           .map(s -> s.replace(".jpg", ""))
           .forEach(s -> {
                 Photo photo = createPhotoFromFile(s, path);
-                photoSizeMap.put(idGenerator.getUniq(), photo);
+                photoSizeMap.put(photo.getTransferId(), photo);
               }
           );
     }
@@ -73,6 +73,7 @@ public class PhotoTransferServiceImpl implements TransferService<Integer, Photo>
     photo.setCaptionLocalPath(captionPath.toString());
     String caption = readCaption(captionPath);
     photo.setCaption(caption);
+    photo.setTransferId(idGenerator.getUniq());
     return photo;
   }
 
