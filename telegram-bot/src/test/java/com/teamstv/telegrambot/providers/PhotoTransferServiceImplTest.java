@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class PhotoTransferServiceImplTest {
 
-  private String filePath = "test.jpg";
+  private String filePath = "test";
   private String dirPath = "events";
   private PhotoTransferServiceImpl transferService;
 
@@ -56,7 +56,8 @@ public class PhotoTransferServiceImplTest {
     Iterator<Photo> photoIterator = photos.iterator();
     int i = 0;
     while (photoIterator.hasNext()) {
-      assertEquals("test"+ i, photoIterator.next().getFileId());
+      Photo photo = photoIterator.next();
+      assertEquals("test"+ i, photo.getFileId());
       i++;
     }
   }
